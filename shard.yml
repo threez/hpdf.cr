@@ -1,0 +1,18 @@
+name: hpdf
+version: 0.1.0
+
+authors:
+  - Vincent Landgraf <vincent@landgrafx.de>
+
+targets:
+  example-hello:
+    main: ./examples/hello.cr
+  example-font:
+    main: ./examples/font.cr
+
+libraries:
+  libhpdf: 2.3.0
+
+crystal: 1.5.0
+
+license: MIT

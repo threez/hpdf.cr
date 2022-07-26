@@ -1,0 +1,147 @@
+
+@[Link("hpdf")]
+lib LibHaru
+  type Doc = Void*
+  type Page = Void*
+  type Font = Void*
+  alias Real = LibC::Float
+  alias Status = LibC::ULong
+  alias Double = LibC::Double
+
+  fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
+  fun free = HPDF_Free(Doc) : Void
+  fun add_page = HPDF_AddPage(Doc) : Page
+  fun get_font = HPDF_GetFont(Doc, LibC::Char*, LibC::Char*) : Font
+  fun save_to_file = HPDF_SaveToFile (Doc, LibC::Char*) : Status
+  
+  fun font_get_x_height = HPDF_Font_GetXHeight(Font) : Status
+
+  fun page_get_height = HPDF_Page_GetHeight(Page) : Real
+  fun page_get_width = HPDF_Page_GetWidth(Page) : Real
+  fun page_set_line_width = HPDF_Page_SetLineWidth(Page, Real) : Void
+  fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Void
+  fun page_stroke = HPDF_Page_Stroke(Page) : Void
+  fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
+  fun page_text_width = HPDF_Page_TextWidth(Page, LibC::Char*) : Real
+  fun page_begin_text = HPDF_Page_BeginText(Page) : Status
+  fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
+  fun page_end_text = HPDF_Page_EndText(Page) : Status
+  fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
+  fun page_show_text = HPDF_Page_ShowText (Page, LibC::Char*) : Status
+  
+  HPDF_ARRAY_COUNT_ERR             = 0x1001 #	Internal error. The consistency of the data was lost.
+  HPDF_ARRAY_ITEM_NOT_FOUND        = 0x1002 #	Internal error. The consistency of the data was lost.
+  HPDF_ARRAY_ITEM_UNEXPECTED_TYPE  = 0x1003 #	Internal error. The consistency of the data was lost.
+  HPDF_BINARY_LENGTH_ERR           = 0x1004 #	The length of the data exceeds HPDF_LIMIT_MAX_STRING_LEN.
+  HPDF_CANNOT_GET_PALLET           = 0x1005 #	Cannot get a pallet data from PNG image.
+  # 0x1006 	#
+  HPDF_DICT_COUNT_ERR              = 0x1007 #	The count of elements of a dictionary exceeds HPDF_LIMIT_MAX_DICT_ELEMENT
+  HPDF_DICT_ITEM_NOT_FOUND         = 0x1008 #	Internal error. The consistency of the data was lost.
+  HPDF_DICT_ITEM_UNEXPECTED_TYPE   = 0x1009 #	Internal error. The consistency of the data was lost.
+  HPDF_DICT_STREAM_LENGTH_NOT_FOUND= 0x100A #	Internal error. The consistency of the data was lost.
+  HPDF_DOC_ENCRYPTDICT_NOT_FOUND   = 0x100B #	HPDF_SetPermission() OR HPDF_SetEncryptMode() was called before a password is set.
+  HPDF_DOC_INVALID_OBJECT          = 0x100C #	Internal error. The consistency of the data was lost.
+  # 0x100D 	#
+  HPDF_DUPLICATE_REGISTRATION      = 0x100E #	Tried to register a font that has been registered.
+  HPDF_EXCEED_JWW_CODE_NUM_LIMIT   = 0x100F #	Cannot register a character to the japanese word wrap characters list.
+  # 0x1010 	#
+  HPDF_ENCRYPT_INVALID_PASSWORD    = 0x1011 #	Tried to set the owner password to NULL. The owner password and user password is the same.
+  HPDF_ERR_UNKNOWN_CLASS           = 0x1013 #	Internal error. The consistency of the data was lost.
+  HPDF_EXCEED_GSTATE_LIMIT         = 0x1014 #	The depth of the stack exceeded HPDF_LIMIT_MAX_GSTATE.
+  HPDF_FAILD_TO_ALLOC_MEM          = 0x1015 #	Memory allocation failed.
+  HPDF_FILE_IO_ERROR               = 0x1016 #	File processing failed. (A detailed code is set.)
+  HPDF_FILE_OPEN_ERROR             = 0x1017 #	Cannot open a file. (A detailed code is set.)
+  # 0x1018 	#
+  HPDF_FONT_EXISTS                 = 0x1019 #	Tried to load a font that has been registered.
+  HPDF_FONT_INVALID_WIDTHS_TABLE   = 0x101A #	The format of a font-file is invalid . Internal error. The consistency of the data was lost.
+  HPDF_INVALID_AFM_HEADER          = 0x101B #	Cannot recognize a header of an afm file.
+  HPDF_INVALID_ANNOTATION          = 0x101C #	The specified annotation handle is invalid.
+  # 0x101D 	#
+  HPDF_INVALID_BIT_PER_COMPONENT   = 0x101E #	Bit-per-component of a image which was set as mask-image is invalid.
+  HPDF_INVALID_CHAR_MATRICS_DATA   = 0x101F #	Cannot recognize char-matrics-data  of an afm file.
+  HPDF_INVALID_COLOR_SPACE         = 0x1020 #	1. The color_space parameter of HPDF_LoadRawImage is invalid.
+                                            #  2. Color-space of a image which was set as mask-image is invalid.
+                                            #  3. The function which is invalid in the present color-space was invoked.
+  HPDF_INVALID_COMPRESSION_MODE    = 0x1021 #	Invalid value was set when invoking HPDF_SetCommpressionMode().
+  HPDF_INVALID_DATE_TIME           = 0x1022 #	An invalid date-time value was set.
+  HPDF_INVALID_DESTINATION         = 0x1023 #	An invalid destination handle was set.
+  # 0x1024 	#
+  HPDF_INVALID_DOCUMENT            = 0x1025 #	An invalid document handle is set.
+  HPDF_INVALID_DOCUMENT_STATE      = 0x1026 #	The function which is invalid in the present state was invoked.
+  HPDF_INVALID_ENCODER             = 0x1027 #	An invalid encoder handle is set.
+  HPDF_INVALID_ENCODER_TYPE        = 0x1028 #	A combination between font and encoder is wrong.
+  # 0x1029 	#
+  # 0x102A 	#
+  HPDF_INVALID_ENCODING_NAME       = 0x102B #	An Invalid encoding name is specified.
+  HPDF_INVALID_ENCRYPT_KEY_LEN     = 0x102C #	The lengh of the key of encryption is invalid.
+  HPDF_INVALID_FONTDEF_DATA        = 0x102D #	1. An invalid font handle was set.
+                                            #  2. Unsupported font format.
+  HPDF_INVALID_FONTDEF_TYPE        = 0x102E #	Internal error. The consistency of the data was lost.
+  HPDF_INVALID_FONT_NAME           = 0x102F #	A font which has the specified name is not found.
+  HPDF_INVALID_IMAGE               = 0x1030 #	Unsupported image format.
+  HPDF_INVALID_JPEG_DATA           = 0x1031 #	Unsupported image format.
+  HPDF_INVALID_N_DATA              = 0x1032 #	Cannot read a postscript-name from an afm file.
+  HPDF_INVALID_OBJECT              = 0x1033 #	1. An invalid object is set.
+                                            #  2. Internal error. The consistency of the data was lost.
+  HPDF_INVALID_OBJ_ID              = 0x1034 #	Internal error. The consistency of the data was lost.
+  HPDF_INVALID_OPERATION           = 0x1035 #	1. Invoked HPDF_Image_SetColorMask() against the image-object which was set a mask-image.
+  HPDF_INVALID_OUTLINE             = 0x1036 #	An invalid outline-handle was specified.
+  HPDF_INVALID_PAGE                = 0x1037 #	An invalid page-handle was specified.
+  HPDF_INVALID_PAGES               = 0x1038 #	An invalid pages-handle was specified. (internel error)
+  HPDF_INVALID_PARAMETER           = 0x1039 #	An invalid value is set.
+  # 0x103A 	#
+  HPDF_INVALID_PNG_IMAGE           = 0x103B #	Invalid PNG image format.
+  HPDF_INVALID_STREAM              = 0x103C #	Internal error. The consistency of the data was lost.
+  HPDF_MISSING_FILE_NAME_ENTRY     = 0x103D #	Internal error. The "_FILE_NAME" entry for delayed loading is missing.
+  # 0x103E 	#
+  HPDF_INVALID_TTC_FILE            = 0x103F #	Invalid .TTC file format.
+  HPDF_INVALID_TTC_INDEX           = 0x1040 #	The index parameter was exceed the number of included fonts
+  HPDF_INVALID_WX_DATA             = 0x1041 #	Cannot read a width-data from an afm file.
+  HPDF_ITEM_NOT_FOUND              = 0x1042 #	Internal error. The consistency of the data was lost.
+  HPDF_LIBPNG_ERROR                = 0x1043 #	An error has returned from PNGLIB while loading an image.
+  HPDF_NAME_INVALID_VALUE          = 0x1044 #	Internal error. The consistency of the data was lost.
+  HPDF_NAME_OUT_OF_RANGE           = 0x1045 #	Internal error. The consistency of the data was lost.
+  # 0x1046 	#
+  # 0x1047 	#
+  # 0x1048 	#
+  HPDF_PAGES_MISSING_KIDS_ENTRY    = 0x1049 #	Internal error. The consistency of the data was lost.
+  HPDF_PAGE_CANNOT_FIND_OBJECT     = 0x104A #	Internal error. The consistency of the data was lost.
+  HPDF_PAGE_CANNOT_GET_ROOT_PAGES  = 0x104B #	Internal error. The consistency of the data was lost.
+  HPDF_PAGE_CANNOT_RESTORE_GSTATE  = 0x104C #	There are no graphics-states to be restored.
+  HPDF_PAGE_CANNOT_SET_PARENT      = 0x104D #	Internal error. The consistency of the data was lost.
+  HPDF_PAGE_FONT_NOT_FOUND         = 0x104E #	The current font is not set.
+  HPDF_PAGE_INVALID_FONT           = 0x104F #	An invalid font-handle was spacified.
+  HPDF_PAGE_INVALID_FONT_SIZE      = 0x1050 #	An invalid font-size was set.
+  HPDF_PAGE_INVALID_GMODE          = 0x1051 #	See Graphics mode.
+  HPDF_PAGE_INVALID_INDEX          = 0x1052 #	Internal error. The consistency of the data was lost.
+  HPDF_PAGE_INVALID_ROTATE_VALUE   = 0x1053 #	The specified value is not a multiple of 90.
+  HPDF_PAGE_INVALID_SIZE           = 0x1054 #	An invalid page-size was set.
+  HPDF_PAGE_INVALID_XOBJECT        = 0x1055 #	An invalid image-handle was set.
+  HPDF_PAGE_OUT_OF_RANGE           = 0x1056 #	The specified value is out of range.
+  HPDF_REAL_OUT_OF_RANGE           = 0x1057 #	The specified value is out of range.
+  HPDF_STREAM_EOF                  = 0x1058 #	Unexpected EOF marker was detected.
+  HPDF_STREAM_READLN_CONTINUE      = 0x1059 #	Internal error. The consistency of the data was lost.
+  # 0x105A 	#
+  HPDF_STRING_OUT_OF_RANGE         = 0x105B #	The length of the specified text is too long.
+  HPDF_THIS_FUNC_WAS_SKIPPED       = 0x105C #	The execution of a function was skipped because of other errors.
+  HPDF_TTF_CANNOT_EMBEDDING_FONT   = 0x105D #	This font cannot be embedded. (restricted by license)
+  HPDF_TTF_INVALID_CMAP            = 0x105E #	Unsupported ttf format. (cannot find unicode cmap.)
+  HPDF_TTF_INVALID_FOMAT           = 0x105F #	Unsupported ttf format.
+  HPDF_TTF_MISSING_TABLE           = 0x1060 #	Unsupported ttf format. (cannot find a necessary table)
+  HPDF_UNSUPPORTED_FONT_TYPE       = 0x1061 #	Internal error. The consistency of the data was lost.
+  HPDF_UNSUPPORTED_FUNC            = 0x1062 #	1. The library is not configured to use PNGLIB.
+                                            # 2. Internal error. The consistency of the data was lost.
+  HPDF_UNSUPPORTED_JPEG_FORMAT     = 0x1063 #	Unsupported Jpeg format.
+  HPDF_UNSUPPORTED_TYPE1_FONT      = 0x1064 #	Failed to parse .PFB file.
+  HPDF_XREF_COUNT_ERR              = 0x1065 #	Internal error. The consistency of the data was lost.
+  HPDF_ZLIB_ERROR                  = 0x1066 #	An error has occurred while executing a function of Zlib.
+  HPDF_INVALID_PAGE_INDEX          = 0x1067 #	An error returned from Zlib.
+  HPDF_INVALID_URI                 = 0x1068 #	An invalid URI was set.
+  HPDF_PAGELAYOUT_OUT_OF_RANGE     = 0x1069 #	An invalid page-layout was set.
+  HPDF_PAGEMODE_OUT_OF_RANGE       = 0x1070 #	An invalid page-mode was set.
+  HPDF_PAGENUM_STYLE_OUT_OF_RANGE  = 0x1071 #	An invalid page-num-style was set.
+  HPDF_ANNOT_INVALID_ICON          = 0x1072 #	An invalid icon was set.
+  HPDF_ANNOT_INVALID_BORDER_STYLE  = 0x1073 #	An invalid border-style was set.
+  HPDF_PAGE_INVALID_DIRECTION      = 0x1074 #	An invalid page-direction was set.
+  HPDF_INVALID_FONT                = 0x1075 #	An invalid font-handle was specified.
+end
