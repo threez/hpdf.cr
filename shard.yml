@@ -9,6 +9,8 @@ targets:
     main: ./examples/hello.cr
   example-font:
     main: ./examples/font.cr
+  example-line:
+    main: ./examples/line.cr
 
 libraries:
   libhpdf: 2.3.0

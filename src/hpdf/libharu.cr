@@ -6,6 +6,7 @@ lib LibHaru
   type Font = Void*
   alias Real = LibC::Float
   alias Status = LibC::ULong
+  alias UInt = LibC::UInt
   alias Double = LibC::Double
 
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
@@ -13,14 +14,32 @@ lib LibHaru
   fun add_page = HPDF_AddPage(Doc) : Page
   fun get_font = HPDF_GetFont(Doc, LibC::Char*, LibC::Char*) : Font
   fun save_to_file = HPDF_SaveToFile (Doc, LibC::Char*) : Status
-  
+
   fun font_get_x_height = HPDF_Font_GetXHeight(Font) : Status
+
+  fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
+  fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status
 
   fun page_get_height = HPDF_Page_GetHeight(Page) : Real
   fun page_get_width = HPDF_Page_GetWidth(Page) : Real
   fun page_set_line_width = HPDF_Page_SetLineWidth(Page, Real) : Void
   fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Void
+
+  fun page_move_to = HPDF_Page_MoveTo(Page, Real, Real) : Status
+  fun page_line_to = HPDF_Page_LineTo(Page, Real, Real) : Status
+  fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
+  fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke (Page, Real, Real, Real) : Status
+  fun page_set_rgb_fill = HPDF_Page_SetRGBFill (Page, Real, Real, Real) : Status
+
+  fun page_set_line_cap = HPDF_Page_SetLineCap(Page, UInt) : Status
+  fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
+
   fun page_stroke = HPDF_Page_Stroke(Page) : Void
+  fun page_fill = HPDF_Page_Fill(Page) : Void
+  fun page_fill_stroke = HPDF_Page_FillStroke(Page) : Void
+  fun page_gsave = HPDF_Page_GSave(Page) : Void
+  fun page_grestore = HPDF_Page_GRestore(Page) : Void
+  fun page_clip = HPDF_Page_Clip(Page) : Void
   fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
   fun page_text_width = HPDF_Page_TextWidth(Page, LibC::Char*) : Real
   fun page_begin_text = HPDF_Page_BeginText(Page) : Status
@@ -28,7 +47,11 @@ lib LibHaru
   fun page_end_text = HPDF_Page_EndText(Page) : Status
   fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
   fun page_show_text = HPDF_Page_ShowText (Page, LibC::Char*) : Status
-  
+
+  fun page_curve_to = HPDF_Page_CurveTo(Page, Real, Real, Real, Real, Real, Real) : Status
+  fun page_curve_to2 = HPDF_Page_CurveTo2(Page, Real, Real, Real, Real) : Status
+  fun page_curve_to3 = HPDF_Page_CurveTo3(Page, Real, Real, Real, Real) : Status
+
   HPDF_ARRAY_COUNT_ERR             = 0x1001 #	Internal error. The consistency of the data was lost.
   HPDF_ARRAY_ITEM_NOT_FOUND        = 0x1002 #	Internal error. The consistency of the data was lost.
   HPDF_ARRAY_ITEM_UNEXPECTED_TYPE  = 0x1003 #	Internal error. The consistency of the data was lost.
