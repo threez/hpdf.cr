@@ -1,4 +1,3 @@
-
 describe Hpdf::Font do
   it "has getters" do
     font = create_font

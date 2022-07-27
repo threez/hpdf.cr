@@ -38,8 +38,9 @@ module Hpdf
     TwoColumnLeft
     # Display the pages in two column. The page of the odd number is displayed right.
     TwoColumnRight
-    TwoPageLeft
-    TwoPageRight
+    # TwoPageLeft
+    # TwoPageRight
+    Default = 6
   end
 
   enum PageMode

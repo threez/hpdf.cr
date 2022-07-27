@@ -22,7 +22,7 @@ lib LibHaru
   fun save_to_file = HPDF_SaveToFile(Doc, LibC::Char*) : Status
   fun save_to_stream = HPDF_SaveToStream(Doc) : Void
   fun get_stream_size = HPDF_GetStreamSize(Doc) : UInt
-  fun read_from_stream = HPDF_ReadFromStream(Doc, LibC::Char*, UInt) : Status
+  fun read_from_stream = HPDF_ReadFromStream(Doc, LibC::Char*, UInt*) : Status
   fun reset_stream = HPDF_ResetStream(Doc) : Status
   fun set_pages_configuration = HPDF_SetPagesConfiguration(Doc, UInt) : Status
   fun set_page_layout = HPDF_SetPageLayout(Doc, UInt) : Status
