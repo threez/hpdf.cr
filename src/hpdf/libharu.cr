@@ -1,21 +1,114 @@
-
 @[Link("hpdf")]
 lib LibHaru
   type Doc = Void*
   type Page = Void*
+  type Image = Void*
   type Font = Void*
+  type Encoding = Void*
+  type Outline = Void*
+  type Destination = Void*
+  type Annotation = Void*
+
   alias Real = LibC::Float
   alias Status = LibC::ULong
   alias UInt = LibC::UInt
+  alias Int = LibC::Int
+  alias Bool = LibC::UInt
   alias Double = LibC::Double
 
+  # Document handling
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
   fun free = HPDF_Free(Doc) : Void
+  fun save_to_file = HPDF_SaveToFile(Doc, LibC::Char*) : Status
+  fun save_to_stream = HPDF_SaveToStream(Doc) : Void
+  fun get_stream_size = HPDF_GetStreamSize(Doc) : UInt
+  fun read_from_stream = HPDF_ReadFromStream(Doc, LibC::Char*, UInt) : Status
+  fun reset_stream = HPDF_ResetStream(Doc) : Status
+  fun set_pages_configuration = HPDF_SetPagesConfiguration(Doc, UInt) : Status
+  fun set_page_layout = HPDF_SetPageLayout(Doc, UInt) : Status
+  fun get_page_layout = HPDF_GetPageLayout(Doc) : UInt
+  fun set_page_mode = HPDF_SetPageMode(Doc, UInt) : Status
+  fun get_page_mode = HPDF_GetPageMode(Doc) : UInt
+  # TODO fun set_open_action = HPDF_SetOpenAction
+  fun get_current_page = HPDF_GetCurrentPage(Doc) : Page
   fun add_page = HPDF_AddPage(Doc) : Page
+  fun insert_page = HPDF_InsertPage(Doc, Page) : Page
   fun get_font = HPDF_GetFont(Doc, LibC::Char*, LibC::Char*) : Font
-  fun save_to_file = HPDF_SaveToFile (Doc, LibC::Char*) : Status
+  fun load_type1_font_from_file = HPDF_LoadType1FontFromFile(Doc, LibC::Char*, LibC::Char*) : LibC::Char*
+  fun load_tt_font_from_file = HPDF_LoadTTFontFromFile(Doc, LibC::Char*, Bool) : LibC::Char*
+  fun load_tt_font_from_file2 = HPDF_LoadTTFontFromFile2(Doc, LibC::Char*, UInt, Bool) : Status
+  fun add_page_label = HPDF_AddPageLabel(Doc, UInt, UInt, UInt, LibC::Char*) : Status
+  fun use_jp_fonts = HPDF_UseJPFonts(Doc) : Status
+  fun use_kr_fonts = HPDF_UseKRFonts(Doc) : Status
+  fun use_cns_fonts = HPDF_UseCNSFonts(Doc) : Status
+  fun use_cnt_fonts = HPDF_UseCNTFonts(Doc) : Status
+  # TODO fun create_outline = HPDF_CreateOutline
+  # TODO fun get_encoder = HPDF_GetEncoder
+  # TODO fun get_current_encoder = HPDF_GetCurrentEncoder
+  # TODO fun set_current_encoder = HPDF_SetCurrentEncoder
+  fun use_jp_encodings = HPDF_UseJPEncodings(Doc) : Status
+  fun use_kr_encodings = HPDF_UseKREncodings(Doc) : Status
+  fun use_cns_encodings = HPDF_UseCNSEncodings(Doc) : Status
+  fun use_cnt_encodings = HPDF_UseCNTEncodings(Doc) : Status
+  fun load_png_image_from_file = HPDF_LoadPngImageFromFile(Doc, LibC::Char*) : Image
+  fun load_png_image_from_file2 = HPDF_LoadPngImageFromFile2(Doc, LibC::Char*) : Image
+  fun load_raw_image_from_file = HPDF_LoadRawImageFromFile(Doc, LibC::Char*, UInt, UInt, UInt) : Image
+  fun load_raw_image_from_mem = HPDF_LoadRawImageFromMem(Doc, UInt*, UInt, UInt, UInt, UInt) : Image
+  fun load_jpeg_image_from_file = HPDF_LoadJpegImageFromFile(Doc, LibC::Char*) : Image
+  fun set_info_attr = HPDF_SetInfoAttr(Doc, UInt, LibC::Char*) : Status
+  fun get_info_attr = HPDF_GetInfoAttr(Doc, UInt) : LibC::Char*
+  struct Date
+    year : Int
+    month : Int       # between 1 and 12.
+    day : Int         # between 1 and ether of 28, 29, 30, 31. (It is different by the month.)
+    hour : Int        #  0 to 23
+    minutes : Int     # 0 to 59
+    seconds : Int     # 0 to 59
+    ind : Char        # the relationship of local time to Universal Time. " ", +, −, and Z are available.
+    off_hour : Int    # if ind is not space, 0 to 23 is valid. Otherwise, this value is ignored.
+    off_minutes : Int # if ind is not space, 0 to 59 is valid. Otherwise, this value is ignored.
+  end
+  fun set_info_date_attr = HPDF_SetInfoDateAttr(Doc, UInt, Date) : Status
+  fun set_password = HPDF_SetPassword(Doc, LibC::Char*, LibC::Char*) : Status
+  fun set_permission = HPDF_SetPermission(Doc, UInt) : Status
 
-  fun font_get_x_height = HPDF_Font_GetXHeight(Font) : Status
+  # Page handling
+
+  # Graphics
+
+  # Font handling
+  fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
+  fun font_get_encoding_name = HPDF_Font_GetEncodingName(Font) : LibC::Char*
+  fun font_get_unicode_width = HPDF_Font_GetUnicodeWidth(Font, UInt16) : Int
+  struct Rect
+    left : Real
+    bottom : Real
+    right : Real
+    top : Real
+  end
+  fun font_get_b_box = HPDF_Font_GetBBox(Font) : Rect
+  fun font_get_ascent = HPDF_Font_GetAscent(Font) : Int
+  fun font_get_descent = HPDF_Font_GetDescent(Font) : Int
+  fun font_get_x_height = HPDF_Font_GetXHeight(Font) : UInt
+  fun font_get_cap_height = HPDF_Font_GetXHeight(Font) : UInt
+  struct TextWidth
+    numchars : UInt
+    numwords : UInt
+    width : UInt
+    numspace : UInt
+  end
+  fun font_text_width = HPDF_Font_TextWidth(Font, LibC::Char*, UInt) : TextWidth
+  fun font_measure_text = HPDF_Font_MeasureText(Font, LibC::Char*, UInt, Real, Real, Real, Real, Bool, Real*) : UInt
+
+  # Encoding
+
+  # Annotation
+
+  # Outline
+
+  # Destination
+
+  # Image
 
   fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status

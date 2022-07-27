@@ -11,5 +11,9 @@ module Hpdf
     def uint16(val) : UInt16
       val.to_u16
     end
+
+    def bool(val) : Int32
+      val ? 1 : 0
+    end
   end
 end

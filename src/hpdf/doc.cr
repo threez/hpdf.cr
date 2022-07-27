@@ -11,6 +11,10 @@ module Hpdf
       end
     end
 
+    def to_unsafe
+      @doc
+    end
+
     def save_to_file(path)
       LibHaru.save_to_file(self, path)
     end
@@ -25,10 +29,6 @@ module Hpdf
 
     def font(name, encoding = nil)
       Font.new(self, name, encoding)
-    end
-
-    def to_unsafe
-      @doc
     end
   end
 end
