@@ -41,14 +41,15 @@ describe Hpdf::Doc do
 
   it "can load afm fonts" do
     pdf = Hpdf::Doc.new
-    name = pdf.load_type1_font_from_file "fonts/a010013l.afm"
+    name = pdf.load_type1_font_from_file "spec/data/fonts/a010013l.afm",
+                                         "spec/data/fonts/a010013l.pfb"
     name.should eq "URWGothicL-Book"
     pdf.font name
   end
 
   it "can load ttf fonts" do
     pdf = Hpdf::Doc.new
-    name = pdf.load_tt_font_from_file "fonts/Roboto-Black.ttf"
+    name = pdf.load_tt_font_from_file "spec/data/fonts/Roboto-Black.ttf"
     name.should eq "Roboto-Black"
     pdf.font name
   end

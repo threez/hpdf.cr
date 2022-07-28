@@ -4,11 +4,7 @@ module Hpdf
   class Font
     include Helper
 
-    @doc : Doc
-
-    def initialize(doc, name : String, encoding : String? = nil)
-      @doc = doc
-      @font = LibHaru.get_font(@doc, name, encoding)
+    def initialize(@font : LibHaru::Font, @doc : Doc)
     end
 
     def to_unsafe

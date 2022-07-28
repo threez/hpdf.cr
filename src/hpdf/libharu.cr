@@ -109,6 +109,19 @@ lib LibHaru
   # Destination
 
   # Image
+  struct Point
+    x : Real
+    y : Real
+  end
+  fun image_get_size = HPDF_Image_GetSize(Image) : Point
+  fun image_get_width = HPDF_Image_GetWidth(Image) : UInt
+  fun image_get_height = HPDF_Image_GetHeight(Image) : UInt
+  fun image_get_bits_per_component = HPDF_Image_GetBitsPerComponent(Image) : UInt
+  fun image_get_color_space = HPDF_Image_GetColorSpace(Image) : LibC::Char*
+  fun image_set_color_mask = HPDF_Image_SetColorMask(Image, UInt, UInt, UInt, UInt, UInt, UInt) : Status
+  fun image_set_mask_image = HPDF_Image_SetMaskImage(Image, Image) : Status
+
+
 
   fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status

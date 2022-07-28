@@ -127,7 +127,7 @@ module Hpdf
 
     # gets the handle of a corresponding font object by specified name and encoding.
     def font(name : String, encoding : String? = nil)
-      Font.new(self, name, encoding)
+      Font.new(LibHaru.get_font(@doc, name, encoding), self)
     end
 
     # loads a type1 font from an external file and register it to a document object.
@@ -154,8 +154,8 @@ module Hpdf
     # * *file_name* path of a TrueType font collection file (.ttc).
     # * *index* index of font that wants to be loaded.
     # * *embedding* this parameter is set to `true`, the glyph data of the font is embedded, otherwise only the matrix data is included in PDF file.
-    def load_tt_font_from_file2(file_name : String, index : Number, embedding : Bool = true) : String
-      String.new(LibHaru.load_tt_font_from_file(self, file_name, uint(index), bool(embedding)))
+    def load_tt_font_from_collection_file(file_name : String, index : Number, embedding : Bool = true) : String
+      String.new(LibHaru.load_tt_font_from_file2(self, file_name, uint(index), bool(embedding)))
     end
 
     # adds a page labeling range for the document.
@@ -190,6 +190,29 @@ module Hpdf
     # can use the following traditional Chinese fonts: `ChineseTraditionalFonts::All`
     def use_cnt_fonts
       LibHaru.use_cnt_fonts(self)
+    end
+
+    # TODO fun create_outline
+    # TODO fun encoder
+    # TODO fun current_encoder
+    # TODO fun current_encoder=
+    # TODO use_jp_encodings
+    # TODO use_kr_encodings
+    # TODO use_cns_encodings
+    # TODO use_cnt_encodings
+
+    # loads an external png image file.
+    #
+    # * *file_name* path to a PNG image file.
+    # * *lazy* if `true` does not load whole data immediately (only size and color properties
+    #   is loaded). The main data is loaded just before the image object is written
+    #   to PDF, and the loaded data is deleted immediately.
+    def load_png_image_from_file(file_name : String, *, lazy : Bool = false) : Image
+      if lazy
+        Image.new(LibHaru.load_png_image_from_file2(self, file_name), self)
+      else
+        Image.new(LibHaru.load_png_image_from_file(self, file_name), self)
+      end
     end
   end
 end

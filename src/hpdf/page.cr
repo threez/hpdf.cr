@@ -5,12 +5,10 @@ module Hpdf
   class Page
     include Helper
 
-    @doc : Doc
-    @page : LibHaru::Page
-    @font : Font?
+    @font : Font? = nil
     @font_size : Float32 = 0
 
-    def initialize(@page, @doc)
+    def initialize(@page : LibHaru::Page, @doc : Doc)
     end
 
     def to_unsafe
