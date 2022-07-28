@@ -3,6 +3,7 @@ module Hpdf
   # an image use:
   #
   # * **PNG** `Doc#load_png_image_from_file`
+  # * **RAW** `Doc#load_raw_image_from_file` or `Doc#load_raw_image_from_mem`
   class Image
     include Helper
 
@@ -71,6 +72,48 @@ module Hpdf
     #   This image must be 1bit gray-scale color image.
     def mask_image=(mask : Image)
       LibHaru.image_set_mask_image(self, mask)
+    end
+  end
+
+  abstract class InMemoryImage
+    getter width
+    getter height
+    getter color_space
+
+    # create a new in-memory image
+    #
+    # * *width* the width of the image.
+    # * *height* the height of the image.
+    # * *color_space* `ColorSpace::DeviceGray` or `ColorSpace::DeviceRgb`
+    #   or `ColorSpace::DeviceCmyk` is allowed.
+    def initialize(@width : UInt32, @height : UInt32, @color_space : ColorSpace)
+      case @color_space
+      when ColorSpace::DeviceGray
+        @buf = Array(UInt8).new(@width * @height, 0)
+      when ColorSpace::DeviceRgb
+        @buf = Array(UInt8).new(@width * @height * 3, 0)
+      when ColorSpace::DeviceCmyk
+        @buf = Array(UInt8).new(@width * @height * 4, 0)
+      else
+        raise Exception.new("invalid color_space was used: #{@color_space}")
+      end
+    end
+
+    def to_unsafe
+      @buf.to_unsafe
+    end
+  end
+
+  # create a new in-momory image with gray scale
+  class InMemoryGrayImage < InMemoryImage
+    def initialize(width : UInt32, height : UInt32)
+      super width, height, ColorSpace::DeviceGray
+    end
+
+    # sets the gray value at `x` and `y` via `scale`.
+    # `0xff` is white and `0x00` is black.
+    def gray_at(x : Int32, y : Int32, scale : UInt8)
+      @buf[y*@width+x] = scale
     end
   end
 end

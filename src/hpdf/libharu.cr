@@ -53,7 +53,7 @@ lib LibHaru
   fun load_png_image_from_file = HPDF_LoadPngImageFromFile(Doc, LibC::Char*) : Image
   fun load_png_image_from_file2 = HPDF_LoadPngImageFromFile2(Doc, LibC::Char*) : Image
   fun load_raw_image_from_file = HPDF_LoadRawImageFromFile(Doc, LibC::Char*, UInt, UInt, UInt) : Image
-  fun load_raw_image_from_mem = HPDF_LoadRawImageFromMem(Doc, UInt*, UInt, UInt, UInt, UInt) : Image
+  fun load_raw_image_from_mem = HPDF_LoadRawImageFromMem(Doc, LibC::Char*, UInt, UInt, UInt, UInt) : Image
   fun load_jpeg_image_from_file = HPDF_LoadJpegImageFromFile(Doc, LibC::Char*) : Image
   fun set_info_attr = HPDF_SetInfoAttr(Doc, UInt, LibC::Char*) : Status
   fun get_info_attr = HPDF_GetInfoAttr(Doc, UInt) : LibC::Char*
@@ -157,6 +157,7 @@ lib LibHaru
   fun page_curve_to = HPDF_Page_CurveTo(Page, Real, Real, Real, Real, Real, Real) : Status
   fun page_curve_to2 = HPDF_Page_CurveTo2(Page, Real, Real, Real, Real) : Status
   fun page_curve_to3 = HPDF_Page_CurveTo3(Page, Real, Real, Real, Real) : Status
+  fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
 
   HPDF_ARRAY_COUNT_ERR             = 0x1001 #	Internal error. The consistency of the data was lost.
   HPDF_ARRAY_ITEM_NOT_FOUND        = 0x1002 #	Internal error. The consistency of the data was lost.

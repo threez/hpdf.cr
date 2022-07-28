@@ -155,6 +155,16 @@ module Hpdf
       LibHaru.page_curve_to3(self, x1, y1, x2, y2)
     end
 
+    # shows an image in one operation.
+    #
+    # * *image* the image object.
+    # * *x*, *y* the lower-left point of the region where image is displayed.
+    # * *width* the width of the region where image is displayed.
+    # * *height* the width of the region where image is displayed.
+    def draw_image(image : Image, x : Number, y : Number, width : Number, height : Number)
+      LibHaru.page_draw_image(self, image, real(x),real(y),real(width),real(height))
+    end
+
     ### Page Helper
 
     def reset_dash

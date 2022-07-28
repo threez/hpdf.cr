@@ -214,5 +214,291 @@ module Hpdf
         Image.new(LibHaru.load_png_image_from_file(self, file_name), self)
       end
     end
+
+    # loads an image which has "raw" image format.
+    # This function loads the data without any conversion.
+    # So it is usually faster than the other functions.
+    #
+    # `load_raw_image_from_file` can load 3 types of format described below.
+    #
+    # * *file_name* path to a RAW image file.
+    # * *width* the width of the image file.
+    # * *height* the height of the image file.
+    # * *color_space* `ColorSpace::DeviceGray` or `ColorSpace::DeviceRgb`
+    #   or `ColorSpace::DeviceCmyk` is allowed.
+    #
+    # ### `ColorSpace::DeviceGray`
+    #
+    # The gray scale describes one pixel by one byte. And the size of the
+    # image data is same as `width * height`.
+    # The sequence of the data is as follows.
+    #
+    # <table style="width: 100px; text-align: left;" cellspacing="1" cellpadding="1" border="1">
+    #   <tbody>
+    #   <tr>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">1<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">2<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">3<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">4<br>
+    #     </td>
+    #   </tr>
+    #   <tr>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">6<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">7<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">8<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">9<br>
+    #     </td>
+    #   </tr>
+    #   <tr>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">11<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">12<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">13<br>
+    #     </td>
+    #     <td style="vertical-align: top; background-color: rgb(204, 204, 204); text-align: center;">14<br>
+    #     </td>
+    #   </tr>
+    # </tbody>
+    # </table>
+    #
+    # ### `ColorSpace::DeviceRgb`
+    #
+    # The 24bit RGB color image describes one pixel by 3 byte (each one byte
+    # describes a value of either red, green or blue). And the size of the
+    # image is same as `width * height * 3`.
+    # The sequence of the data is as follows.
+    #
+    # <table style="width: 100px; text-align: left;" cellspacing="1" cellpadding="1" border="1">
+    #   <tbody>
+    #     <tr>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">4<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">4<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">4<br>
+    #       </td>
+    #     </tr>
+    #     <tr>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">9<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">9<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">9<br>
+    #       </td>
+    #     </tr>
+    #     <tr>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(204, 255, 255); text-align: center;">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(255, 204, 204); text-align: center;">14<br>
+    #       </td>
+    #       <td style="vertical-align: top; background-color: rgb(153, 255, 153); text-align: center;">14<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">14<br>
+    #       </td>
+    #     </tr>
+    #   </tbody>
+    # </table>
+    #
+    # ### `ColorSpace::DeviceCmyk`
+    #
+    # The 36bit CMYK color image describes one pixel by 4 byte (each one
+    # byte describes a value of either Cyan Magenta Yellow Black).
+    # And the size of the image is same as `width * height * 4`.
+    # The sequence of the data is as follows.
+    #
+    # <table style="width: 100px; text-align: left;" cellspacing="1" cellpadding="1" border="1">
+    #   <tbody>
+    #     <tr>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">1<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">2<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">3<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">4<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">4<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">4<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">4<br>
+    #       </td>
+    #     </tr>
+    #     <tr>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">6<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">7<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">8<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">9<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">9<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">9<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">9<br>
+    #       </td>
+    #     </tr>
+    #     <tr>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">11<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">12<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">13<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 255, 255);">14<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 204, 255);">14<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 153);">14<br>
+    #       </td>
+    #       <td style="vertical-align: top; text-align: center; background-color: rgb(204, 204, 204);">14<br>
+    #       </td>
+    #     </tr>
+    #   </tbody>
+    # </table>
+    def load_raw_image_from_file(file_name : String, width : Number,
+                                 height : Number, color_space : ColorSpace) : Image
+      Image.new(LibHaru.load_raw_image_from_file(self, filename, uint(width), uint(height), color_space), self)
+    end
+
+    # loads an image which has "raw" image format from buffer.
+    # This function loads the data without any conversion. So it is
+    # usually faster than the other functions.
+    #
+    # The formats that `load_raw_image_from_mem` can load is the same as `load_raw_image_from_file`.
+    #
+    # * *file_name* path to a RAW image file.
+    # * *width* the width of the image file.
+    # * *height* the height of the image file.
+    # * *color_space* `ColorSpace::DeviceGray` or `ColorSpace::DeviceRgb`
+    #   or `ColorSpace::DeviceCmyk` is allowed.
+    # * *bits_per_component* The bit size of each color component. The valid value is either 1, 2, 4, 8.
+    def load_raw_image_from_mem(buf, width : Number, height : Number,
+                                color_space : ColorSpace = ColorSpace::DeviceRgb,
+                                bits_per_component : UInt8 = 8)
+      Image.new(LibHaru.load_raw_image_from_mem(self, buf, uint(width), uint(height), color_space, uint(bits_per_component)), self)
+    end
+
+    # loads an image which has "raw" image format from buffer.
+    # This function loads the data without any conversion. So it is
+    # usually faster than the other functions.
+    def load_raw_image_from_mem(img : InMemoryImage)
+      load_raw_image_from_mem(img, img.width, img.height, img.color_space, 8)
+    end
   end
 end
