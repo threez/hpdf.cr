@@ -21,7 +21,7 @@ module Hpdf
       when LibHaru::HPDF_DICT_STREAM_LENGTH_NOT_FOUND
         new "Internal error. The consistency of the data was lost."
       when LibHaru::HPDF_DOC_ENCRYPTDICT_NOT_FOUND
-        new "HPDF_SetPermission() OR HPDF_SetEncryptMode() was called before a password is set."
+        new "Doc#permission= OR Doc#encrypt_mode= was called before a password is set."
       when LibHaru::HPDF_DOC_INVALID_OBJECT
         new "Internal error. The consistency of the data was lost."
       when LibHaru::HPDF_DUPLICATE_REGISTRATION
@@ -61,10 +61,10 @@ module Hpdf
         when 3
           new "The function which is invalid in the present color-space was invoked."
         else
-          new("ERROR: error_no=%04x, detail_no=%d" % [error_no, detail_no])
+          new("ERROR color space: error_no=%04x, detail_no=%d" % [error_no, detail_no])
         end
       when LibHaru::HPDF_INVALID_COMPRESSION_MODE
-        new "Invalid value was set when invoking HPDF_SetCommpressionMode()."
+        new "Invalid value was set when invoking Doc#commpression_mode=."
       when LibHaru::HPDF_INVALID_DATE_TIME
         new "An invalid date-time value was set."
       when LibHaru::HPDF_INVALID_DESTINATION
@@ -88,7 +88,7 @@ module Hpdf
         when 2
           new "Unsupported font format."
         else
-          new("ERROR: error_no=%04x, detail_no=%d" % [error_no, detail_no])
+          new("ERROR invalid font data: error_no=%04x, detail_no=%d" % [error_no, detail_no])
         end
       when LibHaru::HPDF_INVALID_FONTDEF_TYPE
         new "Internal error. The consistency of the data was lost."
@@ -107,12 +107,12 @@ module Hpdf
         when 2
           new "Internal error. The consistency of the data was lost."
         else
-          new("ERROR: error_no=%04x, detail_no=%d" % [error_no, detail_no])
+          new("ERROR invalid object: error_no=%04x, detail_no=%d" % [error_no, detail_no])
         end
       when LibHaru::HPDF_INVALID_OBJ_ID
         new "Internal error. The consistency of the data was lost."
       when LibHaru::HPDF_INVALID_OPERATION
-        new "1. Invoked HPDF_Image_SetColorMask() against the image-object which was set a mask-image."
+        new "1. Invoked Image#color_mask= against the image-object which was set a mask-image."
       when LibHaru::HPDF_INVALID_OUTLINE
         new "An invalid outline-handle was specified."
       when LibHaru::HPDF_INVALID_PAGE
@@ -196,7 +196,7 @@ module Hpdf
         when 2
           new "Internal error. The consistency of the data was lost."
         else
-          new("ERROR: error_no=%04x, detail_no=%d" % [error_no, detail_no])
+          new("ERROR unsupported function: error_no=%04x, detail_no=%d" % [error_no, detail_no])
         end
       when LibHaru::HPDF_UNSUPPORTED_JPEG_FORMAT
         new "Unsupported Jpeg format."
@@ -225,7 +225,7 @@ module Hpdf
       when LibHaru::HPDF_INVALID_FONT
         new "An invalid font-handle was specified."
       else
-        new("ERROR: error_no=%04x, detail_no=%d" % [error_no, detail_no])
+        new("ERROR generic: error_no=%04x, detail_no=%d" % [error_no, detail_no])
       end
     end
   end

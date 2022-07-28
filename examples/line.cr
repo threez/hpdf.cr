@@ -44,11 +44,11 @@ page.rectangle 50, 50, page.width - 100, page.height - 110
 page.stroke
 
 # print the title of the page (with positioning center).
-page.text "Helvetica", 24 do
+page.text Hpdf::Base14::Helvetica, 24 do
   page.text_out :center, page.height - 50, "Line Example"
 end
 
-page.use_font "Helvetica", 10
+page.use_font Hpdf::Base14::Helvetica, 10
 
 # Draw verious widths of lines.
 page.line_width = 0
@@ -140,7 +140,7 @@ page.with_graphic_state do
   draw_rect page, 300, 620, "Clip Rectangle"
   page.clip
   page.stroke
-  page.use_font "Helvetica", 13
+  page.use_font Hpdf::Base14::Helvetica, 13
 
   page.text do
     page.move_text_pos 290, 600

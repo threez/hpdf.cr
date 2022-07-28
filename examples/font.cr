@@ -2,22 +2,7 @@
 
 require "../src/hpdf"
 
-font_list = [
-  "Courier",
-  "Courier-Bold",
-  "Courier-Oblique",
-  "Courier-BoldOblique",
-  "Helvetica",
-  "Helvetica-Bold",
-  "Helvetica-Oblique",
-  "Helvetica-BoldOblique",
-  "Times-Roman",
-  "Times-Bold",
-  "Times-Italic",
-  "Times-BoldItalic",
-  "Symbol",
-  "ZapfDingbats",
-]
+font_list = Hpdf::Base14::All
 
 pdf = Hpdf::Doc.new
 page = pdf.add_page
@@ -30,12 +15,12 @@ width = page.width
 page.draw_rectangle(50, 50, width - 100, height - 110)
 
 # Print the title of the page (with positioning center).
-page.text "Helvetica", 24 do
+page.text Hpdf::Base14::Helvetica, 24 do
   page.text_out(:center, height - 50, "Font Demo")
 end
 
 # output subtitle.
-page.text "Helvetica", 16 do
+page.text Hpdf::Base14::Helvetica, 16 do
   page.text_out(60, height - 80, "<Standerd Type1 fonts samples>")
 end
 
@@ -44,7 +29,7 @@ page.text do
 
   font_list.each do |font_name|
     # print a label of text
-    page.use_font("Helvetica", 9)
+    page.use_font(Hpdf::Base14::Helvetica, 9)
     page.show_text(font_name)
     page.move_text_pos(0, -18)
 

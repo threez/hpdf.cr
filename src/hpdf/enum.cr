@@ -29,6 +29,7 @@ module Hpdf
     Pattern
   end
 
+  # used in `Doc#page_layout=`.
   enum PageLayout
     # Only one page is displayed.
     Single = 0
@@ -43,6 +44,7 @@ module Hpdf
     Default = 6
   end
 
+  # used in `Doc#page_mode=`.
   enum PageMode
     # Display the document with neither outline nor thumbnail.
     UseNone = 0
@@ -56,6 +58,7 @@ module Hpdf
     # UseAttachments
   end
 
+  # used in `Doc#add_page_label`.
   enum PageNumStyle
     # Page label is displayed by Arabic numerals.
     Decimal = 0

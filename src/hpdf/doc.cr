@@ -1,5 +1,9 @@
+require "./helper"
+
 module Hpdf
   class Doc
+  include Helper
+
     @doc : LibHaru::Doc
     @pages : Array(Page)
 
@@ -106,14 +110,86 @@ module Hpdf
       end
     end
 
+    # creates a new page and adds it after the last page of a document.
     def add_page : Page
       page = Page.new(LibHaru.add_page(self), self)
       @pages << page
       page
     end
 
-    def font(name, encoding = nil)
+    # creates a new page and inserts it just before the specified `page`.
+    def insert_page(page : Page) : Page
+      idx = @pages.index!(page)
+      new_page = Page.new(LibHaru.insert_page(self, page), self)
+      @pages.insert index: idx, object: new_page
+      new_page
+    end
+
+    # gets the handle of a corresponding font object by specified name and encoding.
+    def font(name : String, encoding : String? = nil)
       Font.new(self, name, encoding)
+    end
+
+    # loads a type1 font from an external file and register it to a document object.
+    # Returns the name of a font.
+    #
+    # * *afm_file* path of an AFM file.
+    # * *data_file* path of a PFA/PFB file. If it is `nil`, the gryph data of font file is not embedded to a PDF file.
+    def load_type1_font_from_file(afm_file : String, data_file : String? = nil) : String
+      String.new(LibHaru.load_type1_font_from_file(self, afm_file, data_file))
+    end
+
+    # loads a TrueType font from an external file and register it to a document object.
+    # Returns the name of a font.
+    #
+    # * *file_name* path of a TrueType font file (.ttf).
+    # * *embedding* this parameter is set to `true`, the glyph data of the font is embedded, otherwise only the matrix data is included in PDF file.
+    def load_tt_font_from_file(file_name : String, embedding : Bool = true)
+      String.new(LibHaru.load_tt_font_from_file(self, file_name, bool(embedding)))
+    end
+
+    # loads a TrueType font from an TrueType collection file and register it to a document object.
+    # Returns the name of a font.
+    #
+    # * *file_name* path of a TrueType font collection file (.ttc).
+    # * *index* index of font that wants to be loaded.
+    # * *embedding* this parameter is set to `true`, the glyph data of the font is embedded, otherwise only the matrix data is included in PDF file.
+    def load_tt_font_from_file2(file_name : String, index : Number, embedding : Bool = true) : String
+      String.new(LibHaru.load_tt_font_from_file(self, file_name, uint(index), bool(embedding)))
+    end
+
+    # adds a page labeling range for the document.
+    #
+    # * *page_num* the first page that applies this labeling range.
+    # * *style* the numbering style.
+    # * *first_page* the first page number in this range.
+    # * *prefix* the prefix for the page label.
+    def add_page_label(page_num : Number, style : PageNumStyle, *, first_page = 1, prefix : String? = nil)
+      LibHaru.add_page_label(self, page_num, style, first_page, prefix)
+    end
+
+    # enables Japanese fonts. After `use_jp_fonts` is called, an application
+    # can use the following Japanese fonts: `JapaneseFonts::All`
+    def use_jp_fonts
+      LibHaru.use_jp_fonts(self)
+    end
+
+    # enables Japanese fonts. After `use_kr_fonts` is called, an application
+    # can use the following Korean fonts: `KoreanFonts::All`
+    def use_kr_fonts
+      LibHaru.use_kr_fonts(self)
+    end
+
+    # enables Japanese fonts. After `use_cns_fonts` is called, an application
+    # can use the following simplified Chinese fonts: `ChineseSimplifiedFonts::All`
+    def use_cns_fonts
+      LibHaru.use_cns_fonts(self)
+    end
+
+    # enables Japanese fonts. After `use_jp_fonts` is called, an application
+    # can use the following traditional Chinese fonts: `ChineseTraditionalFonts::All`
+    def use_cnt_fonts
+      LibHaru.use_cnt_fonts(self)
     end
   end
 end
