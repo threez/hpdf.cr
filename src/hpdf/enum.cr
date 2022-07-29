@@ -191,4 +191,16 @@ module Hpdf
     # Use "Revision 3" algorithm. Between 5(40bit) and 16(128bit) can be specified for length of the key.
     EncryptR3 = 3
   end
+
+  # graphics mode.
+  enum GMode
+    None             = 0x0000
+    PageDescription  = 0x0001
+    PathObject       = 0x0002
+    TextObject       = 0x0004
+    ClippingPath     = 0x0008
+    Shading          = 0x0010
+    InlineImage      = 0x0020
+    ExternalObject   = 0x0040
+  end
 end

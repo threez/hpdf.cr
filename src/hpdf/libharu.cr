@@ -4,7 +4,7 @@ lib LibHaru
   type Page = Void*
   type Image = Void*
   type Font = Void*
-  type Encoding = Void*
+  type Encoder = Void*
   type Outline = Void*
   type Destination = Void*
   type Annotation = Void*
@@ -15,6 +15,37 @@ lib LibHaru
   alias Int = LibC::Int
   alias Bool = LibC::UInt
   alias Double = LibC::Double
+
+  struct Date
+    year : Int
+    month : Int       # between 1 and 12.
+    day : Int         # between 1 and ether of 28, 29, 30, 31. (It is different by the month.)
+    hour : Int        #  0 to 23
+    minutes : Int     # 0 to 59
+    seconds : Int     # 0 to 59
+    ind : Char        # the relationship of local time to Universal Time. " ", +, −, and Z are available.
+    off_hour : Int    # if ind is not space, 0 to 23 is valid. Otherwise, this value is ignored.
+    off_minutes : Int # if ind is not space, 0 to 59 is valid. Otherwise, this value is ignored.
+  end
+
+  struct Point
+    x : Real
+    y : Real
+  end
+
+  struct Rect
+    left : Real
+    bottom : Real
+    right : Real
+    top : Real
+  end
+
+  struct TextWidth
+    numchars : UInt
+    numwords : UInt
+    width : UInt
+    numspace : UInt
+  end
 
   # Document handling
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
@@ -57,17 +88,6 @@ lib LibHaru
   fun load_jpeg_image_from_file = HPDF_LoadJpegImageFromFile(Doc, LibC::Char*) : Image
   fun set_info_attr = HPDF_SetInfoAttr(Doc, UInt, LibC::Char*) : Status
   fun get_info_attr = HPDF_GetInfoAttr(Doc, UInt) : LibC::Char*
-  struct Date
-    year : Int
-    month : Int       # between 1 and 12.
-    day : Int         # between 1 and ether of 28, 29, 30, 31. (It is different by the month.)
-    hour : Int        #  0 to 23
-    minutes : Int     # 0 to 59
-    seconds : Int     # 0 to 59
-    ind : Char        # the relationship of local time to Universal Time. " ", +, −, and Z are available.
-    off_hour : Int    # if ind is not space, 0 to 23 is valid. Otherwise, this value is ignored.
-    off_minutes : Int # if ind is not space, 0 to 59 is valid. Otherwise, this value is ignored.
-  end
   fun set_info_date_attr = HPDF_SetInfoDateAttr(Doc, UInt, Date) : Status
   fun set_password = HPDF_SetPassword(Doc, LibC::Char*, LibC::Char*) : Status
   fun set_permission = HPDF_SetPermission(Doc, UInt) : Status
@@ -75,6 +95,23 @@ lib LibHaru
   fun set_compression_mode = HPDF_SetCompressionMode(Doc, UInt) : Status
 
   # Page handling
+  fun page_set_width = HPDF_Page_SetWidth(Page, Real) : Status
+  fun page_set_height = HPDF_Page_SetHeight(Page, Real) : Status
+  fun page_set_size = HPDF_Page_SetSize(Page, UInt, UInt) : Status
+  fun page_set_rotate = HPDF_Page_SetRotate(Page, UInt16) : Status
+  fun page_get_height = HPDF_Page_GetHeight(Page) : Real
+  fun page_get_width = HPDF_Page_GetWidth(Page) : Real
+  fun page_create_destination = HPDF_Page_CreateDestination(Page) : Destination
+  fun page_measure_text = HPDF_Page_MeasureText(Page, LibC::Char*, Real, Bool, Real*)
+  fun page_get_g_mode = HPDF_Page_GetGMode(Page) : UInt16
+  fun page_get_current_pos = HPDF_Page_GetCurrentPos(Page) : Point
+  fun page_get_current_text_pos = HPDF_Page_GetCurrentTextPos(Page) : Point
+  fun page_get_current_font = HPDF_Page_GetCurrentFont(Page) : Font
+  fun page_get_current_font_size = HPDF_Page_GetCurrentFontSize(Page) : Real
+  fun page_get_line_width = HPDF_Page_GetLineWidth(Page) : Real
+  fun page_get_line_cap = HPDF_Page_GetLineCap(Page) : UInt
+  fun page_get_line_join = HPDF_Page_GetLineJoin(Page) : UInt
+  fun page_get_miter_limit = HPDF_Page_GetMiterLimit(Page) : Real
 
   # Graphics
 
@@ -82,23 +119,11 @@ lib LibHaru
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
   fun font_get_encoding_name = HPDF_Font_GetEncodingName(Font) : LibC::Char*
   fun font_get_unicode_width = HPDF_Font_GetUnicodeWidth(Font, UInt16) : Int
-  struct Rect
-    left : Real
-    bottom : Real
-    right : Real
-    top : Real
-  end
   fun font_get_b_box = HPDF_Font_GetBBox(Font) : Rect
   fun font_get_ascent = HPDF_Font_GetAscent(Font) : Int
   fun font_get_descent = HPDF_Font_GetDescent(Font) : Int
   fun font_get_x_height = HPDF_Font_GetXHeight(Font) : UInt
   fun font_get_cap_height = HPDF_Font_GetXHeight(Font) : UInt
-  struct TextWidth
-    numchars : UInt
-    numwords : UInt
-    width : UInt
-    numspace : UInt
-  end
   fun font_text_width = HPDF_Font_TextWidth(Font, LibC::Char*, UInt) : TextWidth
   fun font_measure_text = HPDF_Font_MeasureText(Font, LibC::Char*, UInt, Real, Real, Real, Real, Bool, Real*) : UInt
 
@@ -111,10 +136,6 @@ lib LibHaru
   # Destination
 
   # Image
-  struct Point
-    x : Real
-    y : Real
-  end
   fun image_get_size = HPDF_Image_GetSize(Image) : Point
   fun image_get_width = HPDF_Image_GetWidth(Image) : UInt
   fun image_get_height = HPDF_Image_GetHeight(Image) : UInt
@@ -128,8 +149,6 @@ lib LibHaru
   fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status
 
-  fun page_get_height = HPDF_Page_GetHeight(Page) : Real
-  fun page_get_width = HPDF_Page_GetWidth(Page) : Real
   fun page_set_line_width = HPDF_Page_SetLineWidth(Page, Real) : Void
   fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Void
 

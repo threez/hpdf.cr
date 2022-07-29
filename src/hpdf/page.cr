@@ -2,6 +2,9 @@ require "./helper"
 require "./enum"
 
 module Hpdf
+  # The page handle is used to operate an individual page.
+  # When `Doc#add_page` or `Doc#insert_page` is invoked, a page object
+  # is created.
   class Page
     include Helper
 
@@ -15,13 +18,135 @@ module Hpdf
       @page
     end
 
-    def height
-      LibHaru.page_get_height(self)
+    # changes the width of a page.
+    #
+    # * *w* Specify the new width of a page. The valid value is between 3 and 14400.
+    def width=(w : Number)
+      LibHaru.page_set_width(self, uint(w))
     end
 
-    def width
-      LibHaru.page_get_width(self)
+    # changes the height of a page.
+    #
+    # * *h* Specify the new height of a page. The valid value is between 3 and 14400.
+    def height=(h : Number)
+      LibHaru.page_set_height(self, uint(h))
     end
+
+    # changes the size and direction of a page to a predefined size.
+    #
+    # * *size* Specify a predefined page-size value. The following values are available.
+    # * *direction* Specify the direction of the page.
+    def set_size(size : PageSizes,
+                 direction : PageDirection = PageDirection::Portrait)
+      LibHaru.page_set_size(self, uint(size), uint(direction))
+    end
+
+    # sets rotation angle of the page.
+    #
+    # * *angle* Specify the rotation angle of the page. It must be a
+    #   multiple of 90 Degrees.
+    def rotate=(angle : Uint16)
+      LibHaru.page_set_rotate(self, angle)
+    end
+
+    # gets the height of a page.
+    def height : Int32
+      LibHaru.page_get_height(self).to_i
+    end
+
+    # gets the width of a page.
+    def width : Int32
+      LibHaru.page_get_width(self).to_i
+    end
+
+    # creates a new destination object for the page.
+    def create_destination : Destination
+      Destination.new(LibHaru.page_create_destination(self), @doc)
+    end
+
+    # TODO HPDF_Page_CreateTextAnnot
+    # TODO HPDF_Page_CreateLinkAnnot
+    # TODO HPDF_Page_CreateURILinkAnnot
+
+    # gets the width of the text in current fontsize, character spacing and word spacing.
+    def text_width(text : String)
+      LibHaru.page_text_width(self, text)
+    end
+
+    # calculates the byte length which can be included within the specified width.
+    #
+    # * *text* the text to get the width for.
+    # * *width* The width of the area to put the text.
+    # * *word_wrap* When there are three words of `"ABCDE FGH IJKL"`, and the substring
+    #   until `"J"` can be included within the width, if *word_wrap* parameter is `false`
+    #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
+    #   `false` it returns `10` (the end of the previous word).
+    def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
+      size = LibHaru.page_measure_text(self, text,
+        real(width),  bool(word_wrap), out real_width)
+      return MeasuredText.new(size, real_width)
+    end
+
+    # gets the current graphics mode.
+    def g_mode : GMode
+      GMode.new(LibHaru.page_get_g_mode(self))
+    end
+
+    # gets the current position for path painting. It returns a `Point`
+    # struct indicating the current position for path painting of the page.
+    # Otherwise it returns a `Point` struct of {0, 0}.
+    #
+    # An application can invoke `#current_pos` only when graphics mode is `GMode::PathObject`.
+    def current_pos : Point
+      Point.new(LibHaru.page_get_current_pos(self))
+    end
+
+    # gets the current position for text showing. It returns a `Point` struct
+    # indicating the current position for text showing of the page.
+    # Otherwise it returns a `Point` struct of {0, 0}.
+    #
+    # An application can invoke `current_text_pos` only when graphics
+    # mode is `GMode::TextObject`.
+    def current_text_pos : Point
+      Point.new(LibHaru.page_get_current_pos(self))
+    end
+
+    # gets the handle of the page's current font.
+    def current_font : Font?
+      f = LibHaru.page_get_current_font(self)
+      Font.new(f, @doc) unless f.null?
+    end
+
+    # gets the size of the page's current font. It returns the size of the
+    # page's current font. Otherwise it returns 0.
+    def current_font_size : Float32
+      LibHaru.page_get_current_font_size(self).to_f32
+    end
+
+    # TODO HPDF_Page_GetTransMatrix
+
+    # gets the current line width of the page. It returns the current
+    # line width for path painting of the page. Otherwise it returns 1.
+    def line_width : Float32
+      LibHaru.page_get_line_width(self).to_f32
+    end
+
+    # gets the current line cap style of the page.
+    def line_cap : LineCap
+      LineCap.new(LibHaru.page_get_line_cap(self))
+    end
+
+    # gets the current line join style of the page
+    def line_join : LineJoin
+      LineJoin.new(LibHaru.page_get_line_join(self))
+    end
+
+    # gets the current value of the page's miter limit.
+    def miter_limit : Float32
+      LibHaru.page_get_miter_limit(self).to_f32
+    end
+
+    ###########################
 
     def line_width=(stroke_width)
       LibHaru.page_set_line_width(self, real(stroke_width))
@@ -93,10 +218,6 @@ module Hpdf
 
     def set_font_and_size(font : Hpdf::Font, size)
       LibHaru.page_set_font_and_size(self, font, real(size))
-    end
-
-    def text_width(text)
-      LibHaru.page_text_width(self, text)
     end
 
     def text_height(text)
@@ -176,7 +297,7 @@ module Hpdf
         use_font(name, size)
       end
       begin_text
-      block.call
+      with self yield
     ensure
       text_end
     end

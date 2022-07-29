@@ -32,14 +32,13 @@ module Hpdf
       LibHaru.save_to_file(self, path)
     end
 
-    # writes the document to an in memory IO object
-    # this will require memory for the size of the document.
+    # writes the document to an in memory IO object.
+    # This will require memory for the size of the document.
     def to_io : IO
       stream = IO::Memory.new
       slice = Bytes.new(4096)
 
       LibHaru.save_to_stream(self)
-
 
       while true
         size = slice.size.to_u32
@@ -51,7 +50,7 @@ module Hpdf
       LibHaru.reset_stream(self)
 
       stream.rewind
-      return stream
+      stream
     end
 
     # In the default setting, a `Doc` object has one "Pages" object as root
@@ -497,7 +496,7 @@ module Hpdf
     # loads an image which has "raw" image format from buffer.
     # This function loads the data without any conversion. So it is
     # usually faster than the other functions.
-    def load_raw_image_from_mem(img : InMemoryImage)
+    def load_raw_image_from_mem(img : Raw::Image)
       load_raw_image_from_mem(img, img.width, img.height, img.color_space, 8)
     end
 
@@ -590,6 +589,15 @@ module Hpdf
     # set the mode of compression.
     def compression_mode=(mode : CompressionMode)
       LibHaru.set_compression_mode(self, mode)
+    end
+
+    ### DSL ###
+
+    # page enables DSL style usage of the document. It calls `#add_page`
+    # and then executes the passed block in the context of the page.
+    def page(&block)
+      page = add_page
+      with page yield page
     end
   end
 end

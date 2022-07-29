@@ -35,7 +35,7 @@ describe Hpdf::Image do
   it "can be loaded from InMemoryGrayImage" do
     pdf = Hpdf::Doc.new
 
-    gi = Hpdf::InMemoryGrayImage.new(4, 4)
+    gi = Hpdf::Raw::GrayImage.new(4, 4)
     gi[0, 1] = 0x7f
     gi[3, 1] = 0x7f
     gi[1, 2] = 0xff
@@ -50,11 +50,11 @@ describe Hpdf::Image do
   it "can be loaded from InMemoryRgbImage" do
     pdf = Hpdf::Doc.new
 
-    gi = Hpdf::InMemoryRgbImage.new(4, 4)
-    gi[0, 1] = Hpdf::RGB.new(0xff, 0, 0)
-    gi[3, 1] = Hpdf::RGB.new(0, 0xff, 0)
-    gi[1, 2] = Hpdf::RGB.new(0, 0, 0xff)
-    gi[2, 2] = Hpdf::RGB.new(0, 0, 0xff)
+    gi = Hpdf::Raw::RgbImage.new(4, 4)
+    gi[0, 1] = Hpdf::Raw::RgbColor.new(0xff, 0, 0)
+    gi[3, 1] = Hpdf::Raw::RgbColor.new(0, 0xff, 0)
+    gi[1, 2] = Hpdf::Raw::RgbColor.new(0, 0, 0xff)
+    gi[2, 2] = Hpdf::Raw::RgbColor.new(0, 0, 0xff)
     img = pdf.load_raw_image_from_mem gi
 
     page = pdf.add_page
@@ -65,11 +65,11 @@ describe Hpdf::Image do
   it "can be loaded from InMemoryCmykImage" do
     pdf = Hpdf::Doc.new
 
-    gi = Hpdf::InMemoryCmykImage.new(4, 4)
-    gi[0, 1] = Hpdf::CMYK.new(0xff, 0, 0, 0)
-    gi[3, 1] = Hpdf::CMYK.new(0, 0xff, 0, 0)
-    gi[1, 2] = Hpdf::CMYK.new(0, 0, 0xff, 0)
-    gi[2, 2] = Hpdf::CMYK.new(0, 0, 0, 0xff)
+    gi = Hpdf::Raw::CmykImage.new(4, 4)
+    gi[0, 1] = Hpdf::Raw::CmykColor.new(0xff, 0, 0, 0)
+    gi[3, 1] = Hpdf::Raw::CmykColor.new(0, 0xff, 0, 0)
+    gi[1, 2] = Hpdf::Raw::CmykColor.new(0, 0, 0xff, 0)
+    gi[2, 2] = Hpdf::Raw::CmykColor.new(0, 0, 0, 0xff)
     img = pdf.load_raw_image_from_mem gi
 
     page = pdf.add_page

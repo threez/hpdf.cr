@@ -72,15 +72,5 @@ module Hpdf
         bool(word_wrap), out real_width)
       return MeasuredText.new(size, real_width)
     end
-
-    struct MeasuredText
-      # the byte length which can be included within the specified width
-      getter len_included : UInt32
-      # the real widths of the text is set. An application can set it to NULL if it is unnecessary
-      getter real_width : Float32
-
-      def initialize(@len_included, @real_width)
-      end
-    end
   end
 end
