@@ -17,5 +17,9 @@ module Hpdf
     def bool(val : Bool) : Int32
       val ? 1 : 0
     end
+
+    def nilable_str(v : Pointer(UInt8)) : String?
+      String.new(v) unless v.null?
+    end
   end
 end

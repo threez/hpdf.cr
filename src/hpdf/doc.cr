@@ -507,5 +507,63 @@ module Hpdf
     def load_jpeg_image_from_file(file_name : String)
       Image.new(LibHaru.load_jpeg_image_from_file(self, file_name), self)
     end
+
+    def creation_date : Time?
+      v = LibHaru.get_info_attr(self, InfoType::CreationDate)
+      Date.parse(String.new(v)) unless v.null?
+    end
+
+    def creation_date=(time : Time)
+      LibHaru.set_info_date_attr(self, InfoType::CreationDate, Date.new(time))
+    end
+
+    def mod_date : Time?
+      v = LibHaru.get_info_attr(self, InfoType::ModDate)
+      Date.parse(String.new(v)) unless v.null?
+    end
+
+    def mod_date=(time : Time)
+      LibHaru.set_info_date_attr(self, InfoType::ModDate, Date.new(time))
+    end
+
+    def author : String?
+      nilable_str LibHaru.get_info_attr(self, InfoType::Author)
+    end
+
+    def author=(v : String)
+      LibHaru.set_info_attr(self, InfoType::Author, v)
+    end
+
+    def creator : String?
+      nilable_str LibHaru.get_info_attr(self, InfoType::Producer)
+    end
+
+    def creator=(v : String)
+      LibHaru.set_info_attr(self, InfoType::Producer, v)
+    end
+
+    def title : String?
+      nilable_str LibHaru.get_info_attr(self, InfoType::Title)
+    end
+
+    def title=(v : String)
+      LibHaru.set_info_attr(self, InfoType::Title, v)
+    end
+
+    def subject : String?
+      nilable_str LibHaru.get_info_attr(self, InfoType::Subject)
+    end
+
+    def subject=(v : String)
+      LibHaru.set_info_attr(self, InfoType::Subject, v)
+    end
+
+    def keywords : String?
+      nilable_str LibHaru.get_info_attr(self, InfoType::Keywords)
+    end
+
+    def keywords=(v : String)
+      LibHaru.set_info_attr(self, InfoType::Keywords, v)
+    end
   end
 end

@@ -68,4 +68,34 @@ describe Hpdf::Doc do
     #  pdf.font font_name
     #end
   end
+
+  it "can get/set document attributes" do
+    pdf = Hpdf::Doc.new
+
+    pdf.creation_date.should eq nil
+    pdf.mod_date.should eq nil
+    pdf.author.should eq nil
+    pdf.creator.should eq "Haru Free PDF Library 2.3.0"
+    pdf.title.should eq nil
+    pdf.subject.should eq nil
+    pdf.keywords.should eq nil
+
+    pdf.creation_date = Time.local
+    pdf.mod_date = Time.utc
+    pdf.author = "Vincent"
+    pdf.creator = "hpdf.cr"
+    pdf.title = "About Hpdf"
+    pdf.subject = "Programming"
+    pdf.keywords = "Crystal,LibHaru"
+
+    page = pdf.add_page
+    pdf.save_to_file "spec-doc-attributes.pdf"
+    pdf.creation_date.should_not eq nil
+    pdf.mod_date.should_not eq nil
+    pdf.author.should eq "Vincent"
+    pdf.creator.should eq "hpdf.cr"
+    pdf.title.should eq "About Hpdf"
+    pdf.subject.should eq "Programming"
+    pdf.keywords.should eq "Crystal,LibHaru"
+  end
 end
