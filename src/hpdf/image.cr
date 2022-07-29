@@ -104,7 +104,7 @@ module Hpdf
     end
   end
 
-  # create a new in-memory image with gray scale
+  # create a new in-memory image with gray scale. Import using `Doc#load_raw_image_from_mem`
   class InMemoryGrayImage < InMemoryImage
     def initialize(width : UInt32, height : UInt32)
       super width, height, ColorSpace::DeviceGray
@@ -123,7 +123,7 @@ module Hpdf
     end
   end
 
-  # Color mixed of red, green and blue.
+  # Color mixed of red, green and blue. Import using `Doc#load_raw_image_from_mem`
   struct RGB
     property red, green, blue
 
@@ -156,7 +156,7 @@ module Hpdf
     end
   end
 
-  # Color mixed of cyan, magenta, yellow and black.
+  # Color mixed of cyan, magenta, yellow and black. Import using `Doc#load_raw_image_from_mem`
   struct CMYK
     property cyan, magenta, yellow, black
 
@@ -171,7 +171,7 @@ module Hpdf
     end
   end
 
-  # create a new in-memory CMYK image
+  # create a new in-memory CMYK image. Import using `Doc#load_raw_image_from_mem`
   class InMemoryCmykImage < InMemoryImage
 
     def initialize(width : UInt32, height : UInt32)

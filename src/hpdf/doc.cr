@@ -500,5 +500,12 @@ module Hpdf
     def load_raw_image_from_mem(img : InMemoryImage)
       load_raw_image_from_mem(img, img.width, img.height, img.color_space, 8)
     end
+
+    # loads an external Jpeg image file.
+    #
+    # * *file_name* path to a jpeg image file.
+    def load_jpeg_image_from_file(file_name : String)
+      Image.new(LibHaru.load_jpeg_image_from_file(self, file_name), self)
+    end
   end
 end

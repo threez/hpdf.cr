@@ -76,4 +76,9 @@ describe Hpdf::Image do
     page.draw_image img, 100, 100, 100, 100
     pdf.save_to_file "spec-raw-cmyk-img.pdf"
   end
+
+  it "can load jpeg images" do
+    pdf = Hpdf::Doc.new
+    image = pdf.load_jpeg_image_from_file("spec/data/screenshot.jpeg")
+  end
 end
