@@ -41,6 +41,24 @@ Before usage you have to install the libraries:
 sudo apt install libhpdf-dev
 ```
 
+### Centos
+
+```shell
+sudo yum install libharu-devel
+```
+
+### Fedora/Redhat
+
+```shell
+sudo dnf install libharu-devel
+```
+
+### FreeBSD
+
+```shell
+pkg install libharu
+```
+
 ## Development
 
 Use the examples to write demos. Read about *libharu* here:
