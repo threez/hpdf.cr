@@ -98,4 +98,14 @@ describe Hpdf::Doc do
     pdf.subject.should eq "Programming"
     pdf.keywords.should eq "Crystal,LibHaru"
   end
+
+  it "can encrypt documents" do
+    pdf = Hpdf::Doc.new
+    pdf.set_password_and_permission "test1234"
+    page = pdf.add_page
+    page.text Hpdf::Base14::Helvetica, 30 do
+      page.text_out :center, :center, "Secret Document"
+    end
+    pdf.save_to_file "spec-doc-password.pdf"
+  end
 end

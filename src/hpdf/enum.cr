@@ -153,6 +153,8 @@ module Hpdf
     Landscape
   end
 
+  # set via `Doc#set_password_and_permission`.
+  @[Flags]
   enum Permission
     # user can read the document.
     EnableRead = 0
@@ -166,6 +168,8 @@ module Hpdf
     EnableEdit = 32
   end
 
+  # set via `Doc#compression_mode=`.
+  @[Flags]
   enum CompressionMode
     # All contents are not compressed.
     None          = 0x00
@@ -176,11 +180,11 @@ module Hpdf
     # Other stream datas (fonts, cmaps and so on)  are compressed.
     Metadata      = 0x04
     # All stream datas are compressed
-    All           = 0x0F
     BestCompress  = 0x10
     BestSpeed     = 0x20
   end
 
+  # set via `Doc#set_password_and_permission`.
   enum EncryptMode
     # Use "Revision 2" algorithm. The length of key is automatically set to 5(40bit).
     EncryptR2 = 2

@@ -71,6 +71,8 @@ lib LibHaru
   fun set_info_date_attr = HPDF_SetInfoDateAttr(Doc, UInt, Date) : Status
   fun set_password = HPDF_SetPassword(Doc, LibC::Char*, LibC::Char*) : Status
   fun set_permission = HPDF_SetPermission(Doc, UInt) : Status
+  fun set_encryption_mode = HPDF_SetEncryptionMode(Doc, UInt, UInt) : Status
+  fun set_compression_mode = HPDF_SetCompressionMode(Doc, UInt) : Status
 
   # Page handling
 

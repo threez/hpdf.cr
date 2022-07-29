@@ -2,7 +2,7 @@ require "./helper"
 
 module Hpdf
   class Doc
-  include Helper
+    include Helper
 
     @doc : LibHaru::Doc
     @pages : Array(Page)
@@ -564,6 +564,32 @@ module Hpdf
 
     def keywords=(v : String)
       LibHaru.set_info_attr(self, InfoType::Keywords, v)
+    end
+
+    # sets the pasword for the document.
+    # If the password is set, contents in the document are encrypted.
+    #
+    # * *owner_password* the password for the owner of the document.
+    #   The owner can change the permission of the document.
+    #   `nil`, zero length string and the same value as user password
+    #   are not allowed.
+    # * *user_password* the password for the user of the document.
+    # The user_password is allowed to be set to `nil` or zero length string.
+    # * *permission* the flags specifying which operations are permitted.
+    #   This parameter is set by logical addition of the following values.
+    def set_password_and_permission(owner_password : String, *,
+        user_password : String? = nil,
+        permission : Permission = Permission::EnableRead,
+        encryption_mode : EncryptMode = EncryptMode::EncryptR3,
+        encryption_key_len_bytes : Int32 = 16)
+        LibHaru.set_password(self, owner_password, user_password)
+        LibHaru.set_permission(self, permission)
+        LibHaru.set_encryption_mode(self, encryption_mode, uint(encryption_key_len_bytes))
+    end
+
+    # set the mode of compression.
+    def compression_mode=(mode : CompressionMode)
+      LibHaru.set_compression_mode(self, mode)
     end
   end
 end
