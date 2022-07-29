@@ -482,9 +482,9 @@ module Hpdf
     #
     # The formats that `load_raw_image_from_mem` can load is the same as `load_raw_image_from_file`.
     #
-    # * *file_name* path to a RAW image file.
-    # * *width* the width of the image file.
-    # * *height* the height of the image file.
+    # * *buf* buffer with a raw memory image, has to implement `#unsafe`.
+    # * *width* the width of the image.
+    # * *height* the height of the image.
     # * *color_space* `ColorSpace::DeviceGray` or `ColorSpace::DeviceRgb`
     #   or `ColorSpace::DeviceCmyk` is allowed.
     # * *bits_per_component* The bit size of each color component. The valid value is either 1, 2, 4, 8.
