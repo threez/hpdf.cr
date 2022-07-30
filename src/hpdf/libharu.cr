@@ -47,6 +47,12 @@ lib LibHaru
     numspace : UInt
   end
 
+  struct DashMode
+    ptn : UInt16[8]
+    num_ptn : UInt
+    phase : UInt
+  end
+
   # Document handling
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
   fun free = HPDF_Free(Doc) : Void
@@ -112,6 +118,7 @@ lib LibHaru
   fun page_get_line_cap = HPDF_Page_GetLineCap(Page) : UInt
   fun page_get_line_join = HPDF_Page_GetLineJoin(Page) : UInt
   fun page_get_miter_limit = HPDF_Page_GetMiterLimit(Page) : Real
+  fun page_get_dash = HPDF_Page_GetDash(Page) : DashMode
 
   # Graphics
 

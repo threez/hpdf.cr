@@ -146,6 +146,17 @@ module Hpdf
       LibHaru.page_get_miter_limit(self).to_f32
     end
 
+    # gets the current pattern of the page.
+    # First argument is the pattern, second is the phase.
+    def dash : {Array(Int32), Int32}
+      mode = LibHaru.page_get_dash(self)
+      pattern = Array(Int32).new
+      mode.num_ptn.times do |i|
+        pattern << mode.ptn[i].to_i32
+      end
+      {pattern, mode.phase.to_i32}
+    end
+
     ###########################
 
     def line_width=(stroke_width)

@@ -1,4 +1,19 @@
 module Hpdf
+  # Raw contains helpers to create in memory gray, rgb and cmyk images.
+  #
+  # Example:
+  # ```
+  # pdf = Hpdf::Doc.new
+  # pdf.page do
+  #   gi = Hpdf::Raw::GrayImage.new(4, 4)
+  #   gi[0, 1] = 0x7f
+  #   gi[3, 1] = 0x7f
+  #   gi[1, 2] = 0xff
+  #   gi[2, 2] = 0xff
+  #   img = pdf.load_raw_image_from_mem gi
+  #   draw_image img, 100, 100, 100, 100
+  # end
+  # ```
   module Raw
     abstract class Image
       getter width
