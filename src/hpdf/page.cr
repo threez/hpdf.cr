@@ -157,6 +157,95 @@ module Hpdf
       {pattern, mode.phase.to_i32}
     end
 
+    # gets the current value of the page's flatness.
+    def flat : Float32
+      LibHaru.page_get_flat(self).to_f32
+    end
+
+    # gets the current value of the page's character spacing.
+    def char_space : Float32
+      LibHaru.page_get_char_space(self).to_f32
+    end
+
+    # returns the current value of the page's word spacing.
+    def word_space : Float32
+      LibHaru.page_get_word_space(self).to_f32
+    end
+
+    # returns the current value of the page's horizontal scaling for text showing.
+    def horizontal_scaling : Float32
+      LibHaru.page_get_horizontal_scalling(self).to_f32
+    end
+
+    # TODO HPDF_Page_GetTextRenderingMode
+
+    # returns the current value of the page's text rising.
+    def text_rise : Float32
+      LibHaru.page_get_text_rise(self).to_f32
+    end
+
+    # returns the current value of the page's filling color. `rgb_fill` is valid
+    # only when the page's filling color space is `ColorSpace::DeviceRgb`.
+    def rgb_fill : RGB
+      RGB.new(LibHaru.page_get_rgb_fill(self))
+    end
+
+    # returns the current value of the page's stroking color. `rgb_stroke` is
+    # valid only when the page's stroking color space is `ColorSpace::DeviceRgb`.
+    def rgb_stroke : RGB
+      RGB.new(LibHaru.page_get_rgb_stroke(self))
+    end
+
+    # returns the current value of the page's filling color. `cmyk_fill` is
+    # valid only when the page's filling color space is `ColorSpace::DeviceCmyk`.
+    def cmyk_fill : CMYK
+      CMYK.new(LibHaru.page_get_cmyk_fill(self))
+    end
+
+    # returns the current value of the page's stroking color. `cmyk_stroke` is
+    # valid only when the page's stroking color space is `ColorSpace::DeviceCmyk`.
+    def cmyk_stroke : CMYK
+      CMYK.new(LibHaru.page_get_cmyk_stroke(self))
+    end
+
+    # returns the current value of the page's filling color. `gray_fill` is
+    # valid only when the page's stroking color space is `ColorSpace::DeviceGray`.
+    def gray_fill : Float32
+      LibHaru.page_get_gray_fill(self).to_f32
+    end
+
+    # returns the current value of the page's stroking color. `gray_fill` is
+    # valid only when the page's stroking color space is `ColorSpace::DeviceGray`.
+    def gray_stroke : Float32
+      LibHaru.page_get_gray_stroke(self).to_f32
+    end
+
+    # returns the current value of the page's stroking color space.
+    def stroking_color_space : ColorSpace
+      ColorSpace.new(LibHaru.page_get_stroking_color_space(self).to_i32)
+    end
+
+    # returns the current value of the page's stroking color space.
+    def filling_color_space : ColorSpace
+      ColorSpace.new(LibHaru.page_get_filling_color_space(self).to_i32)
+    end
+
+    # HPDF_Page_GetTextMatrix
+
+    # returns the number of the page's graphics state stack.
+    def g_state_depth : Int32
+      LibHaru.page_get_g_state_depth(self).to_i32
+    end
+
+    # configures the setting for slide transition of the page.
+    #
+    # * *style* the transition style.
+    # * *disp_time* the display duration of the page. (in seconds)
+    # * *trans_time* the duration of the transition effect. Default value is 1 (second).
+    def set_slide_show(style : TransitionStyle, disp_time : Number, trans_time : Number = 1)
+      LibHaru.page_set_slide_show(self, style.to_i, real(disp_time), real(trans_time))
+    end
+
     ###########################
 
     def line_width=(stroke_width)

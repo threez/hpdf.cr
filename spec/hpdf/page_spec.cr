@@ -1,7 +1,6 @@
 describe Hpdf::Image do
   it "can set page size" do
-    pdf = Hpdf::Doc.new
-    pdf.page do
+    testpage do
       width.should eq 595
       height.should eq 841
 
@@ -12,7 +11,7 @@ describe Hpdf::Image do
       height.should eq 300
     end
 
-    pdf.page do
+    testpage do
       set_size Hpdf::PageSizes::A3, Hpdf::PageDirection::Landscape
 
       width.should eq 1190
@@ -21,23 +20,20 @@ describe Hpdf::Image do
   end
 
   it "can rotate" do
-    pdf = Hpdf::Doc.new
-    pdf.page do
+    testpage do
       rotate = 180
     end
   end
 
   it "creates a destination" do
-    pdf = Hpdf::Doc.new
-    pdf.page do
+    testpage do
       # create_destination
       create_destination.should_not eq nil
     end
   end
 
   it "has getters on empty page" do
-    pdf = Hpdf::Doc.new
-    pdf.page do
+    testpage do
       # g_mode
       g_mode.should eq Hpdf::GMode::PageDescription
 
@@ -70,12 +66,67 @@ describe Hpdf::Image do
       pattern, phase = dash
       pattern.should eq [] of Int32
       phase.should eq 0
+
+      # flat
+      flat.should eq 1
+
+      # char_space
+      char_space.should eq 0
+
+      # char_space
+      word_space.should eq 0
+
+      # horizontal_scaling
+      horizontal_scaling.should eq 100
+
+      # text_rise
+      text_rise.should eq 0
+
+      # fill_rgb
+      color = rgb_fill
+      color.r.should eq 0
+      color.g.should eq 0
+      color.b.should eq 0
+
+      # rgb_stroke
+      color = rgb_stroke
+      color.r.should eq 0
+      color.g.should eq 0
+      color.b.should eq 0
+
+      # cmyk_fill
+      color = cmyk_fill
+      color.c.should eq 0
+      color.m.should eq 0
+      color.y.should eq 0
+      color.k.should eq 0
+
+      # cmyk_stroke
+      color = cmyk_stroke
+      color.c.should eq 0
+      color.m.should eq 0
+      color.y.should eq 0
+      color.k.should eq 0
+
+      # gray_fill
+      gray_fill.should eq 0
+
+      # gray_stroke
+      gray_stroke.should eq 0
+
+      # stroking_color_space
+      stroking_color_space.should eq Hpdf::ColorSpace::DeviceGray
+
+      # filling_color_space
+      filling_color_space.should eq Hpdf::ColorSpace::DeviceGray
+
+      # g_state_depth
+      g_state_depth.should eq 1
     end
   end
 
   it "can work with text" do
-    pdf = Hpdf::Doc.new
-    pdf.page do
+    testpage do
       text Hpdf::Base14::Helvetica, 16 do
         # text_width
         text_width("Hello World").should eq 82.672_f32
@@ -91,6 +142,13 @@ describe Hpdf::Image do
         # current_font_size
         current_font_size.should eq 16
       end
+    end
+  end
+
+  it "can set slideshows on pages" do
+    testpage do
+      set_slide_show Hpdf::TransitionStyle::BoxOut,
+                     1, 2.0
     end
   end
 end

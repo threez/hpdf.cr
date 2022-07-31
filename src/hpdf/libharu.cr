@@ -33,6 +33,19 @@ lib LibHaru
     y : Real
   end
 
+  struct RGB
+    r : Real
+    g : Real
+    b : Real
+  end
+
+  struct CMYK
+    c : Real
+    m : Real
+    y : Real
+    k : Real
+  end
+
   struct Rect
     left : Real
     bottom : Real
@@ -119,6 +132,21 @@ lib LibHaru
   fun page_get_line_join = HPDF_Page_GetLineJoin(Page) : UInt
   fun page_get_miter_limit = HPDF_Page_GetMiterLimit(Page) : Real
   fun page_get_dash = HPDF_Page_GetDash(Page) : DashMode
+  fun page_get_flat = HPDF_Page_GetFlat(Page) : Real
+  fun page_get_char_space = HPDF_Page_GetCharSpace(Page) : Real
+  fun page_get_word_space = HPDF_Page_GetWordSpace(Page) : Real
+  fun page_get_horizontal_scalling = HPDF_Page_GetHorizontalScalling(Page) : Real
+  fun page_get_text_rise = HPDF_Page_GetTextRise(Page) : Real
+  fun page_get_rgb_fill = HPDF_Page_GetRGBFill(Page) : RGB
+  fun page_get_rgb_stroke = HPDF_Page_GetRGBStroke(Page) : RGB
+  fun page_get_cmyk_fill = HPDF_Page_GetCMYKFill(Page) : CMYK
+  fun page_get_cmyk_stroke = HPDF_Page_GetCMYKStroke(Page) : CMYK
+  fun page_get_gray_fill = HPDF_Page_GetGrayFill(Page) : Real
+  fun page_get_gray_stroke = HPDF_Page_GetGrayStroke(Page) : Real
+  fun page_get_stroking_color_space = HPDF_Page_GetStrokingColorSpace(Page) : UInt
+  fun page_get_filling_color_space = HPDF_Page_GetFillingColorSpace(Page) : UInt
+  fun page_get_g_state_depth = HPDF_Page_GetGStateDepth(Page) : UInt
+  fun page_set_slide_show = HPDF_Page_SetSlideShow(Page, UInt, Real, Real) : Status
 
   # Graphics
 
