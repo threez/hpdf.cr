@@ -154,6 +154,8 @@ lib LibHaru
   fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
   fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
   fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
+  fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
+  fun page_concat = HPDF_Page_Concat(Page, Real, Real, Real, Real, Real, Real) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*

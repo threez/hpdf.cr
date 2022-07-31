@@ -302,6 +302,61 @@ module Hpdf
       LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
     end
 
+    # applys the graphics state to the page.
+    # An application can invoke `ext_g_state=` when the graphics mode of
+    # the page is in `GMode::PageDescription`.
+    private def ext_g_state=(handle)
+      LibHaru.page_set_ext_g_state(self, handle)
+    end
+
+    # saves the page's current graphics parameter to the stack.
+    # An application can invoke `g_save` up to 28 and can restore the
+    # saved parameter by invoking `g_restore`, when the graphics mode of
+    # the page is in `GMode::PageDescription`.
+    def g_save
+      LibHaru.page_gsave(self)
+    end
+
+    # restore the graphics state which is saved by `g_save`.
+    # An application can invoke `g_save` when the graphics mode of the
+    # page is in `GMode::PageDescription`.
+    def g_restore
+      LibHaru.page_grestore(self)
+    end
+
+    # concatenates the page's current transformation matrix and specified
+    # matrix. For example, if you want to rotate the coordinate system of the
+    # page by 45 degrees, use `concat` as like demonstrated in the `rotate` method.
+    # An application can invoke `concat` when the graphics mode of the
+    # page is in `GMode::PageDescription`.
+    #
+    # ### Example to change the dpi using concat
+    #
+    # ```
+    # concat 72 / dpi, 0, 0, 72 / dpi, 0, 0
+    # ```
+    #
+    # ### Example rotate 45 degrees
+    #
+    # ```
+    # rad1 = degree / 180 * Math::PI
+    # graphics do
+    #   concat Math.cos(rad1), Math.sin(rad1), -Math.sin(rad1),
+    #          Math.cos(rad1), 0, 0
+    #   text Hpdf::Base14::Helvetica, 70 do
+    #     text_out 100, 100, "Hello World"
+    #   end
+    # end
+    # ```
+    def concat(a : Number, b : Number, c : Number, d : Number, x : Number, y : Number)
+      LibHaru.page_concat(self, real(a), real(b), real(c), real(d), real(x), real(y))
+    end
+
+    # change the DPI of the page using `concat`
+    def dpi=(dpi : Number)
+      concat 72 / dpi, 0, 0, 72 / dpi, 0, 0
+    end
+
     ###########################
     def rectangle(x, y, w, h)
       LibHaru.page_rectangle(self, real(x), real(y), real(w), real(h))
@@ -335,14 +390,6 @@ module Hpdf
       LibHaru.page_fill_stroke(self)
     end
 
-    def gsave
-      LibHaru.page_gsave(self)
-    end
-
-    def grestore
-      LibHaru.page_grestore(self)
-    end
-
     def clip
       LibHaru.page_clip(self)
     end
@@ -371,7 +418,6 @@ module Hpdf
           y = height / 2 - @font_size / 2
         end
       end
-
       LibHaru.page_text_out(self, real(x.as(Number)), real(y.as(Number)), text)
     end
 
@@ -454,9 +500,9 @@ module Hpdf
     end
 
     def graphics
-      gsave  # Save the current graphic state
+      g_save  # Save the current graphic state
       with self yield self
-      grestore
+      g_restore
     end
   end
 end

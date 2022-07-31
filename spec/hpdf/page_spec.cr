@@ -177,4 +177,25 @@ describe Hpdf::Image do
       phase.should eq 0
     end
   end
+
+  it "can work with page modes" do
+    testpage do |page|
+      text Hpdf::Base14::Helvetica, 10 do
+        g_mode.should eq Hpdf::GMode::TextObject
+        g_state_depth.should eq 1
+      end
+
+      # imperative
+      g_save
+      g_state_depth.should eq 2
+      g_restore
+
+      # DSL
+      graphics do
+        g_state_depth.should eq 2
+      end
+
+      g_mode.should eq Hpdf::GMode::PageDescription
+    end
+  end
 end
