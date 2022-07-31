@@ -252,6 +252,7 @@ module Hpdf
     #
     # * *line_width* the width of line.
     def line_width=(line_width : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_line_width(self, real(line_width))
     end
 
@@ -261,6 +262,7 @@ module Hpdf
     #
     # * *line_cap* the style of line-cap.
     def line_cap=(line_cap : LineCap)
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_line_cap(self, line_cap.to_i)
     end
 
@@ -270,10 +272,12 @@ module Hpdf
     #
     # * *line_join* the style of line-join.
     def line_join=(line_join : LineJoin)
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_line_join(self, line_join.to_i)
     end
 
     def miter_limit=(limit : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_miter_limit(self, real(limit))
     end
 
@@ -295,6 +299,7 @@ module Hpdf
     # * `set_dash [8, 7, 2, 7]`
     #   ![http://libharu.sourceforge.net/image/figure19.png](http://libharu.sourceforge.net/image/figure19.png)
     def set_dash(pattern : Array(Number), *, phase = 0)
+      requires_mode GMode::PageDescription, GMode::TextObject
       if pattern.size > 8
         raise Exception.new("to many elements in the dash pattern: #{pattern.size}")
       end
@@ -306,6 +311,7 @@ module Hpdf
     # An application can invoke `ext_g_state=` when the graphics mode of
     # the page is in `GMode::PageDescription`.
     private def ext_g_state=(handle)
+      requires_mode GMode::PageDescription
       LibHaru.page_set_ext_g_state(self, handle)
     end
 
@@ -314,6 +320,7 @@ module Hpdf
     # saved parameter by invoking `g_restore`, when the graphics mode of
     # the page is in `GMode::PageDescription`.
     def g_save
+      requires_mode GMode::PageDescription
       LibHaru.page_gsave(self)
     end
 
@@ -321,6 +328,7 @@ module Hpdf
     # An application can invoke `g_save` when the graphics mode of the
     # page is in `GMode::PageDescription`.
     def g_restore
+      requires_mode GMode::PageDescription
       LibHaru.page_grestore(self)
     end
 
@@ -349,6 +357,7 @@ module Hpdf
     # end
     # ```
     def concat(a : Number, b : Number, c : Number, d : Number, x : Number, y : Number)
+      requires_mode GMode::PageDescription
       LibHaru.page_concat(self, real(a), real(b), real(c), real(d), real(x), real(y))
     end
 
@@ -357,18 +366,106 @@ module Hpdf
       concat 72 / dpi, 0, 0, 72 / dpi, 0, 0
     end
 
+    # starts a new subpath and move the current point for drawing path,
+    # `move_to` sets the start point for the path to the point (x, y)
+    # and changes the graphics mode to `GMode::PathObject`.
+    #
+    # An application can invoke `move_to` when the graphics mode of the
+    # page is in `GMode::PageDescription` or `GMode::PathObject`.
+    #
+    # * *x*, *y* the start point for drawing path
+    def move_to(x : Number, y : Number)
+      requires_mode GMode::PageDescription, GMode::PathObject
+      LibHaru.page_move_to(self, real(x), real(y))
+    end
+
+    # see `move_to`
+    def move_to(p : Point)
+      move_to p.x, p.y
+    end
+
+    # appends a path from the current point to the specified point.
+    # An application can invoke `line_to` when the graphics mode of
+    # the page is in `GMode::PathObject`.
+    # * *x*, *y* the end point of the path
+    def line_to(x : Number, y : Number)
+      requires_mode GMode::PathObject
+      LibHaru.page_line_to(self, real(x), real(y))
+    end
+
+    # see `line_to`
+    def line_to(p : Point)
+      line_to p.x, p.y
+    end
+
+    # appends a Bézier curve to the current path using two specified points.
+    # The point (x1, y1) and the point (x2, y2) are used as the control
+    # points for a Bézier curve and current point is moved to the point
+    # (x3, y3). An application can invoke `curve_to` when the graphics
+    # mode of the page is in `GMode::PathObject`.
+    #
+    # * *x1*, *y1*, *x2*, *y2*, *x3*, *y3* the control points for a
+    # Bézier curve.
+    #
+    # ![http://libharu.sourceforge.net/image/figure20.png](http://libharu.sourceforge.net/image/figure20.png)
+    def curve_to(x1 : Number, y1 : Number, x2 : Number, y2 : Number, x3 : Number, y3 : Number)
+      requires_mode GMode::PathObject
+      LibHaru.page_curve_to(self, real(x1), real(y1), real(x2), real(y2), real(x3), real(y3))
+    end
+
+    # see `curve_to`
+    def curve_to(p1 : Point, p2 : Point, p3 : Point)
+      curve_to p1.x, p1.y, p2.x, p2.y, p3.x, p3.y
+    end
+
+    # appends a Bézier curve to the current path using two spesified points.
+    # The current point and the point (x2, y2) are used as the control
+    # points for a Bézier curve and current point is moved to the point
+    # (x3, y3). An application can invoke `curve_to2` when the graphics
+    # mode of the page is in `GMode::PathObject`.
+    #
+    # ![http://libharu.sourceforge.net/image/figure21.png](http://libharu.sourceforge.net/image/figure21.png)
+    def curve_to2(x1 : Number, y1 : Number, x2 : Number, y2 : Number)
+      requires_mode GMode::PathObject
+      LibHaru.page_curve_to2(self, real(x1), real(y1), real(x2), real(y2))
+    end
+
+    # see `curve_to2`
+    def curve_to2(p1 : Point, p2 : Point)
+      curve_to2 p1.x, p1.y, p2.x, p2.y
+    end
+
+    # appends a Bézier curve to the current path using two spesified points.
+    # The point (x1, y1) and the point (x3, y3) are used as the control
+    # points for a Bézier curve and current point is moved to the point
+    # (x3, y3). An application can invoke `curve_to3` when the graphics
+    # mode of the page is in `GMode::PathObject`.
+    #
+    # ![http://libharu.sourceforge.net/image/figure22.png](http://libharu.sourceforge.net/image/figure22.png)
+    def curve_to3(x1 : Number, y1 : Number, x2 : Number, y2 : Number)
+      requires_mode GMode::PathObject
+      LibHaru.page_curve_to3(self, real(x1), real(y1), real(x2), real(y2))
+    end
+
+    # see `curve_to3`
+    def curve_to3(p1 : Point, p2 : Point)
+      curve_to3 p1.x, p1.y, p2.x, p2.y
+    end
+
+    # appends a strait line from the current point to the start point
+    # of sub path. The current point is moved to the start point of sub
+    # path. An application can invoke `close_path` when the graphics
+    # mode of the page is in `GMode::PathObject`.
+    def close_path
+      requires_mode GMode::PathObject
+      LibHaru.page_close_path(self)
+    end
+
     ###########################
     def rectangle(x, y, w, h)
       LibHaru.page_rectangle(self, real(x), real(y), real(w), real(h))
     end
 
-    def move_to(x, y)
-      LibHaru.page_move_to(self, real(x), real(y))
-    end
-
-    def line_to(x, y)
-      LibHaru.page_line_to(self, real(x), real(y))
-    end
 
     def set_rgb_stroke(r, g, b)
       LibHaru.page_set_rgb_stroke(self, real(r), real(g), real(b))
@@ -441,17 +538,6 @@ module Hpdf
       LibHaru.page_show_text_next_line(self, text)
     end
 
-    def curve_to(x1, y1, x2, y2, x3, y3)
-      LibHaru.page_curve_to(self, x1, y1, x2, y2, x3, y3)
-    end
-
-    def curve_to2(x1, y1, x2, y2)
-      LibHaru.page_curve_to2(self, x1, y1, x2, y2)
-    end
-
-    def curve_to3(x1, y1, x2, y2)
-      LibHaru.page_curve_to3(self, x1, y1, x2, y2)
-    end
 
     # shows an image in one operation.
     #
@@ -482,6 +568,12 @@ module Hpdf
       stroke
     end
 
+    private def requires_mode(*modes : GMode)
+      unless modes.includes? g_mode
+        raise Exception.new "expected to be in different graphics mode #{modes}, but was in #{g_mode}"
+      end
+    end
+
     ### DSL ###
 
     # build enables DSL style access to building a page
@@ -503,6 +595,12 @@ module Hpdf
       g_save  # Save the current graphic state
       with self yield self
       g_restore
+    end
+
+    def path(x : Number, y : Number)
+      move_to x, y
+      with self yield self
+      close_path
     end
   end
 end

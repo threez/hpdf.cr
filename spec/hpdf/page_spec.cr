@@ -198,4 +198,20 @@ describe Hpdf::Image do
       g_mode.should eq Hpdf::GMode::PageDescription
     end
   end
+
+  it "can draw" do
+    testpage do
+      move_to 100, 100
+      line_to 200, 200
+      curve_to 250, 250, 350, 350, 100, 200
+      curve_to2 400, 400, 200, 150
+      curve_to3 500, 700, 100, 200
+      close_path
+
+      path 100, 300 do
+        line_to 300, 100
+        line_to 300, 300
+      end
+    end
+  end
 end

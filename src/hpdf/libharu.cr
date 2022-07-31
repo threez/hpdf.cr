@@ -156,6 +156,12 @@ lib LibHaru
   fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
   fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
   fun page_concat = HPDF_Page_Concat(Page, Real, Real, Real, Real, Real, Real) : Status
+  fun page_move_to = HPDF_Page_MoveTo(Page, Real, Real) : Status
+  fun page_line_to = HPDF_Page_LineTo(Page, Real, Real) : Status
+  fun page_curve_to = HPDF_Page_CurveTo(Page, Real, Real, Real, Real, Real, Real) : Status
+  fun page_curve_to2 = HPDF_Page_CurveTo2(Page, Real, Real, Real, Real) : Status
+  fun page_curve_to3 = HPDF_Page_CurveTo3(Page, Real, Real, Real, Real) : Status
+  fun page_close_path = HPDF_Page_ClosePath(Page) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
@@ -193,8 +199,6 @@ lib LibHaru
 
   fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Void
 
-  fun page_move_to = HPDF_Page_MoveTo(Page, Real, Real) : Status
-  fun page_line_to = HPDF_Page_LineTo(Page, Real, Real) : Status
   fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke (Page, Real, Real, Real) : Status
   fun page_set_rgb_fill = HPDF_Page_SetRGBFill (Page, Real, Real, Real) : Status
 
@@ -213,9 +217,6 @@ lib LibHaru
   fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
   fun page_show_text = HPDF_Page_ShowText (Page, LibC::Char*) : Status
 
-  fun page_curve_to = HPDF_Page_CurveTo(Page, Real, Real, Real, Real, Real, Real) : Status
-  fun page_curve_to2 = HPDF_Page_CurveTo2(Page, Real, Real, Real, Real) : Status
-  fun page_curve_to3 = HPDF_Page_CurveTo3(Page, Real, Real, Real, Real) : Status
   fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
 
   HPDF_ARRAY_COUNT_ERR             = 0x1001 #	Internal error. The consistency of the data was lost.
