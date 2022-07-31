@@ -38,7 +38,7 @@ module Hpdf
     # * *direction* Specify the direction of the page.
     def set_size(size : PageSizes,
                  direction : PageDirection = PageDirection::Portrait)
-      LibHaru.page_set_size(self, uint(size), uint(direction))
+      LibHaru.page_set_size(self, size.to_i32, direction.to_i32)
     end
 
     # sets rotation angle of the page.
@@ -69,8 +69,8 @@ module Hpdf
     # TODO HPDF_Page_CreateURILinkAnnot
 
     # gets the width of the text in current fontsize, character spacing and word spacing.
-    def text_width(text : String)
-      LibHaru.page_text_width(self, text)
+    def text_width(text : String) : Float32
+      LibHaru.page_text_width(self, text).to_f32
     end
 
     # calculates the byte length which can be included within the specified width.
@@ -133,12 +133,12 @@ module Hpdf
 
     # gets the current line cap style of the page.
     def line_cap : LineCap
-      LineCap.new(LibHaru.page_get_line_cap(self))
+      LineCap.new(LibHaru.page_get_line_cap(self).to_i32)
     end
 
     # gets the current line join style of the page
     def line_join : LineJoin
-      LineJoin.new(LibHaru.page_get_line_join(self))
+      LineJoin.new(LibHaru.page_get_line_join(self).to_i32)
     end
 
     # gets the current value of the page's miter limit.

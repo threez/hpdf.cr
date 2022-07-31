@@ -103,12 +103,12 @@ lib LibHaru
   # Page handling
   fun page_set_width = HPDF_Page_SetWidth(Page, Real) : Status
   fun page_set_height = HPDF_Page_SetHeight(Page, Real) : Status
-  fun page_set_size = HPDF_Page_SetSize(Page, UInt, UInt) : Status
+  fun page_set_size = HPDF_Page_SetSize(Page, Int, Int) : Status
   fun page_set_rotate = HPDF_Page_SetRotate(Page, UInt16) : Status
   fun page_get_height = HPDF_Page_GetHeight(Page) : Real
   fun page_get_width = HPDF_Page_GetWidth(Page) : Real
   fun page_create_destination = HPDF_Page_CreateDestination(Page) : Destination
-  fun page_measure_text = HPDF_Page_MeasureText(Page, LibC::Char*, Real, Bool, Real*)
+  fun page_measure_text = HPDF_Page_MeasureText(Page, LibC::Char*, Real, Bool, Real*) : UInt
   fun page_get_g_mode = HPDF_Page_GetGMode(Page) : UInt16
   fun page_get_current_pos = HPDF_Page_GetCurrentPos(Page) : Point
   fun page_get_current_text_pos = HPDF_Page_GetCurrentTextPos(Page) : Point
