@@ -19,13 +19,13 @@ Shard to create PDF documents with crystal using [libharu/libhpdf](https://githu
 ```crystal
 require "hpdf"
 
-pdf = Hpdf::Doc.new
+pdf = Hpdf::Doc.build do
+  page do
+    draw_rectangle 50, 50, width - 100, height - 110
 
-pdf.page do
-  draw_rectangle 50, 50, width - 100, height - 110
-
-  text Hpdf::Base14::Helvetica, 70 do
-    text_out :center, :center, "Hello World"
+    text Hpdf::Base14::Helvetica, 70 do
+      text_out :center, :center, "Hello World"
+    end
   end
 end
 

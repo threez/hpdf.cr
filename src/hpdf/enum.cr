@@ -72,15 +72,29 @@ module Hpdf
     LowerLetters
   end
 
+  # used in `Page#line_cap=`.
   enum LineCap
+    # The line is squared off at the endpoint of the path.
+    #
+    # ![http://libharu.sourceforge.net/image/figure10.png](http://libharu.sourceforge.net/image/figure10.png)
     ButtEnd = 0
+    # The end of a line becomes a semicircle whose center is the end point of the path.
+    #
+    # ![http://libharu.sourceforge.net/image/figure11.png](http://libharu.sourceforge.net/image/figure11.png)
     RoundEnd
+    # The line continues to the point that exceeds half of the stroke width the endpoint.
+    #
+    # ![http://libharu.sourceforge.net/image/figure12.png](http://libharu.sourceforge.net/image/figure12.png)
     ProjectingScuareEnd
   end
 
+  # used in `Page#line_join=`
   enum LineJoin
+    # ![http://libharu.sourceforge.net/image/figure13.png](http://libharu.sourceforge.net/image/figure13.png)
     MiterJoin = 0
+    # ![http://libharu.sourceforge.net/image/figure14.png](http://libharu.sourceforge.net/image/figure14.png)
     RoundJoin
+    # ![http://libharu.sourceforge.net/image/figure15.png](http://libharu.sourceforge.net/image/figure15.png)
     BevelJoin
   end
 

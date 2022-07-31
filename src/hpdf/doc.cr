@@ -21,6 +21,18 @@ module Hpdf
       @doc
     end
 
+    # build enables DSL style access to building a doc
+    def self.build(&block)
+      doc = new
+      with doc yield doc
+      doc
+    end
+
+    # build enables DSL style access to building a doc
+    def build
+      with self yield self
+    end
+
     # will free any related memory in case the document
     # is not used any longer
     def finalize
@@ -595,9 +607,20 @@ module Hpdf
 
     # page enables DSL style usage of the document. It calls `#add_page`
     # and then executes the passed block in the context of the page.
-    def page(&block)
-      page = add_page
+    #
+    # * *klass* can be changed to a subclass of `Page` in order
+    #   to create methods for higher level page constructs.
+    def page(klass = Page, &block)
+      page = custom_page(klass)
       with page yield page
+    end
+
+    # custom pages are subclasses of `Page` that can have more methods
+    # for higher level page constructs.
+    def custom_page(klass)
+      page = klass.new(LibHaru.add_page(self), self)
+      @pages << page
+      page
     end
   end
 end

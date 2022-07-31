@@ -18,6 +18,11 @@ module Hpdf
       @page
     end
 
+    # build enables DSL style access to building a page
+    def build
+      with self yield self
+    end
+
     # changes the width of a page.
     #
     # * *w* Specify the new width of a page. The valid value is between 3 and 14400.
@@ -45,8 +50,8 @@ module Hpdf
     #
     # * *angle* Specify the rotation angle of the page. It must be a
     #   multiple of 90 Degrees.
-    def rotate=(angle : Uint16)
-      LibHaru.page_set_rotate(self, angle)
+    def rotate=(angle : Number)
+      LibHaru.page_set_rotate(self, angle.to_u16)
     end
 
     # gets the height of a page.
@@ -246,12 +251,35 @@ module Hpdf
       LibHaru.page_set_slide_show(self, style.to_i, real(disp_time), real(trans_time))
     end
 
-    ###########################
-
-    def line_width=(stroke_width)
-      LibHaru.page_set_line_width(self, real(stroke_width))
+    # sets the width of the line used to stroke a path.
+    # An application can invoke `line_width=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *line_width* the width of line.
+    def line_width=(line_width : Number)
+      LibHaru.page_set_line_width(self, real(line_width))
     end
 
+    # sets the shape to be used at the ends of line.
+    # An application can invoke `line_cap=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *line_cap* the style of line-cap.
+    def line_cap=(line_cap : LineCap)
+      LibHaru.page_set_line_cap(self, line_cap.to_i)
+    end
+
+    # Sets the line join style in the page.
+    # An application can invoke `line_join=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *line_join* the style of line-join.
+    def line_join=(line_join : LineJoin)
+      LibHaru.page_set_line_join(self, line_join.to_i)
+    end
+
+
+    ###########################
     def rectangle(x, y, w, h)
       LibHaru.page_rectangle(self, real(x), real(y), real(w), real(h))
     end
@@ -282,14 +310,6 @@ module Hpdf
 
     def set_rgb_fill(r, g, b)
       LibHaru.page_set_rgb_fill(self, real(r), real(g), real(b))
-    end
-
-    def set_line_cap(kind : LineCap)
-      LibHaru.page_set_line_cap(self, kind)
-    end
-
-    def set_line_join(kind : LineJoin)
-      LibHaru.page_set_line_join(self, kind)
     end
 
     def stroke
@@ -392,15 +412,6 @@ module Hpdf
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
     end
 
-    def text(name = nil, size = nil, &block)
-      if name && size
-        use_font(name, size)
-      end
-      begin_text
-      with self yield
-    ensure
-      text_end
-    end
 
     def use_font(name, size)
       @font = @doc.font(name)
@@ -414,9 +425,22 @@ module Hpdf
       stroke
     end
 
-    def with_graphic_state(&block)
+
+    ### DSL ###
+
+    def text(name = nil, size = nil, &block)
+      if name && size
+        use_font(name, size)
+      end
+      begin_text
+      with self yield
+    ensure
+      text_end
+    end
+
+    def graphics
       gsave  # Save the current graphic state
-      block.call
+      with self yield self
       grestore
     end
   end

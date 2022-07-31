@@ -1,11 +1,11 @@
 describe Hpdf::Image do
   it "can set page size" do
-    testpage do
+    testpage do |page|
       width.should eq 595
       height.should eq 841
 
-      width = 300
-      height = 300
+      page.width = 300
+      page.height = 300
 
       width.should eq 300
       height.should eq 300
@@ -20,8 +20,8 @@ describe Hpdf::Image do
   end
 
   it "can rotate" do
-    testpage do
-      rotate = 180
+    testpage do |page|
+      page.rotate = 180
     end
   end
 
