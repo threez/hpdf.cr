@@ -18,11 +18,6 @@ module Hpdf
       @page
     end
 
-    # build enables DSL style access to building a page
-    def build
-      with self yield self
-    end
-
     # changes the width of a page.
     #
     # * *w* Specify the new width of a page. The valid value is between 3 and 14400.
@@ -278,6 +273,34 @@ module Hpdf
       LibHaru.page_set_line_join(self, line_join.to_i)
     end
 
+    def miter_limit=(limit : Number)
+      LibHaru.page_set_miter_limit(self, real(limit))
+    end
+
+    # Sets the line dash pattern in the page. An application can invoke
+    # `set_dash` when the graphics mode of the page is in
+    # `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *pattern* pattern of dashes and gaps used to stroke paths,
+    #   can have at most 8 elements.
+    # * *phase* the phase in which the pattern begins (default is 0).
+    #
+    # Samples of the dash pattern:
+    # * `set_dash []`
+    #   ![http://libharu.sourceforge.net/image/figure16.png](http://libharu.sourceforge.net/image/figure16.png)
+    # * `set_dash [3], phase: 1`
+    #   ![http://libharu.sourceforge.net/image/figure17.png](http://libharu.sourceforge.net/image/figure17.png)
+    # * `set_dash [7, 3], phase: 2`
+    #   ![http://libharu.sourceforge.net/image/figure18.png](http://libharu.sourceforge.net/image/figure18.png)
+    # * `set_dash [8, 7, 2, 7]`
+    #   ![http://libharu.sourceforge.net/image/figure19.png](http://libharu.sourceforge.net/image/figure19.png)
+    def set_dash(pattern : Array(Number), *, phase = 0)
+      if pattern.size > 8
+        raise Exception.new("to many elements in the dash pattern: #{pattern.size}")
+      end
+      pat = pattern.map { |i| uint16(i) }
+      LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
+    end
 
     ###########################
     def rectangle(x, y, w, h)
@@ -290,18 +313,6 @@ module Hpdf
 
     def line_to(x, y)
       LibHaru.page_line_to(self, real(x), real(y))
-    end
-
-    # dash_pattern - Pattern of dashes and gaps used to stroke paths.
-    # num_elem - Number of elements in dash_pattern. 0 <= num_param <= 8.
-    # phase - The phase in which the pattern begins (default is 0).
-    def set_dash(dash_pattern, *, phase = 0)
-      #svalid = [0..8]
-      #unless valid.includes?(dash_pattern.size)
-      #  raise Exception.new("pattern size #{dash_pattern.size} invalid, size has to be between #{valid}")
-      #end
-      pat = dash_pattern.map { |i| uint16(i) }
-      LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
     end
 
     def set_rgb_stroke(r, g, b)
@@ -406,7 +417,7 @@ module Hpdf
       LibHaru.page_draw_image(self, image, real(x),real(y),real(width),real(height))
     end
 
-    ### Page Helper
+    ### Helper ###
 
     def reset_dash
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
@@ -425,8 +436,12 @@ module Hpdf
       stroke
     end
 
-
     ### DSL ###
+
+    # build enables DSL style access to building a page
+    def build
+      with self yield self
+    end
 
     def text(name = nil, size = nil, &block)
       if name && size

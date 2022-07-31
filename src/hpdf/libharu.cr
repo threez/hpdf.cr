@@ -152,6 +152,8 @@ lib LibHaru
   fun page_set_line_width = HPDF_Page_SetLineWidth(Page, Real) : Status
   fun page_set_line_cap = HPDF_Page_SetLineCap(Page, UInt) : Status
   fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
+  fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
+  fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
@@ -191,7 +193,6 @@ lib LibHaru
 
   fun page_move_to = HPDF_Page_MoveTo(Page, Real, Real) : Status
   fun page_line_to = HPDF_Page_LineTo(Page, Real, Real) : Status
-  fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
   fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke (Page, Real, Real, Real) : Status
   fun page_set_rgb_fill = HPDF_Page_SetRGBFill (Page, Real, Real, Real) : Status
 

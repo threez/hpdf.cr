@@ -151,4 +151,30 @@ describe Hpdf::Image do
                      1, 2.0
     end
   end
+
+  it "can set line data" do
+    testpage do |page|
+      # line_width
+      page.line_width = 30
+      line_width.should eq 30
+
+      # line_cap
+      page.line_cap = Hpdf::LineCap::RoundEnd
+      line_cap.should eq Hpdf::LineCap::RoundEnd
+
+      # line_cap
+      page.line_join = Hpdf::LineJoin::RoundJoin
+      line_join.should eq Hpdf::LineJoin::RoundJoin
+
+      # miter_limit
+      page.miter_limit = 50
+      miter_limit.should eq 50
+
+      # set_dash
+      set_dash [8,7,2,7]
+      pattern, phase = dash
+      pattern.should eq [8,7,2,7]
+      phase.should eq 0
+    end
+  end
 end
