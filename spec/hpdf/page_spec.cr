@@ -237,4 +237,18 @@ describe Hpdf::Image do
       close_path_fill_stroke
     end
   end
+
+  it "can render text" do
+    testpage "render text" do |page|
+      8.times do |i|
+        text Hpdf::Base14::Helvetica, 20 do
+          set_rgb_stroke 0.5, 0, 0
+          set_rgb_fill 0, 0.5, 0
+
+          page.text_rendering_mode = Hpdf::TextRenderingMode.new(i)
+          text_out 100, height - 40*(i+1), "ABCabc123!?$"
+        end
+      end
+    end
+  end
 end

@@ -184,6 +184,7 @@ lib LibHaru
   fun page_set_horizontal_scalling = HPDF_Page_SetHorizontalScalling(Page, Real) : Status
   fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
+  fun page_set_text_rendering_mode = HPDF_Page_SetTextRenderingMode(Page, UInt) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*

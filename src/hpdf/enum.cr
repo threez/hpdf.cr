@@ -98,6 +98,24 @@ module Hpdf
     BevelJoin
   end
 
+  # used in `Doc#text_rendering_mode=`.
+  enum TextRenderingMode
+    # ![http://libharu.sourceforge.net/image/figure23.png](http://libharu.sourceforge.net/image/figure23.png)
+    Fill = 0
+    # ![http://libharu.sourceforge.net/image/figure24.png](http://libharu.sourceforge.net/image/figure24.png)
+    Stroke
+    # ![http://libharu.sourceforge.net/image/figure25.png](http://libharu.sourceforge.net/image/figure25.png)
+    FillThenStroke
+    Invisible
+    # ![http://libharu.sourceforge.net/image/figure26.png](http://libharu.sourceforge.net/image/figure26.png)
+    FillClipping
+    # ![http://libharu.sourceforge.net/image/figure27.png](http://libharu.sourceforge.net/image/figure27.png)
+    StrokeClipping
+    # ![http://libharu.sourceforge.net/image/figure28.png](http://libharu.sourceforge.net/image/figure28.png)
+    FillStrokeClipping
+    Clipping
+  end
+
   enum BlendMode
     Normal
     Multiply
@@ -113,6 +131,7 @@ module Hpdf
     Exclushon
   end
 
+  # used in `Doc#set_slide_show`
   enum TransitionStyle
     WipeRight = 0
     WipeUp

@@ -667,6 +667,15 @@ module Hpdf
       set_font_and_size @doc.font(font), size
     end
 
+    # sets the text rendering mode.
+    # The initial value of text rendering mode is `TextRenderingMode::Fill`.
+    # An application can invoke `text_rendering_mode=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    def text_rendering_mode=(mode : TextRenderingMode)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_text_rendering_mode(self, mode.to_i)
+    end
+
     ###########################
 
 
@@ -766,8 +775,7 @@ module Hpdf
         use_font(name, size)
       end
       begin_text
-      with self yield
-    ensure
+      with self yield self
       text_end
     end
 
