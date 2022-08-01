@@ -185,6 +185,23 @@ lib LibHaru
   fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
   fun page_set_text_rendering_mode = HPDF_Page_SetTextRenderingMode(Page, UInt) : Status
+  fun page_set_text_rise = HPDF_Page_SetTextRise(Page, Real) : Status
+  fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
+  fun page_move_text_pos2 = HPDF_Page_MoveTextPos2(Page, Real, Real) : Status
+  fun page_set_text_matrix = HPDF_Page_SetTextMatrix(Page, Real, Real, Real, Real, Real, Real) : Status
+  fun page_move_to_next_line = HPDF_Page_MoveToNextLine(Page) : Status
+  fun page_show_text = HPDF_Page_ShowText(Page, LibC::Char*) : Status
+  fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status
+  fun page_show_text_next_line_ex = HPDF_Page_ShowTextNextLineEx(Page, Real, Real, LibC::Char*) : Status
+  fun page_set_gray_fill = HPDF_Page_SetGrayFill(Page, Real) : Status
+  fun page_set_gray_stroke = HPDF_Page_SetGrayStroke(Page, Real) : Status
+  fun page_set_rgb_fill = HPDF_Page_SetRGBFill(Page, Real, Real, Real) : Status
+  fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke(Page, Real, Real, Real) : Status
+  fun page_set_cmyk_fill = HPDF_Page_SetCMYKFill(Page, Real, Real, Real, Real) : Status
+  fun page_set_cmyk_stroke = HPDF_Page_SetCMYKStroke(Page, Real, Real, Real, Real) : Status
+  fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
+  fun page_circle = HPDF_Page_Circle(Page, Real, Real, Real) : Status
+  fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
@@ -197,6 +214,7 @@ lib LibHaru
   fun font_get_cap_height = HPDF_Font_GetXHeight(Font) : UInt
   fun font_text_width = HPDF_Font_TextWidth(Font, LibC::Char*, UInt) : TextWidth
   fun font_measure_text = HPDF_Font_MeasureText(Font, LibC::Char*, UInt, Real, Real, Real, Real, Bool, Real*) : UInt
+  fun page_text_rect = HPDF_Page_TextRect(Page, Real, Real, Real, Real, LibC::Char*, UInt, UInt*) : Status
 
   # Encoding
 
@@ -215,21 +233,7 @@ lib LibHaru
   fun image_set_color_mask = HPDF_Image_SetColorMask(Image, UInt, UInt, UInt, UInt, UInt, UInt) : Status
   fun image_set_mask_image = HPDF_Image_SetMaskImage(Image, Image) : Status
 
-
-
-  fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status
-
-
-  fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke (Page, Real, Real, Real) : Status
-  fun page_set_rgb_fill = HPDF_Page_SetRGBFill (Page, Real, Real, Real) : Status
-
-
-  fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
-  fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
-  fun page_show_text = HPDF_Page_ShowText (Page, LibC::Char*) : Status
-
-  fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
-
+  # Exception codes
   HPDF_ARRAY_COUNT_ERR             = 0x1001 #	Internal error. The consistency of the data was lost.
   HPDF_ARRAY_ITEM_NOT_FOUND        = 0x1002 #	Internal error. The consistency of the data was lost.
   HPDF_ARRAY_ITEM_UNEXPECTED_TYPE  = 0x1003 #	Internal error. The consistency of the data was lost.

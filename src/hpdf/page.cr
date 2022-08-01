@@ -88,8 +88,13 @@ module Hpdf
     end
 
     # gets the current graphics mode.
-    def g_mode : GMode
+    def graphics_mode : GMode
       GMode.new(LibHaru.page_get_g_mode(self))
+    end
+
+    # see `graphics_mode`.
+    def g_mode
+      graphics_mode
     end
 
     # gets the current position for path painting. It returns a `Point`
@@ -282,7 +287,7 @@ module Hpdf
     end
 
     # Sets the line dash pattern in the page. An application can invoke
-    # `set_dash` when the graphics mode of the page is in
+    # `set_dash` when the `graphics_mode` of the page is in
     # `GMode::PageDescription` or `GMode::TextObject`.
     #
     # * *pattern* pattern of dashes and gaps used to stroke paths,
@@ -308,7 +313,7 @@ module Hpdf
     end
 
     # applys the graphics state to the page.
-    # An application can invoke `ext_g_state=` when the graphics mode of
+    # An application can invoke `ext_g_state=` when the `graphics_mode` of
     # the page is in `GMode::PageDescription`.
     private def ext_g_state=(handle)
       requires_mode GMode::PageDescription
@@ -317,7 +322,7 @@ module Hpdf
 
     # saves the page's current graphics parameter to the stack.
     # An application can invoke `g_save` up to 28 and can restore the
-    # saved parameter by invoking `g_restore`, when the graphics mode of
+    # saved parameter by invoking `g_restore`, when the `graphics_mode` of
     # the page is in `GMode::PageDescription`.
     def g_save
       requires_mode GMode::PageDescription
@@ -325,7 +330,7 @@ module Hpdf
     end
 
     # restore the graphics state which is saved by `g_save`.
-    # An application can invoke `g_save` when the graphics mode of the
+    # An application can invoke `g_save` when the `graphics_mode` of the
     # page is in `GMode::PageDescription`.
     def g_restore
       requires_mode GMode::PageDescription
@@ -335,7 +340,7 @@ module Hpdf
     # concatenates the page's current transformation matrix and specified
     # matrix. For example, if you want to rotate the coordinate system of the
     # page by 45 degrees, use `concat` as like demonstrated in the `rotate` method.
-    # An application can invoke `concat` when the graphics mode of the
+    # An application can invoke `concat` when the `graphics_mode` of the
     # page is in `GMode::PageDescription`.
     #
     # ### Example to change the dpi using concat
@@ -348,7 +353,7 @@ module Hpdf
     #
     # ```
     # rad1 = degree / 180 * Math::PI
-    # graphics do
+    # context do
     #   concat Math.cos(rad1), Math.sin(rad1), -Math.sin(rad1),
     #          Math.cos(rad1), 0, 0
     #   text Hpdf::Base14::Helvetica, 70 do
@@ -370,7 +375,7 @@ module Hpdf
     # `move_to` sets the start point for the path to the point (x, y)
     # and changes the graphics mode to `GMode::PathObject`.
     #
-    # An application can invoke `move_to` when the graphics mode of the
+    # An application can invoke `move_to` when the `graphics_mode` of the
     # page is in `GMode::PageDescription` or `GMode::PathObject`.
     #
     # * *x*, *y* the start point for drawing path
@@ -385,7 +390,7 @@ module Hpdf
     end
 
     # appends a path from the current point to the specified point.
-    # An application can invoke `line_to` when the graphics mode of
+    # An application can invoke `line_to` when the `graphics_mode` of
     # the page is in `GMode::PathObject`.
     #
     # * *x*, *y* the end point of the path
@@ -463,7 +468,7 @@ module Hpdf
     end
 
     # appends a rectangle to the current path.
-    # An application can invoke `rectangle` when the graphics mode of
+    # An application can invoke `rectangle` when the `graphics_mode` of
     # the page is in `GMode::PageDescription` or `GMode::PathObject`.
     def rectangle(x : Number, y : Number, w : Number, h : Number)
       requires_mode GMode::PageDescription, GMode::PathObject
@@ -476,7 +481,7 @@ module Hpdf
     end
 
     # paints the current path.
-    # An application can invoke `stroke` when the graphics mode of the
+    # An application can invoke `stroke` when the `graphics_mode` of the
     # page is in `GMode::PathObject`. And it changes the graphics mode
     # to `GMode::PageDescription`.
     def stroke
@@ -494,7 +499,7 @@ module Hpdf
     end
 
     # fills the current path using the nonzero winding number rule.
-    # An application can invoke `fill` when the graphics mode of the`
+    # An application can invoke `fill` when the `graphics_mode` of the`
     # page is in `GMode::PathObject`. And it changes the graphics mode
     # to `GMode::PageDescription`.
     def fill
@@ -503,7 +508,7 @@ module Hpdf
     end
 
     # fills the current path using the even-odd rule.
-    # An application can invoke `eofill` when the graphics mode of the
+    # An application can invoke `eofill` when the `graphics_mode` of the
     # page is in `GMode::PathObject`. And it changes the graphics mode
     # to `GMode::PageDescription`.
     def eofill
@@ -513,7 +518,7 @@ module Hpdf
 
     # fills the current path using the nonzero winding number rule,
     # then it paints the path. An application can invoke `fill_stroke`
-    # when the graphics mode of the page is in `GMode::PathObject`.
+    # when the `graphics_mode` of the page is in `GMode::PathObject`.
     # And it changes the graphics mode to `GMode::PageDescription`.
     def fill_stroke
       requires_mode GMode::PathObject
@@ -541,7 +546,7 @@ module Hpdf
 
     # closes the current path, fills the current path using the
     # even-odd rule, then it paints the path. An application can
-    # invoke `close_path_eofill_stroke` when the graphics mode
+    # invoke `close_path_eofill_stroke` when the `graphics_mode`
     # of the page is in `GMode::PathObject`. And it changes the
     # graphics mode to `GMode::PageDescription`.
     def close_path_eofill_stroke
@@ -550,7 +555,7 @@ module Hpdf
     end
 
     # ends the path object without filling and painting operation.
-    # An application can invoke `end_path` when the graphics mode
+    # An application can invoke `end_path` when the `graphics_mode`
     # of the page is in `GMode::PathObject`. And it changes the
     # graphics mode to `GMode::PageDescription`.
     def end_path
@@ -604,7 +609,7 @@ module Hpdf
     end
 
     # ends a text object. An application can invoke `text_end`
-    # when the graphics mode of the page is in `GMode::TextObject`.
+    # when the `graphics_mode` of the page is in `GMode::TextObject`.
     # And it changes the graphics mode to `GMode::PageDescription`.
     def text_end
       requires_mode GMode::TextObject
@@ -624,7 +629,7 @@ module Hpdf
 
     # sets the word spacing for text showing.
     # The initial value of word spacing is 0.
-    # An application can invoke `word_space=` when the graphics mode
+    # An application can invoke `word_space=` when the `graphics_mode`
     # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
     #
     # * *value* the value of word spacing.
@@ -676,29 +681,208 @@ module Hpdf
       LibHaru.page_set_text_rendering_mode(self, mode.to_i)
     end
 
-    ###########################
-
-
-    def set_rgb_stroke(r, g, b)
-      LibHaru.page_set_rgb_stroke(self, real(r), real(g), real(b))
+    # moves the text position in vertical direction by the amount of `value`.
+    # Useful for making subscripts or superscripts.
+    # An application can invoke `text_rise=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *value* text rise, in user space units.
+    def text_rise=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_text_rise(self, real(value))
     end
 
-    def set_rgb_fill(r, g, b)
+    # moves the current text position to the start of the next line with
+    # using specified offset values. If the start position of the current
+    # line is (x1, y1), the start of the next line is (x1 + x, y1 + y).
+    # An application can invoke `move_text_pos` when the `graphics_mode` of
+    # the page is in `GMode::TextObject`.
+    #
+    # * *x*, *y* the offset of the start of the next line.
+    def move_text_pos(x : Number, y : Number)
+      requires_mode GMode::TextObject
+      LibHaru.page_move_text_pos(self, real(x), real(y))
+    end
+
+    # changes the current text position, using the specified offset values.
+    # If the current text position is (x1, y1), the new text position will
+    # be (x1 + x, y1 + y). Also, the text-leading is set to -y.
+    # An application can invoke `move_text_pos` when the `graphics_mode` of
+    # the page is in `GMode::TextObject`.
+    #
+    # * *x*, *y* the offset of the start of the next line.
+    def page_move_text_pos2(x : Number, y : Number)
+      requires_mode GMode::TextObject
+      LibHaru.page_move_text_pos2(self, real(x), real(y))
+    end
+
+    # `set_text_matrix` sets a transformation matrix for text to be drawn
+    # in using `show_text`.
+    #
+    # * *a* the horizontal rotation of the text. Typically expressed as cosine(Angle)
+    # * *b* the vertical rotation of the text. Typically expressed as sine(Angle)
+    # * *c*, *d* ?? appear to be controlling offset adjustments after text drawn ???
+    # * *x* the page x coordinate
+    # * *y* the page y coordinate
+    #
+    # If the parameter a or d is zero, then the parameters b or c cannot
+    # be zero.
+    #
+    # Text is typically output using the `show_text` function. The function
+    # `text_rect` does not use the active text matrix.
+    # An application can invoke `set_text_matrix` when the `graphics_mode` of
+    # the page is in `GMode::TextObject`.
+    def set_text_matrix(a : Number, b : Number, c : Number, d : Number, x : Number, y : Number)
+      requires_mode GMode::TextObject
+      LibHaru.page_set_text_matrix(self, real(a), real(b), real(c), real(d), real(x), real(y))
+    end
+
+    # moves the current text position to the start of the next line.
+    # If the start position of the current line is (x1, y1), the start
+    # of the next line is (x1, y1 - text leading).
+    # An application can invoke `move_to_next_line` when the graphics
+    # mode of the page is in `GMode::TextObject`.
+    #
+    # **NOTE: Since the default value of Text Leading is `0`, an application
+    # has to invoke `text_leading=` before `move_to_next_line` to set
+    # text leading.**
+    def move_to_next_line
+      requires_mode GMode::TextObject
+      LibHaru.page_move_to_next_line(self)
+    end
+
+    # prints the text at the current position on the page.
+    # An application can invoke `show_text` when the `graphics_mode` of the
+    # page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *text* the text to print.
+    def show_text(text : String)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_show_text(self, text)
+    end
+
+    # moves the current text position to the start of the next line,
+    # then prints the text at the current position on the page.
+    # An application can invoke `show_text_next_line` when the
+    # graphics mode of the page is in `GMode::PageDescription` or
+    # `GMode::TextObject`.
+    def show_text_next_line(text : String)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_show_text_next_line(self, text)
+    end
+
+    # moves the current text position to the start of the next line,
+    # then sets the word spacing, character spacing and prints the
+    # text at the current position on the page.
+    # An application can invoke `show_text_next_line_ex` when the
+    # graphics mode of the page is in `GMode::TextObject`.
+    def show_text_next_line_ex(text : String, word_space : Number, char_space : Number)
+      requires_mode GMode::TextObject
+      LibHaru.page_show_text_next_line_ex(self, real(word_space), real(char_space), text)
+    end
+
+    # sets the filling color.
+    # An application can invoke `gray_fill=` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *value* the value of the gray level between 0 and 1.
+    def gray_fill=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_gray_fill(self, real(value))
+    end
+
+    # sets the stroking color.
+    # An application can invoke `gray_stroke=` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *value* the value of the gray level between 0 and 1.
+    def gray_stroke=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_gray_stroke(self, real(value))
+    end
+
+    # sets the filling color.
+    # An application can invoke `set_rgb_fill` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *r*, *g*, *b* the level of each color element. They must be
+    #   between 0 and 1.
+    def set_rgb_fill(r : Number, g : Number, b : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_rgb_fill(self, real(r), real(g), real(b))
     end
 
-
-
-    def clip
-      LibHaru.page_clip(self)
+    # sets the stroking color.
+    # An application can invoke `set_rgb_stroke` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *r*, *g*, *b* the level of each color element. They must be
+    #   between 0 and 1.
+    def set_rgb_stroke(r : Number, g : Number, b : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_rgb_stroke(self, real(r), real(g), real(b))
+    end
+    # sets the filling color.
+    # An application can invoke `set_cmyk_fill` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *c*, *m*, *y*, *k* the level of each color element. They must be
+    #   between 0 and 1.
+    def set_cmyk_fill(c : Number, m : Number, y : Number, k : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_cmyk_fill(self, real(c), real(m), real(y), real(k))
     end
 
-
-    def text_height(text)
-      LibHaru.page_text_height(self, text)
+    # sets the stroking color.
+    # An application can invoke `set_cmyk_stroke` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *c*, *m*, *y*, *k* the level of each color element. They must be
+    #   between 0 and 1.
+    def set_cmyk_stroke(c : Number, m : Number, y : Number, k : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_cmyk_stroke(self, real(c), real(m), real(y), real(k))
     end
 
+    # TODO HPDF_Page_ExecuteXObject
+
+    # shows an image in one operation.
+    # An application can invoke `draw_image` when the `graphics_mode`
+    # of the page is in `GMode::PageDescription`.
+    #
+    # * *image* the image object.
+    # * *x*, *y* the lower-left point of the region where image is displayed.
+    # * *width* the width of the region where image is displayed.
+    # * *height* the width of the region where image is displayed.
+    def draw_image(image : Image, x : Number, y : Number, width : Number, height : Number)
+      requires_mode GMode::PageDescription
+      LibHaru.page_draw_image(self, image, real(x), real(y), real(width), real(height))
+    end
+
+    # see `draw_image`.
+    def draw_image(image : Image, rect : Rectangle)
+      draw_image image, rect.x, rect.y, rect.width, rect.height
+    end
+
+    # appends a circle to the current path.
+    # An application can invoke `circle` when the `graphics_mode` of the
+    # page is in `GMode::PageDescription` or `GMode::PathObject`.
+    #
+    # * *x*, *y* the center point of the circle.
+    # * *ray* the ray of the circle.
+    def circle(x : Number, y : Number, ray : Number)
+      requires_mode GMode::PageDescription, GMode::PathObject
+      LibHaru.page_circle(self, real(x), real(y), real(ray))
+    end
+
+    # prints the text on the specified position.
+    # An application can invoke `text_out` when the `graphics_mode`
+    # of the page is in `GMode::TextObject`.
+    #
+    # * *x*, *y* the point position where the text is displayed.
+    # * *text* the text to show.
     def text_out(x, y, text)
+      requires_mode GMode::TextObject
       if x == :center
         x = (width - text_width(text)) / 2
       end
@@ -713,29 +897,23 @@ module Hpdf
       LibHaru.page_text_out(self, real(x.as(Number)), real(y.as(Number)), text)
     end
 
-
-    def move_text_pos(x, y)
-      LibHaru.page_move_text_pos(self, real(x), real(y))
-    end
-
-    def show_text(text)
-      LibHaru.page_show_text(self, text)
-    end
-
-
-    def show_text_next_line(text)
-      LibHaru.page_show_text_next_line(self, text)
-    end
-
-
-    # shows an image in one operation.
+    # print the text inside the specified region. Some chars may not
+    # in the displayed in the space, the number of displayed chars is
+    # returned.
+    # An application can invoke `text_rect` when the `graphics_mode`
+    # of the page is in `GMode::TextObject`.
     #
-    # * *image* the image object.
-    # * *x*, *y* the lower-left point of the region where image is displayed.
-    # * *width* the width of the region where image is displayed.
-    # * *height* the width of the region where image is displayed.
-    def draw_image(image : Image, x : Number, y : Number, width : Number, height : Number)
-      LibHaru.page_draw_image(self, image, real(x),real(y),real(width),real(height))
+    # * *left*, *top*, *right*, *bottom* coordinates of corners of the
+    #   region to output text.
+    # * *text* the text to show.
+    # * *align* the alignment of the text.
+    def text_rect(left : Number, top : Number, right : Number, bottom : Number,
+                  text : String, *, align : TextAlignment = TextAlignment::Left) : Number
+      requires_mode GMode::TextObject
+      LibHaru.page_text_rect(self, real(left), real(top),
+                             real(right), real(bottom),
+                             text, align.to_i, out len)
+      len
     end
 
     ### Helper ###
@@ -743,7 +921,6 @@ module Hpdf
     def reset_dash
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
     end
-
 
     def use_font(name, size)
       @font = @doc.font(name)
@@ -779,8 +956,10 @@ module Hpdf
       text_end
     end
 
-    def graphics
-      g_save  # Save the current graphic state
+    # saves the current graphic state and restores it after
+    # the block is completed
+    def context
+      g_save
       with self yield self
       g_restore
     end

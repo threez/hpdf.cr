@@ -136,7 +136,7 @@ pdf = Hpdf::Doc.build do
     fill_stroke
 
     # Clip Rect
-    graphics do
+    context do
       my_draw_rect 300, 620, "Clip Rectangle"
       clip
       stroke

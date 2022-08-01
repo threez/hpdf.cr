@@ -191,7 +191,7 @@ describe Hpdf::Image do
       g_restore
 
       # DSL
-      graphics do
+      context do
         g_state_depth.should eq 2
       end
 
@@ -200,54 +200,99 @@ describe Hpdf::Image do
   end
 
   it "can draw" do
-    testpage do
-      move_to 100, 100
-      line_to 200, 200
-      curve_to 250, 250, 350, 350, 100, 200
-      curve_to2 400, 400, 200, 150
-      curve_to3 500, 700, 100, 200
-      close_path
+    testpage "shapes" do |page|
+      context do
+        set_rgb_stroke 0.7, 0.6, 0.3
+        set_rgb_fill 0.6, 0.3, 0.7
 
-      path 100, 300 do
-        line_to 300, 100
-        line_to 300, 300
+        move_to 100, 100
+        line_to 200, 200
+        curve_to 250, 250, 350, 350, 100, 200
+        curve_to2 400, 400, 200, 150
+        curve_to3 500, 700, 100, 200
+        close_path
+
+        path 100, 300 do
+          line_to 300, 100
+          line_to 300, 300
+        end
+
+        rectangle 10, 500, 50, 80
+        close_path_stroke
+
+        rectangle 10, 100, 50, 80
+        fill
+
+        rectangle 100, 100, 50, 80
+        eofill
+
+        rectangle 200, 100, 50, 80
+        fill_stroke
+
+        rectangle 200, 200, 50, 80
+        eofill_stroke
+
+        move_to 300, 300
+        line_to 200, 200
+        close_path_fill_stroke
+
+        move_to 400, 300
+        line_to 70, 200
+        close_path_fill_stroke
       end
 
-      rectangle 10, 500, 50, 80
-      close_path_stroke
+      context do
+        page.line_width = 30
+        set_rgb_fill 0.6, 0.3, 0.7
+        set_rgb_stroke 0.7, 0.6, 0.3
 
-      rectangle 10, 100, 50, 80
-      fill
-
-      rectangle 100, 100, 50, 80
-      eofill
-
-      rectangle 200, 100, 50, 80
-      fill_stroke
-
-      rectangle 200, 200, 50, 80
-      eofill_stroke
-
-      move_to 300, 300
-      line_to 200, 200
-      close_path_fill_stroke
-
-      move_to 400, 300
-      line_to 70, 200
-      close_path_fill_stroke
+        circle width/2, height/2, 100
+        fill_stroke
+      end
     end
   end
 
   it "can render text" do
     testpage "render text" do |page|
-      8.times do |i|
-        text Hpdf::Base14::Helvetica, 20 do
-          set_rgb_stroke 0.5, 0, 0
-          set_rgb_fill 0, 0.5, 0
+      context do
+        8.times do |i|
+          text Hpdf::Base14::Helvetica, 20 do
+            set_rgb_stroke 0.5, 0, 0
+            set_rgb_fill 0, 0.5, 0
 
-          page.text_rendering_mode = Hpdf::TextRenderingMode.new(i)
-          text_out 100, height - 40*(i+1), "ABCabc123!?$"
+            page.text_rendering_mode = Hpdf::TextRenderingMode.new(i)
+            text_out 100, height - 40*(i+1), "ABCabc123!?$"
+          end
         end
+      end
+
+      text Hpdf::Base14::Helvetica, 12 do
+        page.gray_fill = 0.5
+        move_text_pos 100, height/2
+        page.text_leading = 16
+
+        show_text "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        move_to_next_line
+        show_text "sed do eiusmod tempor incididunt ut labore et dolore magna"
+        move_to_next_line
+        show_text "aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+        show_text_next_line "ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        show_text_next_line "Duis aute irure dolor in reprehenderit in voluptate velit"
+        show_text_next_line "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint"
+        show_text_next_line "occaecat cupidatat non proident, sunt in culpa qui officia"
+        show_text_next_line "deserunt mollit anim id est laborum."
+      end
+
+      text Hpdf::Base14::Helvetica, 22 do
+        move_text_pos 100, 100
+
+        page.gray_stroke = 0.5
+        page.text_rendering_mode = Hpdf::TextRenderingMode::Stroke
+
+        show_text_next_line "Stoked text"
+
+        size = text_rect 500, 300, 600, 400, "deserunt mollit anim id est laborum"
+        size.should eq 9
       end
     end
   end

@@ -131,6 +131,13 @@ module Hpdf
     Exclushon
   end
 
+  enum TextAlignment
+    Left = 0
+    Right
+    Center
+    Justify
+  end
+
   # used in `Doc#set_slide_show`
   enum TransitionStyle
     WipeRight = 0
