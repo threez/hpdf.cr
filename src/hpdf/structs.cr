@@ -18,6 +18,13 @@ module Hpdf
     end
   end
 
+  struct Rectangle
+    property x, y, width, height
+
+    def initialize(@x : Float32, @y : Float32, @width : Float32, @height : Float32)
+    end
+  end
+
   struct MeasuredText
     # the byte length which can be included within the specified width
     getter len_included : UInt32

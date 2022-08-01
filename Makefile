@@ -8,8 +8,10 @@ spec:
 docs:
 	crystal docs
 
-examples:
-	rm -rf bin
-	rm -rf *.pdf
+examples: clean
 	shards build
 	./bin/*
+
+clean:
+	rm -rf bin
+	rm -rf *.pdf

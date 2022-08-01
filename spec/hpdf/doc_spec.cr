@@ -77,7 +77,7 @@ describe Hpdf::Doc do
   end
 
   it "can get/set document attributes" do
-    testdoc do |pdf|
+    testdoc "doc-attributes" do |pdf|
       pdf.creation_date.should eq nil
       pdf.mod_date.should eq nil
       pdf.author.should eq nil
@@ -95,7 +95,6 @@ describe Hpdf::Doc do
       pdf.keywords = "Crystal,LibHaru"
 
       page = pdf.add_page
-      pdf.save_to_file "spec-doc-attributes.pdf"
       pdf.creation_date.should_not eq nil
       pdf.mod_date.should_not eq nil
       pdf.author.should eq "Vincent"
@@ -107,13 +106,12 @@ describe Hpdf::Doc do
   end
 
   it "can encrypt documents" do
-    testdoc do |pdf|
+    testdoc "doc-password" do |pdf|
       pdf.set_password_and_permission "test1234"
       page = pdf.add_page
       page.text Hpdf::Base14::Helvetica, 30 do
         page.text_out :center, :center, "Secret Document"
       end
-      pdf.save_to_file "spec-doc-password.pdf"
     end
   end
 end

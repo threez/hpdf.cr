@@ -121,6 +121,7 @@ lib LibHaru
   fun page_get_height = HPDF_Page_GetHeight(Page) : Real
   fun page_get_width = HPDF_Page_GetWidth(Page) : Real
   fun page_create_destination = HPDF_Page_CreateDestination(Page) : Destination
+  fun page_text_width = HPDF_Page_TextWidth(Page, LibC::Char*) : Real
   fun page_measure_text = HPDF_Page_MeasureText(Page, LibC::Char*, Real, Bool, Real*) : UInt
   fun page_get_g_mode = HPDF_Page_GetGMode(Page) : UInt16
   fun page_get_current_pos = HPDF_Page_GetCurrentPos(Page) : Point
@@ -155,6 +156,8 @@ lib LibHaru
   fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
   fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
   fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
+  fun page_gsave = HPDF_Page_GSave(Page) : Status
+  fun page_grestore = HPDF_Page_GRestore(Page) : Status
   fun page_concat = HPDF_Page_Concat(Page, Real, Real, Real, Real, Real, Real) : Status
   fun page_move_to = HPDF_Page_MoveTo(Page, Real, Real) : Status
   fun page_line_to = HPDF_Page_LineTo(Page, Real, Real) : Status
@@ -162,6 +165,25 @@ lib LibHaru
   fun page_curve_to2 = HPDF_Page_CurveTo2(Page, Real, Real, Real, Real) : Status
   fun page_curve_to3 = HPDF_Page_CurveTo3(Page, Real, Real, Real, Real) : Status
   fun page_close_path = HPDF_Page_ClosePath(Page) : Status
+  fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Status
+  fun page_stroke = HPDF_Page_Stroke(Page) : Status
+  fun page_close_path_stroke = HPDF_Page_ClosePathStroke(Page) : Status
+  fun page_fill = HPDF_Page_Fill(Page) : Status
+  fun page_eofill = HPDF_Page_Eofill(Page) : Status
+  fun page_fill_stroke = HPDF_Page_FillStroke(Page) : Status
+  fun page_eofill_stroke = HPDF_Page_EofillStroke(Page) : Status
+  fun page_close_path_fill_stroke = HPDF_Page_ClosePathFillStroke(Page) : Status
+  fun page_close_path_eofill_stroke = HPDF_Page_ClosePathEofillStroke(Page) : Status
+  fun page_end_path = HPDF_Page_EndPath(Page) : Status
+  fun page_clip = HPDF_Page_Clip(Page) : Status
+  fun page_eoclip = HPDF_Page_Eoclip(Page) : Status
+  fun page_begin_text = HPDF_Page_BeginText(Page) : Status
+  fun page_end_text = HPDF_Page_EndText(Page) : Status
+  fun page_set_char_space = HPDF_Page_SetCharSpace(Page, Real) : Status
+  fun page_set_word_space = HPDF_Page_SetWordSpace(Page, Real) : Status
+  fun page_set_horizontal_scalling = HPDF_Page_SetHorizontalScalling(Page, Real) : Status
+  fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
+  fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
@@ -194,26 +216,14 @@ lib LibHaru
 
 
 
-  fun page_set_text_leading = HPDF_Page_SetTextLeading(Page, Real) : Status
   fun page_show_text_next_line = HPDF_Page_ShowTextNextLine(Page, LibC::Char*) : Status
 
-  fun page_rectangle = HPDF_Page_Rectangle(Page, Real, Real, Real, Real) : Void
 
   fun page_set_rgb_stroke = HPDF_Page_SetRGBStroke (Page, Real, Real, Real) : Status
   fun page_set_rgb_fill = HPDF_Page_SetRGBFill (Page, Real, Real, Real) : Status
 
 
-  fun page_stroke = HPDF_Page_Stroke(Page) : Void
-  fun page_fill = HPDF_Page_Fill(Page) : Void
-  fun page_fill_stroke = HPDF_Page_FillStroke(Page) : Void
-  fun page_gsave = HPDF_Page_GSave(Page) : Void
-  fun page_grestore = HPDF_Page_GRestore(Page) : Void
-  fun page_clip = HPDF_Page_Clip(Page) : Void
-  fun page_set_font_and_size = HPDF_Page_SetFontAndSize(Page, Font, Real) : Status
-  fun page_text_width = HPDF_Page_TextWidth(Page, LibC::Char*) : Real
-  fun page_begin_text = HPDF_Page_BeginText(Page) : Status
   fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
-  fun page_end_text = HPDF_Page_EndText(Page) : Status
   fun page_move_text_pos = HPDF_Page_MoveTextPos(Page, Real, Real) : Status
   fun page_show_text = HPDF_Page_ShowText (Page, LibC::Char*) : Status
 

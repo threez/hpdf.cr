@@ -144,7 +144,7 @@ pdf = Hpdf::Doc.build do
 
       text do
         move_text_pos 290, 600
-        set_text_leading 12
+        page.text_leading = 12
         show_text "Clip Clip Clip Clip Clip Clipi Clip Clip Clip"
         show_text_next_line "Clip Clip Clip Clip Clip Clip Clip Clip Clip"
         show_text_next_line "Clip Clip Clip Clip Clip Clip Clip Clip Clip"

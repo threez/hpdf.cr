@@ -68,7 +68,7 @@ Use the examples to write demos. Read about *libharu* here:
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/hpdf/fork>)
+1. Fork it (<https://github.com/threez/hpdf.cr/ fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -76,4 +76,4 @@ Use the examples to write demos. Read about *libharu* here:
 
 ## Contributors
 
-- [Vincent Landgraf](https://github.com/your-github-user) - creator and maintainer
+- [Vincent Landgraf](https://github.com/threez) - creator and maintainer

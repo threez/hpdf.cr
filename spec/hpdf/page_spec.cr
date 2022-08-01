@@ -212,6 +212,29 @@ describe Hpdf::Image do
         line_to 300, 100
         line_to 300, 300
       end
+
+      rectangle 10, 500, 50, 80
+      close_path_stroke
+
+      rectangle 10, 100, 50, 80
+      fill
+
+      rectangle 100, 100, 50, 80
+      eofill
+
+      rectangle 200, 100, 50, 80
+      fill_stroke
+
+      rectangle 200, 200, 50, 80
+      eofill_stroke
+
+      move_to 300, 300
+      line_to 200, 200
+      close_path_fill_stroke
+
+      move_to 400, 300
+      line_to 70, 200
+      close_path_fill_stroke
     end
   end
 end

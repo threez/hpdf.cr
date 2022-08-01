@@ -387,6 +387,7 @@ module Hpdf
     # appends a path from the current point to the specified point.
     # An application can invoke `line_to` when the graphics mode of
     # the page is in `GMode::PathObject`.
+    #
     # * *x*, *y* the end point of the path
     def line_to(x : Number, y : Number)
       requires_mode GMode::PathObject
@@ -405,7 +406,7 @@ module Hpdf
     # mode of the page is in `GMode::PathObject`.
     #
     # * *x1*, *y1*, *x2*, *y2*, *x3*, *y3* the control points for a
-    # Bézier curve.
+    #   Bézier curve.
     #
     # ![http://libharu.sourceforge.net/image/figure20.png](http://libharu.sourceforge.net/image/figure20.png)
     def curve_to(x1 : Number, y1 : Number, x2 : Number, y2 : Number, x3 : Number, y3 : Number)
@@ -461,10 +462,212 @@ module Hpdf
       LibHaru.page_close_path(self)
     end
 
-    ###########################
-    def rectangle(x, y, w, h)
+    # appends a rectangle to the current path.
+    # An application can invoke `rectangle` when the graphics mode of
+    # the page is in `GMode::PageDescription` or `GMode::PathObject`.
+    def rectangle(x : Number, y : Number, w : Number, h : Number)
+      requires_mode GMode::PageDescription, GMode::PathObject
       LibHaru.page_rectangle(self, real(x), real(y), real(w), real(h))
     end
+
+    # see `rectangle`
+    def rectangle(r : Rectangle)
+      rectangle r.x, r.y, r.width, r.height
+    end
+
+    # paints the current path.
+    # An application can invoke `stroke` when the graphics mode of the
+    # page is in `GMode::PathObject`. And it changes the graphics mode
+    # to `GMode::PageDescription`.
+    def stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_stroke(self)
+    end
+
+    # closes the current path, then it paints the path.
+    # An application can invoke `close_path_stroke` when the graphics
+    # mode of the page is in `GMode::PathObject`. And it changes the
+    # graphics mode to `GMode::PageDescription`.
+    def close_path_stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_close_path_stroke(self)
+    end
+
+    # fills the current path using the nonzero winding number rule.
+    # An application can invoke `fill` when the graphics mode of the`
+    # page is in `GMode::PathObject`. And it changes the graphics mode
+    # to `GMode::PageDescription`.
+    def fill
+      requires_mode GMode::PathObject
+      LibHaru.page_fill(self)
+    end
+
+    # fills the current path using the even-odd rule.
+    # An application can invoke `eofill` when the graphics mode of the
+    # page is in `GMode::PathObject`. And it changes the graphics mode
+    # to `GMode::PageDescription`.
+    def eofill
+      requires_mode GMode::PathObject
+      LibHaru.page_eofill(self)
+    end
+
+    # fills the current path using the nonzero winding number rule,
+    # then it paints the path. An application can invoke `fill_stroke`
+    # when the graphics mode of the page is in `GMode::PathObject`.
+    # And it changes the graphics mode to `GMode::PageDescription`.
+    def fill_stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_fill_stroke(self)
+    end
+
+    # fills the current path using the even-odd rule, then it paints
+    # the path. An application can invoke `eofill_stroke` when the
+    # graphics mode of the page is in `GMode::PathObject`. And it
+    # changes the graphics mode to `GMode::PageDescription`.
+    def eofill_stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_fill_stroke(self)
+    end
+
+    # closes the current path, fills the current path using the
+    # nonzero winding number rule, then it paints the path.
+    # An application can invoke `close_path_fill_stroke` when the
+    # graphics mode of the page is in `GMode::PathObject`. And it
+    # changes the graphics mode to `GMode::PageDescription`.
+    def close_path_fill_stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_close_path_fill_stroke(self)
+    end
+
+    # closes the current path, fills the current path using the
+    # even-odd rule, then it paints the path. An application can
+    # invoke `close_path_eofill_stroke` when the graphics mode
+    # of the page is in `GMode::PathObject`. And it changes the
+    # graphics mode to `GMode::PageDescription`.
+    def close_path_eofill_stroke
+      requires_mode GMode::PathObject
+      LibHaru.page_close_path_eofill_stroke(self)
+    end
+
+    # ends the path object without filling and painting operation.
+    # An application can invoke `end_path` when the graphics mode
+    # of the page is in `GMode::PathObject`. And it changes the
+    # graphics mode to `GMode::PageDescription`.
+    def end_path
+      requires_mode GMode::PathObject
+      LibHaru.page_end_path(self)
+    end
+
+    # `clip` modifies the current clipping path by intersecting
+    # it with the current path using the nonzero winding number
+    # rule. The clipping path is only modified after the succeeding
+    # painting operator. To avoid painting the current path, use
+    # the function `end_path`.
+    #
+    # Following painting operations will only affect the regions of
+    # the page contained by the clipping path. Initially, the
+    # clipping path includes the entire page. There is no way to
+    # enlarge the current clipping path, or to replace the clipping
+    # path with a new one. The functions `g_save` and `g_restore`
+    # may be used to save and restore the current graphics state,
+    # including the clipping path.
+    def clip
+      requires_mode GMode::PathObject
+      LibHaru.page_clip(self)
+    end
+
+    # `clip` modifies the current clipping path by intersecting it
+    # with the current path using the even-odd rule. The clipping
+    # path is only modified after the succeeding painting operator.
+    # To avoid painting the current path, use the function `end_path`.
+    #
+    # Following painting operations will only affect the regions of
+    # the page contained by the clipping path. Initially, the
+    # clipping path includes the entire page. There is no way to
+    # enlarge the current clipping path, or to replace the clipping
+    # path with a new one. The functions `g_save` and `g_restore`
+    # may be used to save and restore the current graphics state,
+    # including the clipping path.
+    # HPDF_Page_Clip() modifies the current clipping path by intersecting it with the current path using the even-odd rule. The clipping path is only modified after the succeeding painting operator. To avoid painting the current path, use the function HPDF_Page_EndPath().
+    def eoclip
+      requires_mode GMode::PathObject
+      LibHaru.page_eoclip(self)
+    end
+
+    # begins a text object and sets the current text position to
+    # the point (0, 0). An application can invoke `begin_text` when
+    # the graphics mode of the page is in `GMode::PageDescription`.
+    # And it changes the graphics mode to `GMode::TextObject`.
+    def begin_text
+      requires_mode GMode::PageDescription
+      LibHaru.page_begin_text(self)
+    end
+
+    # ends a text object. An application can invoke `text_end`
+    # when the graphics mode of the page is in `GMode::TextObject`.
+    # And it changes the graphics mode to `GMode::PageDescription`.
+    def text_end
+      requires_mode GMode::TextObject
+      LibHaru.page_end_text(self)
+    end
+
+    # sets the character spacing for text showing.
+    # The initial value of character spacing is 0.
+    # An application can invoke `char_space=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *value* the value of character spacing.
+    def char_space=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_char_space(self, real(value))
+    end
+
+    # sets the word spacing for text showing.
+    # The initial value of word spacing is 0.
+    # An application can invoke `word_space=` when the graphics mode
+    # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
+    #
+    # * *value* the value of word spacing.
+    def word_space=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_word_space(self, real(value))
+    end
+
+    # sets the horizontal scalling for text showing.
+    # The initial value of horizontal scalling is 100.
+    # An application can invoke `horizontal_scalling=` when the
+    # graphics mode of the page is in `GMode::PageDescription` or
+    # `GMode::TextObject`.
+    def horizontal_scalling=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_horizontal_scalling(self, real(value))
+    end
+
+    # sets the text leading (line spacing) for text showing.
+    # The initial value of leading is 0.
+    # An application can invoke `text_leading=` when the graphics
+    # mode of the page is in `GMode::PageDescription` or
+    # `GMode::TextObject`.
+    def text_leading=(value : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_text_leading(self, real(value))
+    end
+
+    # sets the type of font and size leading.
+    # An application can invoke `set_font_and_size` when the graphics
+    # mode of the page is in `GMode::PageDescription` or
+    # `GMode::TextObject`.
+    def set_font_and_size(font : Hpdf::Font, size : Number)
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_set_font_and_size(self, font, real(size))
+    end
+
+    # see `set_font_and_size`.
+    def set_font_and_size(font : String, size : Number)
+      set_font_and_size @doc.font(font), size
+    end
+
+    ###########################
 
 
     def set_rgb_stroke(r, g, b)
@@ -475,32 +678,15 @@ module Hpdf
       LibHaru.page_set_rgb_fill(self, real(r), real(g), real(b))
     end
 
-    def stroke
-      LibHaru.page_stroke(self)
-    end
 
-    def fill
-      LibHaru.page_fill(self)
-    end
-
-    def fill_stroke
-      LibHaru.page_fill_stroke(self)
-    end
 
     def clip
       LibHaru.page_clip(self)
     end
 
-    def set_font_and_size(font : Hpdf::Font, size)
-      LibHaru.page_set_font_and_size(self, font, real(size))
-    end
 
     def text_height(text)
       LibHaru.page_text_height(self, text)
-    end
-
-    def begin_text
-      LibHaru.page_begin_text(self)
     end
 
     def text_out(x, y, text)
@@ -518,9 +704,6 @@ module Hpdf
       LibHaru.page_text_out(self, real(x.as(Number)), real(y.as(Number)), text)
     end
 
-    def text_end
-      LibHaru.page_end_text(self)
-    end
 
     def move_text_pos(x, y)
       LibHaru.page_move_text_pos(self, real(x), real(y))
@@ -530,9 +713,6 @@ module Hpdf
       LibHaru.page_show_text(self, text)
     end
 
-    def set_text_leading(lead)
-      LibHaru.page_set_text_leading(self, real(lead))
-    end
 
     def show_text_next_line(text)
       LibHaru.page_show_text_next_line(self, text)

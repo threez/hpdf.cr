@@ -24,18 +24,17 @@ describe Hpdf::Image do
   end
 
   it "can be loaded from mem if raw" do
-    testdoc do |pdf|
+    testdoc "raw-array" do |pdf|
       buf = Array(UInt8).new(256) { |i| i.to_u8 }
       img = pdf.load_raw_image_from_mem buf, 16, 16, Hpdf::ColorSpace::DeviceGray, 8
 
       page = pdf.add_page
       page.draw_image img, 100, 100, 100, 100
-      pdf.save_to_file "spec-raw-array.pdf"
     end
   end
 
   it "can be loaded from InMemoryGrayImage" do
-    testdoc do |pdf|
+    testdoc "raw-gray-img" do |pdf|
       gi = Hpdf::Raw::GrayImage.new(4, 4)
       gi[0, 1] = 0x7f
       gi[3, 1] = 0x7f
@@ -45,12 +44,11 @@ describe Hpdf::Image do
 
       page = pdf.add_page
       page.draw_image img, 100, 100, 100, 100
-      pdf.save_to_file "spec-raw-gray-img.pdf"
     end
   end
 
   it "can be loaded from InMemoryRgbImage" do
-    testdoc do |pdf|
+    testdoc "raw-rgb-img" do |pdf|
       gi = Hpdf::Raw::RgbImage.new(4, 4)
       gi[0, 1] = Hpdf::Raw::RgbColor.new(0xff, 0, 0)
       gi[3, 1] = Hpdf::Raw::RgbColor.new(0, 0xff, 0)
@@ -60,12 +58,11 @@ describe Hpdf::Image do
 
       page = pdf.add_page
       page.draw_image img, 100, 100, 100, 100
-      pdf.save_to_file "spec-raw-rgb-img.pdf"
     end
   end
 
   it "can be loaded from InMemoryCmykImage" do
-    testdoc do |pdf|
+    testdoc "raw-cmyk-img" do |pdf|
       gi = Hpdf::Raw::CmykImage.new(4, 4)
       gi[0, 1] = Hpdf::Raw::CmykColor.new(0xff, 0, 0, 0)
       gi[3, 1] = Hpdf::Raw::CmykColor.new(0, 0xff, 0, 0)
@@ -75,7 +72,6 @@ describe Hpdf::Image do
 
       page = pdf.add_page
       page.draw_image img, 100, 100, 100, 100
-      pdf.save_to_file "spec-raw-cmyk-img.pdf"
     end
   end
 
