@@ -1,9 +1,10 @@
 describe Hpdf::Doc do
   it "can create a stream" do
     testdoc do |pdf|
+      pdf.creator = "test"
       pdf.add_page
       stream = pdf.to_io
-      stream.size.should eq 624
+      stream.size.should eq 601
       stream.to_s[0..10].should eq "%PDF-1.3\n%\xB7"
     end
   end
@@ -81,7 +82,10 @@ describe Hpdf::Doc do
       pdf.creation_date.should eq nil
       pdf.mod_date.should eq nil
       pdf.author.should eq nil
-      pdf.creator.should eq "Haru Free PDF Library 2.3.0"
+      # The library version installed is different
+      # from OS to OS.
+      ire = /Haru Free PDF Library 2./i
+      ire.matches?(pdf.creator.not_nil!).should eq true
       pdf.title.should eq nil
       pdf.subject.should eq nil
       pdf.keywords.should eq nil
