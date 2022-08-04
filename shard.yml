@@ -12,6 +12,11 @@ targets:
   example-line:
     main: ./examples/line.cr
 
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.0.0
+
 libraries:
   libhpdf: 2.3.0
 

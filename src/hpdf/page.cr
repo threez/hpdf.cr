@@ -84,7 +84,7 @@ module Hpdf
     def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.page_measure_text(self, text,
         real(width),  bool(word_wrap), out real_width)
-      return MeasuredText.new(size, real_width)
+      MeasuredText.new(size, real_width)
     end
 
     # gets the current graphics mode.
@@ -929,7 +929,7 @@ module Hpdf
     end
 
     def draw_rectangle(x : Number, y : Number, w : Number, h : Number, *, line_width lw = 1)
-      line_width = lw
+      @line_width = lw
       rectangle(x, y, w, h)
       stroke
     end

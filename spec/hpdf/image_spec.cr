@@ -25,7 +25,7 @@ describe Hpdf::Image do
 
   it "can be loaded from mem if raw" do
     testdoc "raw-array" do |pdf|
-      buf = Array(UInt8).new(256) { |i| i.to_u8 }
+      buf = Array(UInt8).new(256, &.to_u8)
       img = pdf.load_raw_image_from_mem buf, 16, 16, Hpdf::ColorSpace::DeviceGray, 8
 
       page = pdf.add_page

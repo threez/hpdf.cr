@@ -70,7 +70,7 @@ module Hpdf
       size = LibHaru.font_measure_text(self, text, text.size,
         real(width), real(font_size), real(char_space), real(word_space),
         bool(word_wrap), out real_width)
-      return MeasuredText.new(size, real_width)
+      MeasuredText.new(size, real_width)
     end
   end
 end

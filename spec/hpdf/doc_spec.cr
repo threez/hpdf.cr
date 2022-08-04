@@ -30,7 +30,7 @@ describe Hpdf::Doc do
       last = pdf.add_page
       pdf.current_page.should eq last
 
-      first = pdf.insert_page last
+      pdf.insert_page last
       pdf.current_page.should eq last
     end
   end
@@ -98,7 +98,7 @@ describe Hpdf::Doc do
       pdf.subject = "Programming"
       pdf.keywords = "Crystal,LibHaru"
 
-      page = pdf.add_page
+      pdf.add_page
       pdf.creation_date.should_not eq nil
       pdf.mod_date.should_not eq nil
       pdf.author.should eq "Vincent"

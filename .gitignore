@@ -9,3 +9,4 @@
 /shard.lock
 
 *.pdf
+.vscode

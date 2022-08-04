@@ -12,7 +12,9 @@ jobs:
         uses: crystal-lang/install-crystal@v1
       - name: Install libharu
         run: sudo apt install libhpdf-dev
+      - name: Install development dependencies
+        run: shards install
       - name: Run tests
-        run: make spec
+        run: make lint spec
       - name: Run examples
         run: make examples
