@@ -179,7 +179,7 @@ describe Hpdf::Image do
   end
 
   it "can work with page modes" do
-    testpage do |page|
+    testpage do
       text Hpdf::Base14::Helvetica, 10 do
         g_mode.should eq Hpdf::GMode::TextObject
         g_state_depth.should eq 1

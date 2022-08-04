@@ -8,7 +8,7 @@ module Hpdf
     @pages : Array(Page)
 
     def initialize
-      @doc = LibHaru.new(->(error_no, detail_no, asd) {
+      @doc = LibHaru.new(->(error_no, detail_no, _user_data) {
         raise Exception.errcode(error_no, detail_no)
       }, nil)
       unless @doc
@@ -40,7 +40,7 @@ module Hpdf
 
       LibHaru.save_to_stream(self)
 
-      while true
+      loop do
         size = slice.size.to_u32
         LibHaru.read_from_stream(self, slice, pointerof(size))
         break if size == 0

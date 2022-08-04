@@ -34,4 +34,3 @@ describe Hpdf::Font do
     m.real_width.should eq 42.12.to_f32
   end
 end
-
