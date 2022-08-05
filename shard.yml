@@ -21,6 +21,10 @@ targets:
     main: ./examples/jpfont.cr
   example-colortext:
     main: ./examples/colortext.cr
+  example-text-annotation:
+    main: ./examples/text_annotation.cr
+  example-link-annotation:
+    main: ./examples/link_annotation.cr
 
 development_dependencies:
   ameba:

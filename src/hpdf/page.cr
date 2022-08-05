@@ -64,9 +64,31 @@ module Hpdf
       Destination.new(LibHaru.page_create_destination(self), @doc)
     end
 
-    # TODO HPDF_Page_CreateTextAnnot
-    # TODO HPDF_Page_CreateLinkAnnot
-    # TODO HPDF_Page_CreateURILinkAnnot
+    # creates a new text annotation object for the page.
+    #
+    # * *rect* a rectangle where the annotation is displayed
+    # * *text* the text to be displayed.
+    # * *encoder* an encoder handle which is used to encode the text.
+    #   If it is null, PDFDocEncoding is used.
+    def create_text_annotation(rect : Rectangle, text : String, encoder : Encoder? = nil) : TextAnnotation
+      TextAnnotation.new(LibHaru.page_create_text_annotation(self, rect, text, encoder), @doc, self)
+    end
+
+    # creates a new link annotation object for the page.
+    #
+    # * *rect* a rectangle of clickable area.
+    # * *dst* a handle of destination object to jump to.
+    def create_link_annotation(rect : Rectangle, dst : Destination) : LinkAnnotation
+      LinkAnnotation.new(LibHaru.page_create_link_annotation(self, rect, dst), @doc, self)
+    end
+
+    # creates a new web link annotation object for the page.
+    #
+    # * *rect* a rectangle of clickable area.
+    # * *uri* URL of destination to jump to.
+    def create_uri_link_annotation(rect : Rectangle, uri : String)
+      LinkAnnotation.new(LibHaru.page_create_uri_link_annotation(self, rect, uri), @doc, self)
+    end
 
     # gets the width of the text in current fontsize, character spacing and word spacing.
     def text_width(text : String) : Float32
@@ -113,7 +135,7 @@ module Hpdf
     # An application can invoke `current_text_pos` only when graphics
     # mode is `GMode::TextObject`.
     def current_text_pos : Point
-      Point.new(LibHaru.page_get_current_pos(self))
+      Point.new(LibHaru.page_get_current_text_pos(self))
     end
 
     # gets the handle of the page's current font.
@@ -127,8 +149,6 @@ module Hpdf
     def current_font_size : Float32
       LibHaru.page_get_current_font_size(self).to_f32
     end
-
-    # TODO HPDF_Page_GetTransMatrix
 
     # gets the current line width of the page. It returns the current
     # line width for path painting of the page. Otherwise it returns 1.
@@ -181,8 +201,6 @@ module Hpdf
     def horizontal_scaling : Float32
       LibHaru.page_get_horizontal_scalling(self).to_f32
     end
-
-    # TODO HPDF_Page_GetTextRenderingMode
 
     # returns the current value of the page's text rising.
     def text_rise : Float32
@@ -482,84 +500,84 @@ module Hpdf
 
     # paints the current path.
     # An application can invoke `stroke` when the `graphics_mode` of the
-    # page is in `GMode::PathObject`. And it changes the graphics mode
-    # to `GMode::PageDescription`.
+    # page is in `GMode::PathObject` or `GMode::ClippingPath`.
+    # And it changes the graphics mode to `GMode::PageDescription`.
     def stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_stroke(self)
     end
 
     # closes the current path, then it paints the path.
     # An application can invoke `close_path_stroke` when the graphics
-    # mode of the page is in `GMode::PathObject`. And it changes the
+    # mode of the page is in `GMode::PathObject` or `GMode::ClippingPath`. And it changes the
     # graphics mode to `GMode::PageDescription`.
     def close_path_stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_close_path_stroke(self)
     end
 
     # fills the current path using the nonzero winding number rule.
     # An application can invoke `fill` when the `graphics_mode` of the`
-    # page is in `GMode::PathObject`. And it changes the graphics mode
+    # page is in `GMode::PathObject` or `GMode::ClippingPath`. And it changes the graphics mode
     # to `GMode::PageDescription`.
     def fill
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_fill(self)
     end
 
     # fills the current path using the even-odd rule.
     # An application can invoke `eofill` when the `graphics_mode` of the
-    # page is in `GMode::PathObject`. And it changes the graphics mode
+    # page is in `GMode::PathObject` or `GMode::ClippingPath`. And it changes the graphics mode
     # to `GMode::PageDescription`.
     def eofill
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_eofill(self)
     end
 
     # fills the current path using the nonzero winding number rule,
     # then it paints the path. An application can invoke `fill_stroke`
-    # when the `graphics_mode` of the page is in `GMode::PathObject`.
+    # when the `graphics_mode` of the page is in `GMode::PathObject` or `GMode::ClippingPath`.
     # And it changes the graphics mode to `GMode::PageDescription`.
     def fill_stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_fill_stroke(self)
     end
 
     # fills the current path using the even-odd rule, then it paints
     # the path. An application can invoke `eofill_stroke` when the
-    # graphics mode of the page is in `GMode::PathObject`. And it
+    # graphics mode of the page is in `GMode::PathObject` or `GMode::ClippingPath`. And it
     # changes the graphics mode to `GMode::PageDescription`.
     def eofill_stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_fill_stroke(self)
     end
 
     # closes the current path, fills the current path using the
     # nonzero winding number rule, then it paints the path.
     # An application can invoke `close_path_fill_stroke` when the
-    # graphics mode of the page is in `GMode::PathObject`. And it
+    # graphics mode of the page is in `GMode::PathObject` or `GMode::ClippingPath`. And it
     # changes the graphics mode to `GMode::PageDescription`.
     def close_path_fill_stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_close_path_fill_stroke(self)
     end
 
     # closes the current path, fills the current path using the
     # even-odd rule, then it paints the path. An application can
     # invoke `close_path_eofill_stroke` when the `graphics_mode`
-    # of the page is in `GMode::PathObject`. And it changes the
+    # of the page is in `GMode::PathObject` or `GMode::ClippingPath`. And it changes the
     # graphics mode to `GMode::PageDescription`.
     def close_path_eofill_stroke
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_close_path_eofill_stroke(self)
     end
 
     # ends the path object without filling and painting operation.
     # An application can invoke `end_path` when the `graphics_mode`
-    # of the page is in `GMode::PathObject`. And it changes the
+    # of the page is in `GMode::PathObject` or `GMode::ClippingPath`. And it changes the
     # graphics mode to `GMode::PageDescription`.
     def end_path
-      requires_mode GMode::PathObject
+      requires_mode GMode::PathObject, GMode::ClippingPath
       LibHaru.page_end_path(self)
     end
 
@@ -843,8 +861,6 @@ module Hpdf
       requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_cmyk_stroke(self, real(c), real(m), real(y), real(k))
     end
-
-    # TODO HPDF_Page_ExecuteXObject
 
     # shows an image in one operation.
     # An application can invoke `draw_image` when the `graphics_mode`

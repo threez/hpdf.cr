@@ -23,6 +23,56 @@ module Hpdf
 
     def initialize(@x : Float32, @y : Float32, @width : Float32, @height : Float32)
     end
+
+    def initialize()
+      @x = 0
+      @y = 0
+      @width = 0
+      @height = 0
+    end
+
+    def to_unsafe
+      r = LibHaru::Rect.new
+      r.left = left
+      r.right = right
+      r.bottom = bottom
+      r.top = top
+      r
+    end
+
+    def left
+      @x
+    end
+
+    def right
+      @x + @width
+    end
+
+    def bottom
+      @y
+    end
+
+    def top
+      @y + @height
+    end
+
+    def left=(left : Float32)
+      @x = left
+    end
+
+    # will be converted to `width`, so `left` has to be set before
+    def right=(right : Float32)
+      @width = right - left
+    end
+
+    def bottom=(bottom : Float32)
+      @y = bottom
+    end
+
+    # will be converted to `height`, so `bottom` has to be set before
+    def top=(top : Float32)
+      @height = top - bottom
+    end
   end
 
   struct MeasuredText

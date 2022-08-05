@@ -73,10 +73,9 @@ describe Hpdf::Doc do
       pdf.use_jp_fonts
     end
 
-    #TODO find out why fonts are not found
-    #Hpdf::JapaneseFonts::All.each do |font_name|
-    #  pdf.font font_name
-    #end
+    Hpdf::JapaneseFonts::All.each do |font_name|
+      pdf.font font_name
+    end
   end
   {% end %}
 

@@ -248,32 +248,55 @@ module Hpdf
   # used in `Encoder#type`.
   enum EncoderType
     # Encoder is an encoder for single byte characters.
-    SingleByte         = 0
+    SingleByte = 0
     # Encoder is an encoder for multi byte characters.
-    DoubleByte         = 1
+    DoubleByte
     # Encoder is uninitialized. (May be it is an encoder for multi byte characters.)
-    Uninitialized      = 2
+    Uninitialized
     # Invalid encoder.
-    Unknown            = 3
+    Unknown
   end
 
   # used in `Encoder#byte_type`.
   enum ByteType
     # Single byte character.
-    Single  = 0
+    Single = 0
     # Lead byte of a double-byte character.
-    Lead    = 1
+    Lead
     # Trailing byte of a double-byte character.
-    Trial   = 2
+    Trial
     # Invalid encoder or cannot judge the byte type.
-    Unknown = 3
+    Unknown
   end
 
   # used in `Encoder#writing_mode`
   enum WritingMode
     # horizontal writing mode.
-    Horizontal = 2
+    Horizontal = 0
     # vertical writing mode.
-    Vertical = 2
+    Vertical
+  end
+
+  # used in `LinkAnnotation#highlight_mode=`.
+  enum AnnotationHighlightMode
+    # No highlighting.
+	  NoHightlight = 0
+    # Invert the contents of the area of annotation.
+	  InvertBox
+    # Invert the annotation's border.
+	  InvertBorder
+    # Dent the annotation.
+	  DownAppearance
+  end
+
+  # used in `TextAnnotation#icon=`.
+  enum AnnotationIcon
+    Comment = 0
+    Key
+    Note
+    Help
+    NewParagraph
+    Paragraph
+    Insert
   end
 end

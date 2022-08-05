@@ -4,7 +4,7 @@ require "../src/hpdf"
 
 {% unless flag?(:windows) %}
 puts "requires fonts only available on win32"
-exit 1
+exit 0
 {% end %}
 
 SAMP_TEXT1 = "abcdefgABCDEFG123!#$\%&+-@?"

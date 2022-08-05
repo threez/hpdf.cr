@@ -79,7 +79,7 @@ lib LibHaru
   fun get_page_layout = HPDF_GetPageLayout(Doc) : UInt
   fun set_page_mode = HPDF_SetPageMode(Doc, UInt) : Status
   fun get_page_mode = HPDF_GetPageMode(Doc) : UInt
-  # TODO fun set_open_action = HPDF_SetOpenAction
+  # TODO HPDF_SetOpenAction
   fun get_current_page = HPDF_GetCurrentPage(Doc) : Page
   fun add_page = HPDF_AddPage(Doc) : Page
   fun insert_page = HPDF_InsertPage(Doc, Page) : Page
@@ -121,6 +121,9 @@ lib LibHaru
   fun page_get_height = HPDF_Page_GetHeight(Page) : Real
   fun page_get_width = HPDF_Page_GetWidth(Page) : Real
   fun page_create_destination = HPDF_Page_CreateDestination(Page) : Destination
+  fun page_create_text_annotation = HPDF_Page_CreateTextAnnot(Page, Rect, LibC::Char*, Encoder) : Annotation
+  fun page_create_link_annotation = HPDF_Page_CreateLinkAnnot(Page, Rect, Destination) : Annotation
+  fun page_create_uri_link_annotation = HPDF_Page_CreateURILinkAnnot(Page, Rect, LibC::Char*) : Annotation
   fun page_text_width = HPDF_Page_TextWidth(Page, LibC::Char*) : Real
   fun page_measure_text = HPDF_Page_MeasureText(Page, LibC::Char*, Real, Bool, Real*) : UInt
   fun page_get_g_mode = HPDF_Page_GetGMode(Page) : UInt16
@@ -128,6 +131,7 @@ lib LibHaru
   fun page_get_current_text_pos = HPDF_Page_GetCurrentTextPos(Page) : Point
   fun page_get_current_font = HPDF_Page_GetCurrentFont(Page) : Font
   fun page_get_current_font_size = HPDF_Page_GetCurrentFontSize(Page) : Real
+  # TODO HPDF_Page_GetTransMatrix
   fun page_get_line_width = HPDF_Page_GetLineWidth(Page) : Real
   fun page_get_line_cap = HPDF_Page_GetLineCap(Page) : UInt
   fun page_get_line_join = HPDF_Page_GetLineJoin(Page) : UInt
@@ -137,11 +141,13 @@ lib LibHaru
   fun page_get_char_space = HPDF_Page_GetCharSpace(Page) : Real
   fun page_get_word_space = HPDF_Page_GetWordSpace(Page) : Real
   fun page_get_horizontal_scalling = HPDF_Page_GetHorizontalScalling(Page) : Real
+  # TODO HPDF_Page_GetTextRenderingMode
   fun page_get_text_rise = HPDF_Page_GetTextRise(Page) : Real
   fun page_get_rgb_fill = HPDF_Page_GetRGBFill(Page) : RGB
   fun page_get_rgb_stroke = HPDF_Page_GetRGBStroke(Page) : RGB
   fun page_get_cmyk_fill = HPDF_Page_GetCMYKFill(Page) : CMYK
   fun page_get_cmyk_stroke = HPDF_Page_GetCMYKStroke(Page) : CMYK
+    # TODO HPDF_Page_ExecuteXObject
   fun page_get_gray_fill = HPDF_Page_GetGrayFill(Page) : Real
   fun page_get_gray_stroke = HPDF_Page_GetGrayStroke(Page) : Real
   fun page_get_stroking_color_space = HPDF_Page_GetStrokingColorSpace(Page) : UInt
@@ -224,6 +230,10 @@ lib LibHaru
   fun encoder_get_writing_mode = HPDF_Encoder_GetWritingMode(Encoder) : UInt
 
   # Annotation
+  fun link_annot_set_highlight_mode = HPDF_LinkAnnot_SetHighlightMode(Annotation, UInt) : Status
+  fun link_annot_set_border_style = HPDF_LinkAnnot_SetBorderStyle(Annotation, Real, UInt16, UInt16) : Status
+  fun text_annot_set_icon = HPDF_TextAnnot_SetIcon(Annotation, UInt) : Status
+  fun text_annot_set_opened = HPDF_TextAnnot_SetOpened(Annotation, Bool) : Status
 
   # Outline
   fun outline_set_opened = HPDF_Outline_SetOpened(Outline, Bool) : Status

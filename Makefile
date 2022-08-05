@@ -13,7 +13,7 @@ docs:
 
 examples: clean
 	shards build
-	./bin/*
+	sh ./examples/run.sh
 
 clean:
 	rm -rf bin
