@@ -6,7 +6,7 @@ spec:
 	crystal spec -v
 
 lint:
-	./bin/ameba
+	./lib/ameba/bin/ameba
 
 docs:
 	crystal docs
