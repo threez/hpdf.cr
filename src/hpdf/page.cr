@@ -150,6 +150,11 @@ module Hpdf
       LibHaru.page_get_current_font_size(self).to_f32
     end
 
+    # gets the current transformation matrix of the page.
+    def trans_matrix : TransMatrix
+      TransMatrix.new(LibHaru.page_get_trans_matrix(self))
+    end
+
     # gets the current line width of the page. It returns the current
     # line width for path painting of the page. Otherwise it returns 1.
     def line_width : Float32
@@ -189,46 +194,63 @@ module Hpdf
 
     # gets the current value of the page's character spacing.
     def char_space : Float32
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_get_char_space(self).to_f32
     end
 
     # returns the current value of the page's word spacing.
     def word_space : Float32
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_get_word_space(self).to_f32
     end
 
     # returns the current value of the page's horizontal scaling for text showing.
     def horizontal_scaling : Float32
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_get_horizontal_scalling(self).to_f32
     end
 
     # returns the current value of the page's text rising.
     def text_rise : Float32
+      requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_get_text_rise(self).to_f32
     end
 
     # returns the current value of the page's filling color. `rgb_fill` is valid
     # only when the page's filling color space is `ColorSpace::DeviceRgb`.
     def rgb_fill : RGB
+      requires_mode GMode::PageDescription, GMode::TextObject
       RGB.new(LibHaru.page_get_rgb_fill(self))
     end
 
     # returns the current value of the page's stroking color. `rgb_stroke` is
     # valid only when the page's stroking color space is `ColorSpace::DeviceRgb`.
     def rgb_stroke : RGB
+      requires_mode GMode::PageDescription, GMode::TextObject
       RGB.new(LibHaru.page_get_rgb_stroke(self))
     end
 
     # returns the current value of the page's filling color. `cmyk_fill` is
     # valid only when the page's filling color space is `ColorSpace::DeviceCmyk`.
     def cmyk_fill : CMYK
+      requires_mode GMode::PageDescription, GMode::TextObject
       CMYK.new(LibHaru.page_get_cmyk_fill(self))
     end
 
     # returns the current value of the page's stroking color. `cmyk_stroke` is
     # valid only when the page's stroking color space is `ColorSpace::DeviceCmyk`.
     def cmyk_stroke : CMYK
+      requires_mode GMode::PageDescription, GMode::TextObject
       CMYK.new(LibHaru.page_get_cmyk_stroke(self))
+    end
+
+    # draws the XObject using the current graphics context. This is used
+    # by `draw_image` to draw the `Image` by first calling `g_save` and
+    # `concat` and then calling `g_restore` after `execute_x_object`.
+    # It could be used manually to rotate an image.
+    def execute_x_object(image : Image)
+      requires_mode GMode::PageDescription
+      LibHaru.page_execute_x_object(self, image)
     end
 
     # returns the current value of the page's filling color. `gray_fill` is
@@ -664,6 +686,11 @@ module Hpdf
     def horizontal_scalling=(value : Number)
       requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_horizontal_scalling(self, real(value))
+    end
+
+    # returns the current text rendering mode.
+    def text_rendering_mode : TextRenderingMode
+      TextRenderingMode.new(LibHaru.page_get_text_rendering_mode(self).to_i)
     end
 
     # sets the text leading (line spacing) for text showing.

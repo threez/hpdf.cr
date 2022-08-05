@@ -18,3 +18,4 @@ examples: clean
 clean:
 	rm -rf bin
 	rm -rf *.pdf
+	rm -rf docs

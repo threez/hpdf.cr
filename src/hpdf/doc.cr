@@ -100,6 +100,11 @@ module Hpdf
       PageMode.new LibHaru.get_page_mode(self).to_i32
     end
 
+    # set the first page to appear when a document is opened.
+    def open_action=(dst : Destination)
+      LibHaru.set_open_action(self, dst)
+    end
+
     # the handle of current page object.
     def current_page : Page?
       return nil if @pages.empty?

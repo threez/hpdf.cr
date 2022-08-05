@@ -66,6 +66,15 @@ lib LibHaru
     phase : UInt
   end
 
+  struct TransMatrix
+    a : Real
+    b : Real
+    c : Real
+    d : Real
+    x : Real
+    y : Real
+  end
+
   # Document handling
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
   fun free = HPDF_Free(Doc) : Void
@@ -79,7 +88,7 @@ lib LibHaru
   fun get_page_layout = HPDF_GetPageLayout(Doc) : UInt
   fun set_page_mode = HPDF_SetPageMode(Doc, UInt) : Status
   fun get_page_mode = HPDF_GetPageMode(Doc) : UInt
-  # TODO HPDF_SetOpenAction
+  fun set_open_action = HPDF_SetOpenAction (Doc, Destination) : Status
   fun get_current_page = HPDF_GetCurrentPage(Doc) : Page
   fun add_page = HPDF_AddPage(Doc) : Page
   fun insert_page = HPDF_InsertPage(Doc, Page) : Page
@@ -131,7 +140,7 @@ lib LibHaru
   fun page_get_current_text_pos = HPDF_Page_GetCurrentTextPos(Page) : Point
   fun page_get_current_font = HPDF_Page_GetCurrentFont(Page) : Font
   fun page_get_current_font_size = HPDF_Page_GetCurrentFontSize(Page) : Real
-  # TODO HPDF_Page_GetTransMatrix
+  fun page_get_trans_matrix = HPDF_Page_GetTransMatrix(Page) : TransMatrix
   fun page_get_line_width = HPDF_Page_GetLineWidth(Page) : Real
   fun page_get_line_cap = HPDF_Page_GetLineCap(Page) : UInt
   fun page_get_line_join = HPDF_Page_GetLineJoin(Page) : UInt
@@ -141,13 +150,13 @@ lib LibHaru
   fun page_get_char_space = HPDF_Page_GetCharSpace(Page) : Real
   fun page_get_word_space = HPDF_Page_GetWordSpace(Page) : Real
   fun page_get_horizontal_scalling = HPDF_Page_GetHorizontalScalling(Page) : Real
-  # TODO HPDF_Page_GetTextRenderingMode
+  fun page_get_text_rendering_mode = HPDF_Page_GetTextRenderingMode(Page) : UInt
   fun page_get_text_rise = HPDF_Page_GetTextRise(Page) : Real
   fun page_get_rgb_fill = HPDF_Page_GetRGBFill(Page) : RGB
   fun page_get_rgb_stroke = HPDF_Page_GetRGBStroke(Page) : RGB
   fun page_get_cmyk_fill = HPDF_Page_GetCMYKFill(Page) : CMYK
   fun page_get_cmyk_stroke = HPDF_Page_GetCMYKStroke(Page) : CMYK
-    # TODO HPDF_Page_ExecuteXObject
+  fun page_execute_x_object = HPDF_Page_ExecuteXObject(Page, Image) : Status
   fun page_get_gray_fill = HPDF_Page_GetGrayFill(Page) : Real
   fun page_get_gray_stroke = HPDF_Page_GetGrayStroke(Page) : Real
   fun page_get_stroking_color_space = HPDF_Page_GetStrokingColorSpace(Page) : UInt

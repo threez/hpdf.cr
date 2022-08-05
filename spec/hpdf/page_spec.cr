@@ -262,6 +262,7 @@ describe Hpdf::Image do
 
             page.text_rendering_mode = Hpdf::TextRenderingMode.new(i)
             text_out 100, height - 40*(i+1), "ABCabc123!?$"
+            text_rendering_mode.should eq Hpdf::TextRenderingMode.new(i)
           end
         end
       end
@@ -294,6 +295,30 @@ describe Hpdf::Image do
         size = text_rect 500, 300, 600, 400, "deserunt mollit anim id est laborum"
         size.should eq 9
       end
+    end
+  end
+
+  it "can handle transformations" do
+    testpage do |page|
+      tm = page.trans_matrix
+      tm.a.should eq 1
+      tm.b.should eq 0
+      tm.c.should eq 0
+      tm.d.should eq 1
+      tm.x.should eq 0
+      tm.y.should eq 0
+    end
+
+    testpage do |page|
+      page.concat 1, 2, 3, 4, 5, 6
+
+      tm = page.trans_matrix
+      tm.a.should eq 1
+      tm.b.should eq 2
+      tm.c.should eq 3
+      tm.d.should eq 4
+      tm.x.should eq 5
+      tm.y.should eq 6
     end
   end
 end

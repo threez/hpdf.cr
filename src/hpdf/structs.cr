@@ -111,4 +111,21 @@ module Hpdf
       @k = point.k.to_f32
     end
   end
+
+  struct TransMatrix
+    property a, b, c, d, x, y
+
+    def initialize(@a : Float32, @b : Float32, @c : Float32, @d : Float32,
+                   @x : Float32, @y : Float32)
+    end
+
+    def initialize(tm : LibHaru::TransMatrix)
+      @a = tm.a.to_f32
+      @b = tm.b.to_f32
+      @c = tm.c.to_f32
+      @d = tm.d.to_f32
+      @x = tm.x.to_f32
+      @y = tm.y.to_f32
+    end
+  end
 end
