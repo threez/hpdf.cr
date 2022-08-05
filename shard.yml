@@ -17,6 +17,8 @@ targets:
     main: ./examples/encodings.cr
   example-text:
     main: ./examples/text.cr
+  example-jpfont:
+    main: ./examples/jpfont.cr
 
 development_dependencies:
   ameba:

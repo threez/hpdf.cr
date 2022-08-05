@@ -204,13 +204,60 @@ module Hpdf
       Outline.new(LibHaru.create_outline(self, parent, title, encoder), self)
     end
 
-    # TODO fun encoder
-    # TODO fun current_encoder
-    # TODO fun current_encoder=
-    # TODO use_jp_encodings
-    # TODO use_kr_encodings
-    # TODO use_cns_encodings
-    # TODO use_cnt_encodings
+    # finds the handle of a corresponding encoder object by
+    # specified encoding name.
+    #
+    # * *name* specify a valid encoding name, see `Encodings`
+    def find_encoder(name : String) : Encoder
+      Encoder.new(name, LibHaru.get_encoder(self, name), self)
+    end
+
+    # gets the handle of the current encoder of the document object.
+    # The current encoder is set by invoking `encoder=` and it is used
+    # to processing a text when an application changes document attributes.
+    # The default value of it is 'nil'.
+    def encoder : Encoder?
+      v = LibHaru.get_current_encoder(self)
+      Encoder.new(v, self) unless v.nil?
+    end
+
+    # sets the current encoder for the document.
+    #
+    # * *encoding_name* the name of an encoding. (See `Encodings`)
+    def encoder=(encoding_name : String)
+      LibHaru.set_current_encoder(self, encoding_name)
+    end
+
+    # see `encoder=`.
+    def encoder=(enc : Encoder)
+      self.encoder = enc.name
+    end
+
+    # enables Japanese encodings. After `use_jp_encodings` is involed,
+    # an application can use the following Japanese encodings.
+    def use_jp_encodings
+      LibHaru.use_jp_encodings(self)
+    end
+
+    # enables Korean encodings. After `use_kr_encodings`
+    # is involed, an application can use the following Korean encodings.
+    def use_kr_encodings
+      LibHaru.use_kr_encodings(self)
+    end
+
+    # enables simplified Chinese encodings. After `use_cns_encodings`
+    # is involed, an application can use the following simplified
+    # Chinese encodings.
+    def use_cns_encodings
+      LibHaru.use_cns_encodings(self)
+    end
+
+    # enables traditional Chinese encodings. After `use_cnt_encodings`
+    # is involed, an application can use the following traditional
+    # Chinese encodings.
+    def use_cnt_encodings
+      LibHaru.use_cnt_encodings(self)
+    end
 
     # loads an external png image file.
     #

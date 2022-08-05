@@ -36,7 +36,10 @@ module Hpdf
   class Encoder
     include Helper
 
-    def initialize(@encoder : LibHaru::Encoder, @doc : Doc)
+    # name of the encoding, one of `Encodings`
+    getter name : String
+
+    def initialize(@name, @encoder : LibHaru::Encoder, @doc : Doc)
     end
 
     def to_unsafe

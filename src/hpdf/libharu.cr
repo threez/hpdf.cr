@@ -93,10 +93,9 @@ lib LibHaru
   fun use_cns_fonts = HPDF_UseCNSFonts(Doc) : Status
   fun use_cnt_fonts = HPDF_UseCNTFonts(Doc) : Status
   fun create_outline = HPDF_CreateOutline(Doc, Outline, LibC::Char*, Encoder) : Outline
-  # TODO fun create_outline = HPDF_CreateOutline
-  # TODO fun get_encoder = HPDF_GetEncoder
-  # TODO fun get_current_encoder = HPDF_GetCurrentEncoder
-  # TODO fun set_current_encoder = HPDF_SetCurrentEncoder
+  fun get_encoder = HPDF_GetEncoder(Doc, LibC::Char*) : Encoder
+  fun get_current_encoder = HPDF_GetCurrentEncoder(Doc) : Encoder
+  fun set_current_encoder  = HPDF_SetCurrentEncoder(Doc, LibC::Char*) : Status
   fun use_jp_encodings = HPDF_UseJPEncodings(Doc) : Status
   fun use_kr_encodings = HPDF_UseKREncodings(Doc) : Status
   fun use_cns_encodings = HPDF_UseCNSEncodings(Doc) : Status

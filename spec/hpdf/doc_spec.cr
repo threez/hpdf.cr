@@ -66,6 +66,8 @@ describe Hpdf::Doc do
     end
   end
 
+  # requires fonts only available on win32
+  {% if flag?(:windows) %}
   it "can handle japanese fonts" do
     testdoc do |pdf|
       pdf.use_jp_fonts
@@ -76,6 +78,7 @@ describe Hpdf::Doc do
     #  pdf.font font_name
     #end
   end
+  {% end %}
 
   it "can get/set document attributes" do
     testdoc "doc-attributes" do |pdf|
