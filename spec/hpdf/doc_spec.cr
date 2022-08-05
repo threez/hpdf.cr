@@ -111,11 +111,12 @@ describe Hpdf::Doc do
 
   it "can encrypt documents" do
     testdoc "doc-password" do |pdf|
-      pdf.set_password_and_permission "test1234"
       page = pdf.add_page
       page.text Hpdf::Base14::Helvetica, 30 do
         page.text_out :center, :center, "Secret Document"
       end
+
+      pdf.set_password_and_permission "test1234"
     end
   end
 end

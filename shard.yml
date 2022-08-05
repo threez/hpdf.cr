@@ -11,6 +11,12 @@ targets:
     main: ./examples/font.cr
   example-line:
     main: ./examples/line.cr
+  example-arc:
+    main: ./examples/arc.cr
+  example-encodings:
+    main: ./examples/encodings.cr
+  example-text:
+    main: ./examples/text.cr
 
 development_dependencies:
   ameba:

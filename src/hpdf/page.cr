@@ -875,6 +875,19 @@ module Hpdf
       LibHaru.page_circle(self, real(x), real(y), real(ray))
     end
 
+    # appends a circle to the current path.
+    # An application can invoke `arc` when the `graphics_mode` of the
+    # page is in `GMode::PageDescription` or `GMode::PathObject`.
+    #
+    # * *x*, *y* the center point of the circle.
+    # * *ray* the ray of the circle.
+    # * *ang1* the angle of the begining of the arc.
+    # * *ang2* the angle of the end of the arc. It must be greater than ang1.
+    def arc(x : Number, y : Number, ray : Number, ang1 : Number, ang2 : Number)
+      requires_mode GMode::PageDescription, GMode::PathObject
+      LibHaru.page_arc(self, real(x), real(y), real(ray), real(ang1), real(ang2))
+    end
+
     # prints the text on the specified position.
     # An application can invoke `text_out` when the `graphics_mode`
     # of the page is in `GMode::TextObject`.

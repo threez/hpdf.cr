@@ -202,6 +202,7 @@ lib LibHaru
   fun page_set_cmyk_stroke = HPDF_Page_SetCMYKStroke(Page, Real, Real, Real, Real) : Status
   fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
   fun page_circle = HPDF_Page_Circle(Page, Real, Real, Real) : Status
+  fun page_arc = HPDF_Page_Arc(Page, Real, Real, Real, Real, Real) : Status
   fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
 
   # Font handling
