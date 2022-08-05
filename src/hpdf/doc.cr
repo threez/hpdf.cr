@@ -654,7 +654,17 @@ module Hpdf
 
     # custom pages are subclasses of `Page` that can have more methods
     # for higher level page constructs.
-    def custom_page(klass)
+    #
+    # ```
+    # class MyPage < Hpdf::Page
+    #   # ...
+    # end
+    #
+    # pdf = Hpdf::Doc.new do |pdf|
+    # page = pdf.add_custom_page(MyPage)
+    # # ...
+    # ```
+    def add_custom_page(klass)
       page = klass.new(LibHaru.add_page(self), self)
       @pages << page
       page
@@ -679,8 +689,21 @@ module Hpdf
     #
     # * *klass* can be changed to a subclass of `Page` in order
     #   to create methods for higher level page constructs.
+    #
+    # ### Example with custom page class
+    # ```
+    # class MyPage < Hpdf::Page
+    #   # ...
+    # end
+    #
+    # Hpdf::Doc.build do |pdf|
+    #   page(MyPage) do |page|
+    #     # ...
+    #   end
+    # end
+    # ```
     def page(klass = Page, &block)
-      page = custom_page(klass)
+      page = add_custom_page(klass)
       with page yield page
     end
   end

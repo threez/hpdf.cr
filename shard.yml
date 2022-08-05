@@ -19,6 +19,8 @@ targets:
     main: ./examples/text.cr
   example-jpfont:
     main: ./examples/jpfont.cr
+  example-colortext:
+    main: ./examples/colortext.cr
 
 development_dependencies:
   ameba:
