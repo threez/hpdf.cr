@@ -33,31 +33,19 @@ pdf.save_to_file "hello.pdf"
 
 ```
 
-Before usage you have to install the libraries:
+## C library dependencies
 
-### Debian/Ubuntu
+Before usage you have to install the library **libharu** which
+depends on **libpng** and **zlib**:
 
-```shell
-sudo apt install libhpdf-dev
-```
-
-### Centos
-
-```shell
-sudo yum install libharu-devel
-```
-
-### Fedora/Redhat
-
-```shell
-sudo dnf install libharu-devel
-```
-
-### FreeBSD
-
-```shell
-pkg install libharu
-```
+|System|Command|
+|------|-------|
+| Alpine | `apk add libharu` |
+| Debian/Ubuntu | `sudo apt install libhpdf-dev` |
+| Centos  | `sudo yum install libharu-devel` |
+| Fedora/Redhat | `sudo dnf install libharu-devel` |
+| FreeBSD | `pkg install libharu` |
+| OpenBSD | `pkg_add libharu` |
 
 ## Development
 
