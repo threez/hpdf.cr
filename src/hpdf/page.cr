@@ -881,7 +881,7 @@ module Hpdf
     #
     # * *x*, *y* the point position where the text is displayed.
     # * *text* the text to show.
-    def text_out(x, y, text)
+    def text_out(x : Number | Symbol, y : Number | Symbol, text : String)
       requires_mode GMode::TextObject
       if x == :center
         x = (width - text_width(text)) / 2

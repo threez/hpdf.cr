@@ -191,7 +191,19 @@ module Hpdf
       LibHaru.use_cnt_fonts(self)
     end
 
-    # TODO fun create_outline
+    # creates a new outline object.
+    #
+    # * *title* the caption of the outline object.
+    # * *parent* the handle of an outline object which comes to the
+    #   parent of the created outline object.
+    #   If this parameter is 'nil', The outline is created as a root outline.
+    # * *encoder* the handle of an encoding object applied to the title.
+    #   If 'nil' is set, `current_encoder` is used.
+    def create_outline(title : String, *, parent : Outline? = nil,
+                                          encoder : Encoder? = nil) : Outline
+      Outline.new(LibHaru.create_outline(self, parent, title, encoder), self)
+    end
+
     # TODO fun encoder
     # TODO fun current_encoder
     # TODO fun current_encoder=

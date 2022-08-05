@@ -220,6 +220,7 @@ module Hpdf
     # Other stream datas (fonts, cmaps and so on)  are compressed.
     Metadata      = 0x04
     # All stream datas are compressed
+    AllStreams    = Text | Image | Metadata
     BestCompress  = 0x10
     BestSpeed     = 0x20
   end
@@ -242,5 +243,37 @@ module Hpdf
     Shading          = 0x0010
     InlineImage      = 0x0020
     ExternalObject   = 0x0040
+  end
+
+  # used in `Encoder#type`.
+  enum EncoderType
+    # Encoder is an encoder for single byte characters.
+    SingleByte         = 0
+    # Encoder is an encoder for multi byte characters.
+    DoubleByte         = 1
+    # Encoder is uninitialized. (May be it is an encoder for multi byte characters.)
+    Uninitialized      = 2
+    # Invalid encoder.
+    Unknown            = 3
+  end
+
+  # used in `Encoder#byte_type`.
+  enum ByteType
+    # Single byte character.
+    Single  = 0
+    # Lead byte of a double-byte character.
+    Lead    = 1
+    # Trailing byte of a double-byte character.
+    Trial   = 2
+    # Invalid encoder or cannot judge the byte type.
+    Unknown = 3
+  end
+
+  # used in `Encoder#writing_mode`
+  enum WritingMode
+    # horizontal writing mode.
+    Horizontal = 2
+    # vertical writing mode.
+    Vertical = 2
   end
 end

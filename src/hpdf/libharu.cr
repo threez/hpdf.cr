@@ -92,6 +92,7 @@ lib LibHaru
   fun use_kr_fonts = HPDF_UseKRFonts(Doc) : Status
   fun use_cns_fonts = HPDF_UseCNSFonts(Doc) : Status
   fun use_cnt_fonts = HPDF_UseCNTFonts(Doc) : Status
+  fun create_outline = HPDF_CreateOutline(Doc, Outline, LibC::Char*, Encoder) : Outline
   # TODO fun create_outline = HPDF_CreateOutline
   # TODO fun get_encoder = HPDF_GetEncoder
   # TODO fun get_current_encoder = HPDF_GetCurrentEncoder
@@ -217,12 +218,26 @@ lib LibHaru
   fun page_text_rect = HPDF_Page_TextRect(Page, Real, Real, Real, Real, LibC::Char*, UInt, UInt*) : Status
 
   # Encoding
+  fun encoder_get_type = HPDF_Encoder_GetType(Encoder) : UInt
+  fun encoder_get_byte_type = HPDF_Encoder_GetByteType(Encoder, LibC::Char*, UInt) : UInt
+  fun encoder_get_unicode  = HPDF_Encoder_GetUnicode(Encoder, UInt16) : UInt16
+  fun encoder_get_writing_mode = HPDF_Encoder_GetWritingMode(Encoder) : UInt
 
   # Annotation
 
   # Outline
+  fun outline_set_opened = HPDF_Outline_SetOpened(Outline, Bool) : Status
+  fun outline_set_destination = HPDF_Outline_SetDestination (Outline, Destination) : Status
 
   # Destination
+  fun destination_set_xyz = HPDF_Destination_SetXYZ(Destination, Real, Real, Real) : Status
+  fun destination_set_fit = HPDF_Destination_SetFit(Destination) : Status
+  fun destination_set_fit_h = HPDF_Destination_SetFitH(Destination, Real) : Status
+  fun destination_set_fit_v = HPDF_Destination_SetFitV(Destination, Real) : Status
+  fun destination_set_fit_r = HPDF_Destination_SetFitR(Destination, Real, Real, Real, Real) : Status
+  fun destination_set_fit_b = HPDF_Destination_SetFitB(Destination) : Status
+  fun destination_set_fit_bh = HPDF_Destination_SetFitBH(Destination, Real) : Status
+  fun destination_set_fit_bv = HPDF_Destination_SetFitBV(Destination, Real) : Status
 
   # Image
   fun image_get_size = HPDF_Image_GetSize(Image) : Point
