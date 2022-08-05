@@ -1,4 +1,4 @@
-# hpdf [![.github/workflows/ci.yml](https://github.com/threez/hpdf.cr/actions/workflows/ci.yml/badge.svg)](https://github.com/threez/hpdf.cr/actions/workflows/ci.yml) [![https://threez.github.io/hpdf.cr/](https://badgen.net/badge/api/documentation/green)](https://threez.github.io/hpdf.cr/) (**WIP**)
+# hpdf [![.github/workflows/ci.yml](https://github.com/threez/hpdf.cr/actions/workflows/ci.yml/badge.svg)](https://github.com/threez/hpdf.cr/actions/workflows/ci.yml) [![https://threez.github.io/hpdf.cr/](https://badgen.net/badge/api/documentation/green)](https://threez.github.io/hpdf.cr/)
 
 Shard to create PDF documents with crystal using [libharu/libhpdf](https://github.com/libharu/libharu/).
 
