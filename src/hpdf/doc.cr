@@ -9,10 +9,10 @@ module Hpdf
 
     def initialize
       @doc = LibHaru.new(->(error_no, detail_no, _user_data) {
-        raise Exception.errcode(error_no, detail_no)
+        raise HaruError.errcode(error_no, detail_no)
       }, nil)
       unless @doc
-        raise Exception.new("error: cannot create PdfDoc object")
+        raise Error.new("error: cannot create PdfDoc object")
       end
       @pages = Array(Page).new
     end

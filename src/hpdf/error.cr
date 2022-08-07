@@ -1,5 +1,10 @@
 module Hpdf
-  class Exception < ::Exception
+  # Base of all Hpdf errors
+  class Error < ::ArgumentError
+  end
+
+  # Error raised by the underlying native libharu.
+  class HaruError < Error
     CODES = {
       LibHaru::HPDF_ARRAY_COUNT_ERR =>  "Internal error. The consistency of the data was lost.",
       LibHaru::HPDF_ARRAY_ITEM_NOT_FOUND =>  "Internal error. The consistency of the data was lost.",
