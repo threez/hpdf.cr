@@ -5,7 +5,7 @@ class TestPage < Hpdf::Page
 end
 
 describe Hpdf::Grid do
-  it "can set page size" do
+  it "can draw different grids" do
     testdoc "grids" do
       page TestPage do
         draw_grid

@@ -10,7 +10,7 @@ def testdoc(filename : String? = nil, &block)
   pdf = Hpdf::Doc.new
   with pdf yield pdf
   unless filename.nil?
-    filename = filename.downcase.gsub /[^a-z]+/, "-"
+    filename = filename.downcase.gsub /[^a-z0-9]+/, "-"
     path = "spec-#{filename}.pdf"
     pdf.save_to_file path
   end

@@ -24,6 +24,13 @@ module Hpdf
     def initialize(@x : Float32, @y : Float32, @width : Float32, @height : Float32)
     end
 
+    def initialize(x : Number, y : Number, width : Number, height : Number)
+      @x = x.to_f32
+      @y = y.to_f32
+      @width = width.to_f32
+      @height = height.to_f32
+    end
+
     def initialize(rect : LibHaru::Rect)
       @x = rect.left.to_f32
       @width = rect.right - rect.left.to_f32

@@ -97,7 +97,7 @@ module Hpdf
 
     def self.errcode(error_no, detail_no) : Exception
       if msg = CODES[error_no]?
-        new msg
+        return new msg
       end
 
       case error_no
