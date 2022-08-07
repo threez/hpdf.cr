@@ -346,7 +346,7 @@ module Hpdf
     def set_dash(pattern : Array(Number), *, phase = 0)
       requires_mode GMode::PageDescription, GMode::TextObject
       if pattern.size > 8
-        raise Error.new("to many elements in the dash pattern: #{pattern.size}")
+        raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
       pat = pattern.map { |i| uint16(i) }
       LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
@@ -945,7 +945,7 @@ module Hpdf
 
       if y == :center
         if @font.nil?
-          raise Error.new("no font set, can't calculate y")
+          raise ArgumentError.new("no font set, can't calculate y")
         else
           y = height / 2 - @font_size / 2
         end
@@ -992,7 +992,7 @@ module Hpdf
 
     private def requires_mode(*modes : GMode)
       unless modes.includes? g_mode
-        raise Error.new "expected to be in different graphics mode #{modes}, but was in #{g_mode}"
+        raise ArgumentError.new "expected to be in different graphics mode #{modes}, but was in #{g_mode}"
       end
     end
 

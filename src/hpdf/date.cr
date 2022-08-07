@@ -24,7 +24,7 @@ module Hpdf
     # parses the pdf time format e.g. `"D:20220729135612+02'00'"`
     def self.parse(time_str : String) : Time
       md = FORMAT.match(time_str)
-      raise Error.new("invalid date: #{time_str.inspect}") unless md
+      raise ArgumentError.new("invalid date: #{time_str.inspect}") unless md
 
       year = md[1].to_i
       month = md[2].to_i

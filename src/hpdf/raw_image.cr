@@ -35,7 +35,7 @@ module Hpdf
         when ColorSpace::DeviceCmyk
           @buf = Array(UInt8).new(@width * @height * 4, 0)
         else
-          raise Error.new("invalid color_space was used: #{@color_space}")
+          raise ArgumentError.new("invalid color_space was used: #{@color_space}")
         end
       end
 
