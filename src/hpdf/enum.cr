@@ -132,7 +132,7 @@ module Hpdf
   end
 
   enum TextAlignment
-    Left = 0
+    Left    = 0
     Right
     Center
     Justify
@@ -140,7 +140,7 @@ module Hpdf
 
   # used in `Doc#set_slide_show`
   enum TransitionStyle
-    WipeRight = 0
+    WipeRight                   = 0
     WipeUp
     WipeLeft
     WipeDown
@@ -204,7 +204,7 @@ module Hpdf
     EnableEditAll = 8
     # user can copy the text and the graphics of the document.
     EnableCopy = 16
-     # user can add or modify the annotations and form fields of the document.
+    # user can add or modify the annotations and form fields of the document.
     EnableEdit = 32
   end
 
@@ -212,17 +212,17 @@ module Hpdf
   @[Flags]
   enum CompressionMode
     # All contents are not compressed.
-    None          = 0x00
+    None = 0x00
     # Compress the contents stream of the page.
-    Text          = 0x01
+    Text = 0x01
     # Compress the streams of the image objects.
-    Image         = 0x02
+    Image = 0x02
     # Other stream datas (fonts, cmaps and so on)  are compressed.
-    Metadata      = 0x04
+    Metadata = 0x04
     # All stream datas are compressed
-    AllStreams    = Text | Image | Metadata
-    BestCompress  = 0x10
-    BestSpeed     = 0x20
+    AllStreams   = Text | Image | Metadata
+    BestCompress = 0x10
+    BestSpeed    = 0x20
   end
 
   # set via `Doc#set_password_and_permission`.
@@ -235,14 +235,14 @@ module Hpdf
 
   # graphics mode.
   enum GMode
-    None             = 0x0000
-    PageDescription  = 0x0001
-    PathObject       = 0x0002
-    TextObject       = 0x0004
-    ClippingPath     = 0x0008
-    Shading          = 0x0010
-    InlineImage      = 0x0020
-    ExternalObject   = 0x0040
+    None            = 0x0000
+    PageDescription = 0x0001
+    PathObject      = 0x0002
+    TextObject      = 0x0004
+    ClippingPath    = 0x0008
+    Shading         = 0x0010
+    InlineImage     = 0x0020
+    ExternalObject  = 0x0040
   end
 
   # used in `Encoder#type`.
@@ -280,18 +280,18 @@ module Hpdf
   # used in `LinkAnnotation#highlight_mode=`.
   enum AnnotationHighlightMode
     # No highlighting.
-	  NoHightlight = 0
+    NoHightlight = 0
     # Invert the contents of the area of annotation.
-	  InvertBox
+    InvertBox
     # Invert the annotation's border.
-	  InvertBorder
+    InvertBorder
     # Dent the annotation.
-	  DownAppearance
+    DownAppearance
   end
 
   # used in `TextAnnotation#icon=`.
   enum AnnotationIcon
-    Comment = 0
+    Comment      = 0
     Key
     Note
     Help

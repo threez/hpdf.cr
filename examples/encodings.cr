@@ -2,11 +2,11 @@
 
 require "../src/hpdf"
 
-PAGE_WIDTH = 420
+PAGE_WIDTH  = 420
 PAGE_HEIGHT = 400
-CELL_WIDTH = 20
-CELL_HEIGHT = 20
-CELL_HEADER = 10
+CELL_WIDTH  =  20
+CELL_HEIGHT =  20
+CELL_HEADER =  10
 
 class MyPage < Hpdf::Page
   # Draw 16 X 15 cells
@@ -82,7 +82,7 @@ f = Hpdf::Doc.build do |pdf|
 
   # load font object
   font_name = pdf.load_type1_font_from_file("spec/data/fonts/a010013l.afm",
-                                            "spec/data/fonts/a010013l.pfb")
+    "spec/data/fonts/a010013l.pfb")
 
   # create outline root.
   root = create_outline "Encoding list"

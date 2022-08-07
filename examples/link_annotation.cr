@@ -62,7 +62,6 @@ f = Hpdf::Doc.build do |pdf|
     annot = index_page.create_link_annotation rect, dst
     annot.highlight_mode = Hpdf::AnnotationHighlightMode::NoHightlight
 
-
     # page2 (HPDF_ANNOT_INVERT_BOX)
     tp = index_page.current_text_pos
 
@@ -78,7 +77,6 @@ f = Hpdf::Doc.build do |pdf|
 
     annot = index_page.create_link_annotation rect, dst
     annot.highlight_mode = Hpdf::AnnotationHighlightMode::InvertBox
-
 
     # page3 (HPDF_ANNOT_INVERT_BORDER)
     tp = index_page.current_text_pos
@@ -96,7 +94,6 @@ f = Hpdf::Doc.build do |pdf|
     annot = index_page.create_link_annotation rect, dst
     annot.highlight_mode = Hpdf::AnnotationHighlightMode::InvertBorder
 
-
     # page4 (HPDF_ANNOT_DOWN_APPEARANCE)
     tp = index_page.current_text_pos
 
@@ -112,7 +109,6 @@ f = Hpdf::Doc.build do |pdf|
 
     annot = index_page.create_link_annotation rect, dst
     annot.highlight_mode = Hpdf::AnnotationHighlightMode::DownAppearance
-
 
     # page5 (dash border)
     tp = index_page.current_text_pos
@@ -130,7 +126,6 @@ f = Hpdf::Doc.build do |pdf|
     annot = index_page.create_link_annotation rect, dst
     annot.set_border_style 1, 3, 2
 
-
     # page6 (no border)
     tp = index_page.current_text_pos
 
@@ -147,7 +142,6 @@ f = Hpdf::Doc.build do |pdf|
     annot = index_page.create_link_annotation rect, dst
     annot.set_border_style 0, 0, 0
 
-
     # page7 (bold border)
     tp = index_page.current_text_pos
 
@@ -163,7 +157,6 @@ f = Hpdf::Doc.build do |pdf|
 
     annot = index_page.create_link_annotation rect, dst
     annot.set_border_style 2, 0, 0
-
 
     # URI link
     tp = index_page.current_text_pos

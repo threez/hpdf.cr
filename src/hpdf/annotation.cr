@@ -27,7 +27,7 @@ module Hpdf
     #
     # * *width* the width of an annotation's border.
     # * *dash_on*, *dash_off* the dash style.
-    def set_border_style(width : Number, dash_on : UInt16 , dash_off : UInt16)
+    def set_border_style(width : Number, dash_on : UInt16, dash_off : UInt16)
       LibHaru.link_annot_set_border_style(self, real(width), dash_on, dash_off)
     end
   end

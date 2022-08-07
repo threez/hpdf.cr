@@ -105,7 +105,7 @@ module Hpdf
     #   `false` it returns `10` (the end of the previous word).
     def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.page_measure_text(self, text,
-        real(width),  bool(word_wrap), out real_width)
+        real(width), bool(word_wrap), out real_width)
       MeasuredText.new(size, real_width)
     end
 
@@ -395,7 +395,7 @@ module Hpdf
     # rad1 = degree / 180 * Math::PI
     # context do
     #   concat Math.cos(rad1), Math.sin(rad1), -Math.sin(rad1),
-    #          Math.cos(rad1), 0, 0
+    #     Math.cos(rad1), 0, 0
     #   text Hpdf::Base14::Helvetica, 70 do
     #     text_out 100, 100, "Hello World"
     #   end
@@ -867,6 +867,7 @@ module Hpdf
       requires_mode GMode::PageDescription, GMode::TextObject
       LibHaru.page_set_rgb_stroke(self, real(r), real(g), real(b))
     end
+
     # sets the filling color.
     # An application can invoke `set_cmyk_fill` when the `graphics_mode`
     # of the page is in `GMode::PageDescription` or `GMode::TextObject`.
@@ -967,12 +968,12 @@ module Hpdf
                   text : String, *, align : TextAlignment = TextAlignment::Left) : Number
       requires_mode GMode::TextObject
       LibHaru.page_text_rect(self, real(left), real(top),
-                             real(right), real(bottom),
-                             text, align.to_i, out len)
+        real(right), real(bottom),
+        text, align.to_i, out len)
       len
     end
 
-    ### Helper ###
+    # ## Helper ###
 
     def reset_dash
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
@@ -996,7 +997,7 @@ module Hpdf
       end
     end
 
-    ### DSL ###
+    # ## DSL ###
 
     # build enables DSL style access to building a page
     def build

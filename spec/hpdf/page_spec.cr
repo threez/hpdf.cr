@@ -148,7 +148,7 @@ describe Hpdf::Image do
   it "can set slideshows on pages" do
     testpage do
       set_slide_show Hpdf::TransitionStyle::BoxOut,
-                     1, 2.0
+        1, 2.0
     end
   end
 
@@ -171,9 +171,9 @@ describe Hpdf::Image do
       miter_limit.should eq 50
 
       # set_dash
-      set_dash [8,7,2,7]
+      set_dash [8, 7, 2, 7]
       pattern, phase = dash
-      pattern.should eq [8,7,2,7]
+      pattern.should eq [8, 7, 2, 7]
       phase.should eq 0
     end
   end
@@ -261,7 +261,7 @@ describe Hpdf::Image do
             set_rgb_fill 0, 0.5, 0
 
             page.text_rendering_mode = Hpdf::TextRenderingMode.new(i)
-            text_out 100, height - 40*(i+1), "ABCabc123!?$"
+            text_out 100, height - 40*(i + 1), "ABCabc123!?$"
             text_rendering_mode.should eq Hpdf::TextRenderingMode.new(i)
           end
         end

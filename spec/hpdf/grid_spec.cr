@@ -12,13 +12,13 @@ describe Hpdf::Grid do
       end
       page TestPage do
         draw_grid vertical_fat_line_every: 2,
-                  horizontal_fat_line_every: 2,
-                  step: 50
+          horizontal_fat_line_every: 2,
+          step: 50
       end
       page TestPage do
         draw_grid vertical_fat_line_every: 1,
-                  horizontal_fat_line_every: 2,
-                  step: 100
+          horizontal_fat_line_every: 2,
+          step: 100
       end
     end
   end

@@ -53,7 +53,7 @@ module Hpdf
       # sets the gray value at `x` and `y` via `scale`.
       # `0xff` is white and `0x00` is black.
       def gray_at(x : UInt32, y : UInt32, scale : UInt8)
-        @buf[y*@width+x] = scale
+        @buf[y*@width + x] = scale
       end
 
       # sets the gray value at `x` and `y` via `scale`.
@@ -79,16 +79,15 @@ module Hpdf
 
     # create a new in-memory RGB image
     class RgbImage < Image
-
       def initialize(width : UInt32, height : UInt32)
         super width, height, ColorSpace::DeviceRgb
       end
 
       # sets the rgb value at `x` and `y`.
       def rgb_at(x : UInt32, y : UInt32, red : UInt8, green : UInt8, blue : UInt8)
-        @buf[y*@width*3+x*3] = red
-        @buf[y*@width*3+x*3+1] = green
-        @buf[y*@width*3+x*3+2] = blue
+        @buf[y*@width*3 + x*3] = red
+        @buf[y*@width*3 + x*3 + 1] = green
+        @buf[y*@width*3 + x*3 + 2] = blue
       end
 
       def []=(x : Number, y : Number, color : RgbColor)
@@ -113,17 +112,16 @@ module Hpdf
 
     # create a new in-memory CMYK image. Import using `Doc#load_raw_image_from_mem`
     class CmykImage < Image
-
       def initialize(width : UInt32, height : UInt32)
         super width, height, ColorSpace::DeviceCmyk
       end
 
       # sets the rgb value at `x` and `y`.
       def rgb_at(x : UInt32, y : UInt32, cyan : UInt8, magenta : UInt8, yellow : UInt8, black : UInt8)
-        @buf[y*@width*4+x*4] = cyan
-        @buf[y*@width*4+x*4+1] = magenta
-        @buf[y*@width*4+x*4+2] = yellow
-        @buf[y*@width*4+x*4+3] = black
+        @buf[y*@width*4 + x*4] = cyan
+        @buf[y*@width*4 + x*4 + 1] = magenta
+        @buf[y*@width*4 + x*4 + 2] = yellow
+        @buf[y*@width*4 + x*4 + 3] = black
       end
 
       def []=(x : Number, y : Number, color : CmykColor)

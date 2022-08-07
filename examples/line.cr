@@ -98,7 +98,7 @@ pdf = Hpdf::Doc.build do
     stroke
 
     text do
-        text_out 60, 360, "PDF_MITER_JOIN"
+      text_out 60, 360, "PDF_MITER_JOIN"
     end
 
     page.line_join = Hpdf::LineJoin::RoundJoin

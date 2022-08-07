@@ -46,7 +46,7 @@ describe Hpdf::Doc do
   it "can load afm fonts" do
     testdoc do |pdf|
       name = pdf.load_type1_font_from_file "spec/data/fonts/a010013l.afm",
-                                          "spec/data/fonts/a010013l.pfb"
+        "spec/data/fonts/a010013l.pfb"
       name.should eq "URWGothicL-Book"
       pdf.font name
     end
@@ -68,15 +68,15 @@ describe Hpdf::Doc do
 
   # requires fonts only available on win32
   {% if flag?(:windows) %}
-  it "can handle japanese fonts" do
-    testdoc do |pdf|
-      pdf.use_jp_fonts
-    end
+    it "can handle japanese fonts" do
+      testdoc do |pdf|
+        pdf.use_jp_fonts
+      end
 
-    Hpdf::JapaneseFonts::All.each do |font_name|
-      pdf.font font_name
+      Hpdf::JapaneseFonts::All.each do |font_name|
+        pdf.font font_name
+      end
     end
-  end
   {% end %}
 
   it "can get/set document attributes" do

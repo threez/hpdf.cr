@@ -24,10 +24,11 @@ module Hpdf
     #   drawn vertically, every fat line has a text marker
     # * *horizontal_fat_line_every* how often a fat line shoild
     #   be drawn horizontally, every fat line has a text marker
-    def draw_grid(*, font_name = Base14::Helvetica,
-                     step = 5,
-                     vertical_fat_line_every vfle = 10,
-                     horizontal_fat_line_every hfle = 2)
+    def draw_grid(*,
+                  font_name = Base14::Helvetica,
+                  step = 5,
+                  vertical_fat_line_every vfle = 10,
+                  horizontal_fat_line_every hfle = 2)
       context do
         font = @doc.font(font_name)
         set_font_and_size font, 5
@@ -44,8 +45,9 @@ module Hpdf
     end
 
     # part of `draw_grid`.
-    def draw_horizontal_lines(*, step = 5,
-                                 fat_line_every = 2)
+    def draw_horizontal_lines(*,
+                              step = 5,
+                              fat_line_every = 2)
       y = 0
       while y < height
         if y % (step * fat_line_every) == 0
@@ -73,8 +75,9 @@ module Hpdf
     end
 
     # part of `draw_grid`.
-    def draw_vertical_lines(*, step = 5,
-                               fat_line_every = 2)
+    def draw_vertical_lines(*,
+                            step = 5,
+                            fat_line_every = 2)
       x = 0
       while x < width
         if x % (step * fat_line_every) == 0
@@ -106,9 +109,9 @@ module Hpdf
     end
 
     # part of `draw_grid`.
-    def draw_horizontal_text(*, step = 5,
-                                fat_line_every = 2)
-
+    def draw_horizontal_text(*,
+                             step = 5,
+                             fat_line_every = 2)
       context do
         self.gray_fill = 0.8
         self.gray_stroke = 0.5
@@ -128,8 +131,9 @@ module Hpdf
     end
 
     # part of `draw_grid`.
-    def draw_vertical_text(*, step = 5,
-                              fat_line_every = 2)
+    def draw_vertical_text(*,
+                           step = 5,
+                           fat_line_every = 2)
       context do
         self.gray_fill = 0.8
         self.gray_stroke = 0.5
