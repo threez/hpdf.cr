@@ -5,11 +5,11 @@ describe Hpdf::Letter do
         draw
 
         draw_address company: "Evil Corp",
-                     salutation: "Mr.",
-                     name: "Robot",
-                     street: "Street 1",
-                     place: "New York",
-                     country: "USA"
+          salutation: "Mr.",
+          name: "Robot",
+          street: "Street 1",
+          place: "New York",
+          country: "USA"
 
         # 3. ZVZ – z. B. elektronische Freimachungsvermerke
         # 2. ZVZ – z. B. Vorausverfügung Nicht nachsenden!
