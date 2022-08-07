@@ -27,8 +27,8 @@ module Hpdf
     end
 
     # the bounding box of the font.
-    def b_box
-       LibHaru.font_get_b_box(self)
+    def b_box : Rectangle
+      Rectangle.new(LibHaru.font_get_b_box(self))
     end
 
     # the vertical ascent of the font.
