@@ -27,9 +27,9 @@ describe Hpdf::Font do
     tw.numspace.should eq 6
 
     m = font.measure_text(text, width: 100,
-                                font_size: 16,
-                                char_space: 1,
-                                word_space: 1)
+      font_size: 16,
+      char_space: 1,
+      word_space: 1)
     m.len_included.should eq 5
     m.real_width.should eq 42.12.to_f32
   end

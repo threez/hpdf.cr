@@ -3,11 +3,11 @@
 require "../src/hpdf"
 
 {% unless flag?(:windows) %}
-puts "requires fonts only available on win32"
-exit 0
+  puts "requires fonts only available on win32"
+  exit 0
 {% end %}
 
-SAMP_TEXT1 = "abcdefgABCDEFG123!#$\%&+-@?"
+SAMP_TEXT1 = "abcdefgABCDEFG123!#$%&+-@?"
 SAMP_TEXT2 = "アメンボ赤いなあいうえお。浮き藻に小エビもおよいでる。"
 
 f = Hpdf::Doc.build do |pdf|
@@ -34,7 +34,7 @@ f = Hpdf::Doc.build do |pdf|
   fonts[12] = pdf.font "MS-PGothic", "90msp-RKSJ-H"
   fonts[13] = pdf.font "MS-PGothic,Bold", "90msp-RKSJ-H"
   fonts[14] = pdf.font "MS-PGothic,Italic", "90msp-RKSJ-H"
-  fonts[15] = pdf.font "MS-PGothic,BoldItalic","90msp-RKSJ-H"
+  fonts[15] = pdf.font "MS-PGothic,BoldItalic", "90msp-RKSJ-H"
 
   # set page mode to use outlines.
   pdf.page_mode = Hpdf::PageMode::UseOutline
@@ -66,19 +66,19 @@ f = Hpdf::Doc.build do |pdf|
         page.show_text("1234567890")
         page.move_text_pos(0.0, -20.0)
 
-        page.set_font_and_size(font, 10.0);
+        page.set_font_and_size(font, 10.0)
         page.show_text(SAMP_TEXT2)
         page.move_text_pos(0.0, -18.0)
 
-        page.set_font_and_size(font, 16.0);
+        page.set_font_and_size(font, 16.0)
         page.show_text(SAMP_TEXT2)
         page.move_text_pos(0.0, -27.0)
 
-        page.set_font_and_size(font, 23.0);
+        page.set_font_and_size(font, 23.0)
         page.show_text(SAMP_TEXT2)
         page.move_text_pos(0.0, -36.0)
 
-        page.set_font_and_size(font, 30.0);
+        page.set_font_and_size(font, 30.0)
         page.show_text(SAMP_TEXT2)
 
         p = page.current_text_pos

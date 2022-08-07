@@ -1,6 +1,9 @@
 .PHONY: spec docs examples
 
-all: lint spec docs examples
+all: fmt lint spec docs examples
+
+fmt:
+	crystal tool format
 
 spec:
 	crystal spec -v

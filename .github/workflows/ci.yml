@@ -18,6 +18,8 @@ jobs:
         run: make lint spec
       - name: Run examples
         run: make examples
+      - name: Make sure the files are formatted
+        run: crystal tool format --check
 
   verify-macos:
     runs-on: macos-latest

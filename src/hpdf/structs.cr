@@ -38,7 +38,7 @@ module Hpdf
       @height = rect.top - rect.bottom.to_f32
     end
 
-    def initialize()
+    def initialize
       @x = 0
       @y = 0
       @width = 0

@@ -84,13 +84,13 @@ f = Hpdf::Doc.build do |pdf|
 
     context do
       concat(1, Math.tan(rad1), Math.tan(rad2), 1, 25, 350)
-          left = 0
-          top = 40
-          right = 175
-          bottom = 0
+      left = 0
+      top = 40
+      right = 175
+      bottom = 0
 
       rectangle(left, bottom, right - left,
-                      top - bottom)
+        top - bottom)
       stroke
 
       text do
@@ -114,7 +114,7 @@ f = Hpdf::Doc.build do |pdf|
       bottom = 0
 
       rectangle(left, bottom, right - left,
-                      top - bottom)
+        top - bottom)
       stroke
 
       text do
@@ -125,7 +125,6 @@ f = Hpdf::Doc.build do |pdf|
         text_rect(left, top, right, bottom, samp_text)
       end
     end
-
 
     # text along a circle
     page.gray_stroke = 0

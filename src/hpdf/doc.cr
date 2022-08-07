@@ -205,7 +205,7 @@ module Hpdf
     # * *encoder* the handle of an encoding object applied to the title.
     #   If 'nil' is set, `current_encoder` is used.
     def create_outline(title : String, *, parent : Outline? = nil,
-                                          encoder : Encoder? = nil) : Outline
+                       encoder : Encoder? = nil) : Outline
       Outline.new(LibHaru.create_outline(self, parent, title, encoder), self)
     end
 
@@ -641,10 +641,10 @@ module Hpdf
     # * *permission* the flags specifying which operations are permitted.
     #   This parameter is set by logical addition of the following values.
     def set_password_and_permission(owner_password : String, *,
-      user_password : String? = nil,
-      permission : Permission = Permission::EnableRead,
-      encryption_mode : EncryptMode = EncryptMode::EncryptR3,
-      encryption_key_len_bytes : Int32 = 16)
+                                    user_password : String? = nil,
+                                    permission : Permission = Permission::EnableRead,
+                                    encryption_mode : EncryptMode = EncryptMode::EncryptR3,
+                                    encryption_key_len_bytes : Int32 = 16)
       LibHaru.set_password(self, owner_password, user_password)
       LibHaru.set_permission(self, permission)
       LibHaru.set_encryption_mode(self, encryption_mode, uint(encryption_key_len_bytes))
@@ -655,7 +655,7 @@ module Hpdf
       LibHaru.set_compression_mode(self, mode)
     end
 
-    ### Helper ###
+    # ## Helper ###
 
     # custom pages are subclasses of `Page` that can have more methods
     # for higher level page constructs.
@@ -675,7 +675,7 @@ module Hpdf
       page
     end
 
-    ### DSL ###
+    # ## DSL ###
 
     # build enables DSL style access to building a doc
     def self.build(&block)

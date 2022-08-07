@@ -45,7 +45,7 @@ module Hpdf
       end
 
       Time.local year, month, day,
-                 hour, minute, second, location: location
+        hour, minute, second, location: location
     end
 
     def to_unsafe

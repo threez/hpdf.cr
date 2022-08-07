@@ -57,7 +57,7 @@ f = Hpdf::Doc.build do |pdf|
     set_font_and_size font, 24
     tw = text_width page_title
     text do
-      text_out (width- tw) / 2, height - 50, page_title
+      text_out (width - tw) / 2, height - 50, page_title
     end
 
     text do
@@ -134,7 +134,7 @@ f = Hpdf::Doc.build do |pdf|
     end
 
     # PDF_STROKE
-    show_description 60, ypos - 50,  "TextRenderingMode=Stroke"
+    show_description 60, ypos - 50, "TextRenderingMode=Stroke"
     page.text_rendering_mode = Hpdf::TextRenderingMode::Stroke
     text do
       text_out 60, ypos - 50, "ABCabc123"
@@ -178,18 +178,18 @@ f = Hpdf::Doc.build do |pdf|
     end
 
     # Reset text attributes
-    page.text_rendering_mode =  Hpdf::TextRenderingMode::Fill
+    page.text_rendering_mode = Hpdf::TextRenderingMode::Fill
     set_rgb_fill 0, 0, 0
     set_font_and_size font, 30
 
     # Rotating text
-    angle1 = 30                   # A rotation of 30 degrees.
+    angle1 = 30                    # A rotation of 30 degrees.
     rad1 = angle1 / 180 * 3.141592 # Calcurate the radian value.
 
     show_description 320, ypos - 60, "Rotating text"
     text do
       set_text_matrix Math.cos(rad1), Math.sin(rad1), -Math.sin(rad1), Math.cos(rad1),
-                      330, ypos - 60
+        330, ypos - 60
       show_text "ABCabc123"
     end
 

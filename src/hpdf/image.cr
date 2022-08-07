@@ -18,7 +18,7 @@ module Hpdf
     # gets the size of the image of an image object.
     def get_size : Size
       s = LibHaru.image_get_size(self)
-      Size.new(width:s.x.to_u32, height:s.y.to_u32)
+      Size.new(width: s.x.to_u32, height: s.y.to_u32)
     end
 
     # gets the width of the image of an image object.
@@ -53,11 +53,12 @@ module Hpdf
     # * *gmax* upper limit of Green. It must be between `0` and `255`.
     # * *bmin* lower limit of Blue. It must be between `0` and `255`.
     # * *bmax* upper limit of Blue. It must be between `0` and `255`.
-    def set_color_mask(*, rmin : UInt8 = 0, rmax : UInt8 = 0,
-                          gmin : UInt8 = 0, gmax : UInt8 = 0,
-                          bmin : UInt8 = 0, bmax : UInt8 = 0)
+    def set_color_mask(*,
+                       rmin : UInt8 = 0, rmax : UInt8 = 0,
+                       gmin : UInt8 = 0, gmax : UInt8 = 0,
+                       bmin : UInt8 = 0, bmax : UInt8 = 0)
       LibHaru.image_set_color_mask(self, uint(rmin), uint(rmax), uint(gmin),
-                                         uint(gmax), uint(bmin), uint(bmax))
+        uint(gmax), uint(bmin), uint(bmax))
     end
 
     # sets the mask image.
