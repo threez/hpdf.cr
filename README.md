@@ -38,14 +38,20 @@ pdf.save_to_file "hello.pdf"
 Before usage you have to install the library **libharu** which
 depends on **libpng** and **zlib**:
 
-|System|Command|
-|------|-------|
-| Alpine | `apk add libharu` |
-| Debian/Ubuntu | `sudo apt install libhpdf-dev` |
-| Centos  | `sudo yum install libharu-devel` |
-| Fedora/Redhat | `sudo dnf install libharu-devel` |
-| FreeBSD | `pkg install libharu` |
-| OpenBSD | `pkg_add libharu` |
+<table>
+<thead>
+<tr><th>System</th><th>Command</th></tr>
+</thead>
+<tbody>
+<tr><td>Alpine</td><td>`apk add libharu`</td></tr>
+<tr><td>Debian/Ubuntu</td><td>`sudo apt install libhpdf-dev`</td></tr>
+<tr><td>Centos</td><td> `sudo yum install libharu-devel`</td></tr>
+<tr><td>Fedora/Redhat</td><td>`sudo dnf install libharu-devel`</td></tr>
+<tr><td>FreeBSD</td><td>`pkg install libharu`</td></tr>
+<tr><td>OpenBSD</td><td>`pkg_add libharu`</td></tr>
+<tr><td>macOS</td><td>`brew install libharu`</td></tr>
+<tbody>
+</table>
 
 ## Development
 
