@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  build:
+  verify-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Download source
@@ -12,6 +12,20 @@ jobs:
         uses: crystal-lang/install-crystal@v1
       - name: Install libharu
         run: sudo apt install libhpdf-dev
+      - name: Install development dependencies
+        run: shards install
+      - name: Run tests
+        run: make lint spec
+      - name: Run examples
+        run: make examples
+
+  verify-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Download source
+        uses: actions/checkout@v2
+      - name: Install libharu / crystal
+        run: brew install libharu crystal
       - name: Install development dependencies
         run: shards install
       - name: Run tests

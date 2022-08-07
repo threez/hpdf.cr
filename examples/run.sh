@@ -1,8 +1,8 @@
 #!/bin/sh
 
-for example in ./bin/*; do
+for example in `ls ./bin/ | grep -v .dwarf`; do
     echo " === Run $example ==="
-    if $example; then
+    if ./bin/$example; then
         echo "  :: DONE ::"
     else
         echo "  !! FAILED !!"
