@@ -7,7 +7,7 @@ module Hpdf
 
   # Letter following the german national standard for page
   # sizes.
-  class LetterDIN_A4 < Letter
+  class LetterDINA4 < Letter
     DIN_A5_HEIGHT = 297 # mm
     DIN_A5_WIDTH = 210 # mm
 
@@ -30,7 +30,7 @@ module Hpdf
   # * Footer area
   #
   # ![https://de.wikipedia.org/wiki/DIN_5008#/media/Datei:DIN_5008,_Form_A.svg](https://de.wikipedia.org/wiki/DIN_5008#/media/Datei:DIN_5008,_Form_A.svg)
-  class LetterDIN5008A < LetterDIN_A4
+  class LetterDIN5008A < LetterDINA4
 
     CONTENT_TOP = 103.46
     CONTENT_LEFT = 25
