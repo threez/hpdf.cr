@@ -43,13 +43,13 @@ depends on **libpng** and **zlib**:
 <tr><th>System</th><th>Command</th></tr>
 </thead>
 <tbody>
-<tr><td>Alpine</td><td>`apk add libharu`</td></tr>
-<tr><td>Debian/Ubuntu</td><td>`sudo apt install libhpdf-dev`</td></tr>
-<tr><td>Centos</td><td> `sudo yum install libharu-devel`</td></tr>
-<tr><td>Fedora/Redhat</td><td>`sudo dnf install libharu-devel`</td></tr>
-<tr><td>FreeBSD</td><td>`pkg install libharu`</td></tr>
-<tr><td>OpenBSD</td><td>`pkg_add libharu`</td></tr>
-<tr><td>macOS</td><td>`brew install libharu`</td></tr>
+<tr><td>Alpine</td><td><code>apk add libharu</code></td></tr>
+<tr><td>Debian/Ubuntu</td><td><code>sudo apt install libhpdf-dev</code></td></tr>
+<tr><td>Centos</td><td><code>sudo yum install libharu-devel</code></td></tr>
+<tr><td>Fedora/Redhat</td><td><code>sudo dnf install libharu-devel</code></td></tr>
+<tr><td>FreeBSD</td><td><code>pkg install libharu</code></td></tr>
+<tr><td>OpenBSD</td><td><code>pkg_add libharu</code></td></tr>
+<tr><td>macOS</td><td><code>brew install libharu</code></td></tr>
 <tbody>
 </table>
 
