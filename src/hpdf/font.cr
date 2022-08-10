@@ -31,24 +31,56 @@ module Hpdf
       Rectangle.new(LibHaru.font_get_b_box(self))
     end
 
-    # the vertical ascent of the font.
+    # the vertical ascent of the font in UPM (units per eM).
     def ascent : Int32
       LibHaru.font_get_ascent(self)
     end
 
-    # the vertical descent of the font.
+    # the vertical descent of the font in UPM (units per eM).
     def descent : Int32
       LibHaru.font_get_descent(self)
     end
 
-    # the distance from the baseline of lowercase letters.
+    # the distance from the baseline of lowercase letters in UPM (units per eM).
     def x_height : UInt32
       LibHaru.font_get_x_height(self)
     end
 
-    # the distance from the baseline of uppercase letters.
+    # the distance from the baseline of uppercase letters in UPM (units per eM).
     def cap_height : UInt32
       LibHaru.font_get_cap_height(self)
+    end
+
+    # the vertical ascent of the font in points calculated
+    # based on the given *font_size*.
+    #
+    # * *font_size* the size to calculate the height with.
+    def ascent(font_size : Number) : Float32
+      (ascent * font_size / 1000).to_f32
+    end
+
+    # the vertical descent of the font in points calculated
+    # based on the given *font_size*.
+    #
+    # * *font_size* the size to calculate the height with.
+    def descent(font_size : Number) : Float32
+      (descent * font_size / 1000).to_f32
+    end
+
+    # the distance from the baseline of lowercase letters in points calculated
+    # based on the given *font_size*.
+    #
+    # * *font_size* the size to calculate the height with.
+    def x_height(font_size : Number) : Float32
+      (x_height * font_size / 1000).to_f32
+    end
+
+    # the distance from the baseline of uppercase letters in points calculated
+    # based on the given *font_size*.
+    #
+    # * *font_size* the size to calculate the height with.
+    def cap_height(font_size : Number) : Float32
+      (cap_height * font_size / 1000).to_f32
     end
 
     # total width of the text, number of charactors and number of the words.

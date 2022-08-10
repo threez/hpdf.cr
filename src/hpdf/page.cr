@@ -11,6 +11,9 @@ module Hpdf
     @font : Font? = nil
     @font_size : Float32 = 0
 
+    # get the current font if any
+    getter font
+
     def initialize(@page : LibHaru::Page, @doc : Doc)
     end
 
