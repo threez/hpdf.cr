@@ -73,17 +73,14 @@ module Hpdf
         width: width,
         height: mm(HEADING_HEIGHT))
 
-      return_address Rectangle.new(x: ADDRESS_LEFT,
-        y: height - mm(ADDRESS_TOP + RETURN_HEIGHT),
-        width: mm(ADDRESS_WIDTH),
-        height: mm(RETURN_HEIGHT))
+      box return_address_rect
 
       remark Rectangle.new(x: ADDRESS_LEFT,
-        y: height - mm(ADDRESS_TOP + RETURN_HEIGHT + REMARK_HEIGHT),
+        y: height - mm(ADDRESS_TOP + REMARK_HEIGHT),
         width: mm(ADDRESS_WIDTH),
         height: mm(REMARK_HEIGHT))
 
-      postal_address postal_address_rect
+      box postal_address_rect
 
       information Rectangle.new(x: mm(INFOBOX_LEFT),
         y: height - mm(CONTENT_TOP - INFOBOX_BOTTOM),
@@ -108,11 +105,11 @@ module Hpdf
                      place : String = "",
                      country : String = "")
       r = postal_address_rect
-      self.gray_stroke = 1
-      self.gray_fill = 1
+      self.gray_stroke = 0
+      self.gray_fill = 0
       self.text_leading = 13
-      text Base14::Helvetica, 12 do
-        move_text_pos r.x + mm(ADDRESS_PADDING_LEFT), r.y + r.height
+      text Base14::CourierBold, 12 do
+        move_text_pos r.x + mm(ADDRESS_PADDING_LEFT), r.y + r.height - 10
         show_text company
         show_text_next_line salutation
         show_text_next_line name
@@ -122,11 +119,28 @@ module Hpdf
       end
     end
 
+    def draw_return_address(text : String)
+      r = return_address_rect
+      self.gray_stroke = 0.5
+      self.gray_fill = 0.5
+      text Base14::Helvetica, 8 do
+        move_text_pos r.x + mm(ADDRESS_PADDING_LEFT), r.y + (r.height-8/2) - 8/2
+        show_text text
+      end
+    end
+
     def postal_address_rect : Rectangle
       Rectangle.new(x: ADDRESS_LEFT,
         y: height - mm(ADDRESS_TOP + RETURN_HEIGHT + REMARK_HEIGHT + POSTAL_HEIGHT),
         width: mm(ADDRESS_WIDTH),
         height: mm(POSTAL_HEIGHT))
+    end
+
+    def return_address_rect : Rectangle
+      Rectangle.new(x: ADDRESS_LEFT,
+        y: height - mm(ADDRESS_TOP + RETURN_HEIGHT + REMARK_HEIGHT),
+        width: mm(ADDRESS_WIDTH),
+        height: mm(RETURN_HEIGHT))
     end
 
     def heading(r : Rectangle)
@@ -169,6 +183,14 @@ module Hpdf
       self.gray_fill = 0.5
       rectangle r
       fill
+    end
+
+    private def box(r : Rectangle)
+      # self.gray_fill = 0.5
+      # rectangle r
+      # fill
+      self.gray_stroke = 0.5
+      draw_rectangle r.x, r.y, r.width, r.height
     end
   end
 end

@@ -11,6 +11,8 @@ describe Hpdf::Letter do
           place: "New York",
           country: "USA"
 
+        draw_return_address "Good Corp | Awesomestr. 20 | 12345 Place"
+
         # 3. ZVZ – z. B. elektronische Freimachungsvermerke
         # 2. ZVZ – z. B. Vorausverfügung Nicht nachsenden!
         # 1. ZVZ – z. B. Einschreiben / Recommandé
