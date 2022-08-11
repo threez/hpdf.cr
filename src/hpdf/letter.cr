@@ -39,8 +39,7 @@ module Hpdf
     INFOBOX_BOTTOM       =   8.46 # mm
     INFOBOX_WIDTH        =  75.00 # mm
     HEADING_HEIGHT       =  27.00 # mm
-    RETURN_HEIGHT        =   5.00 # mm
-    REMARK_HEIGHT        =  12.70 # mm
+    REMARK_HEIGHT        =  17.70 # mm
     POSTAL_HEIGHT        =  27.30 # mm
     ADDRESS_LEFT         =  20.00 # mm
     ADDRESS_HEIGHT       =  45.00 # mm
@@ -61,11 +60,15 @@ module Hpdf
       self.line_width = 1
 
       move_to 0, mm(FOLD_MARKER_1)
-      line_to mm(10), mm(FOLD_MARKER_1)
+      line_to mm(5), mm(FOLD_MARKER_1)
       stroke
 
       move_to 0, mm(FOLD_MARKER_2)
-      line_to mm(10), mm(FOLD_MARKER_2)
+      line_to mm(5), mm(FOLD_MARKER_2)
+      stroke
+
+      move_to 0, mm(DIN_A5_HEIGHT/2)
+      line_to mm(7.5), mm(DIN_A5_HEIGHT/2)
       stroke
 
       heading Rectangle.new(x: 0,
@@ -73,7 +76,7 @@ module Hpdf
         width: width,
         height: mm(HEADING_HEIGHT))
 
-      box return_address_rect
+      box remark_area_rect
 
       remark Rectangle.new(x: ADDRESS_LEFT,
         y: height - mm(ADDRESS_TOP + REMARK_HEIGHT),
@@ -105,56 +108,68 @@ module Hpdf
                      street : String = "",
                      place : String = "",
                      country : String = "")
-      r = postal_address_rect
       self.gray_stroke = 0
       self.gray_fill = 0
-      font_size = 12
-      line_height = font_size + 1
-      self.text_leading = line_height
-      text Base14::CourierBold, font_size do
-        first_line = line_height * 5 + font.not_nil!.cap_height(font_size) / 2
-        move_text_pos r.x + mm(ADDRESS_PADDING_LEFT), r.y + first_line
-        show_text company
-        show_text_next_line salutation
-        show_text_next_line name
-        show_text_next_line street
-        show_text_next_line place
-        show_text_next_line country
-      end
+      draw_multirow_text rect: postal_address_rect,
+                         rows: [company, salutation, name, street, place, country],
+                         padding_left: mm(ADDRESS_PADDING_LEFT),
+                         font_name: Base14::CourierBold
     end
 
-    def draw_return_address(text : String)
-      r = return_address_rect
+    def draw_remark_area(*,
+                         first : String = "",
+                         second : String = "",
+                         third : String = "",
+                         fourth : String = "",
+                         fifth : String = "")
+      r = remark_area_rect
       self.gray_stroke = 0.5
       self.gray_fill = 0.5
-      font_size = 8
-      line_height = r.height
-      text Base14::Helvetica, font_size do
-        margin = (line_height - font.not_nil!.cap_height(font_size)) / 2
-        move_text_pos r.x + mm(ADDRESS_PADDING_LEFT), r.y + margin
-        show_text text
+      draw_multirow_text rect: remark_area_rect,
+                         rows: [fifth, fourth, third, second, first],
+                         padding_left: mm(ADDRESS_PADDING_LEFT)
+    end
+
+    def draw_multirow_text(rect : Rectangle,
+                           rows : Array(String),
+                           padding_left : Number,
+                           line_space : Number = 1,
+                           font_name : String = Base14::Helvetica)
+      line_height = rect.height / rows.size
+      font_size = line_height - line_space
+      self.text_leading = line_height
+      text font_name, font_size do
+        first_line = line_height * (rows.size - 1) + font.not_nil!.cap_height(font_size) / 2
+        move_text_pos rect.x + padding_left, rect.y + first_line
+        rows.each_with_index do |text, i|
+          if i == 0
+            show_text text
+          else
+            show_text_next_line text
+          end
+        end
       end
     end
 
     def postal_address_rect : Rectangle
       Rectangle.new(x: ADDRESS_LEFT,
-        y: height - mm(ADDRESS_TOP + RETURN_HEIGHT + REMARK_HEIGHT + POSTAL_HEIGHT),
+        y: height - mm(ADDRESS_TOP + REMARK_HEIGHT + POSTAL_HEIGHT),
         width: mm(ADDRESS_WIDTH),
         height: mm(POSTAL_HEIGHT))
     end
 
-    def return_address_rect : Rectangle
+    def remark_area_rect : Rectangle
       Rectangle.new(x: ADDRESS_LEFT,
-        y: height - mm(ADDRESS_TOP + RETURN_HEIGHT + REMARK_HEIGHT),
+        y: height - mm(ADDRESS_TOP + REMARK_HEIGHT),
         width: mm(ADDRESS_WIDTH),
-        height: mm(RETURN_HEIGHT))
+        height: mm(REMARK_HEIGHT))
     end
 
     def heading(r : Rectangle)
       box r
     end
 
-    def return_address(r : Rectangle)
+    def remark_area(r : Rectangle)
       box r
     end
 
