@@ -976,6 +976,12 @@ module Hpdf
       len
     end
 
+    # see `text_rect`.
+    def text_rect(rect : Rectangle, text : String, *,
+                  align : TextAlignment = TextAlignment::Left) : Number
+      text_rect rect.left, rect.top, rect.right, rect.bottom, text, align: align
+    end
+
     # ## Helper ###
 
     def reset_dash

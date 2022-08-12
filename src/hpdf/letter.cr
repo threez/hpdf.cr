@@ -7,15 +7,15 @@ module Hpdf
   # Letter following the german national standard for page
   # sizes.
   class LetterDINA4 < Letter
-    DIN_A5_HEIGHT = 297 # mm
-    DIN_A5_WIDTH  = 210 # mm
+    DIN_A4_HEIGHT = 297 # mm
+    DIN_A4_WIDTH  = 210 # mm
 
     # mm converts the passed values to points,
     # usable in PDF documents.
     #
     # * *mm* the value in milimeters
     private def mm(mm : Number) : Number
-      height / DIN_A5_HEIGHT * mm
+      height / DIN_A4_HEIGHT * mm
     end
   end
 
@@ -49,56 +49,28 @@ module Hpdf
     FOLD_MARKER_2_GAP    = 105.00 # mm
     NEXT_PAGE_SEP        =   4.23 # mm
 
-    CONTENT_WIDTH  = DIN_A5_WIDTH - CONTENT_LEFT - CONTENT_RIGHT
-    CONTENT_HEIGHT = DIN_A5_HEIGHT - CONTENT_BOTTOM - CONTENT_TOP
+    CONTENT_WIDTH  = DIN_A4_WIDTH - CONTENT_LEFT - CONTENT_RIGHT
+    CONTENT_HEIGHT = DIN_A4_HEIGHT - CONTENT_BOTTOM - CONTENT_TOP
     INFOBOX_HEIGHT = CONTENT_TOP - INFOBOX_BOTTOM - INFOBOX_TOP
     ADDRESS_TOP    = HEADING_HEIGHT
     FOLD_MARKER_2  = FOLD_MARKER_1 + FOLD_MARKER_2_GAP
 
-    def draw
-      self.gray_stroke = 0
-      self.line_width = 1
+    def draw_boxes
+      draw_box heading_rect
+      draw_box remark_area_rect
+      draw_box postal_address_rect
+      draw_box content_rect
+      draw_box information_rect
+      draw_box footer_rect
+    end
 
-      move_to 0, mm(FOLD_MARKER_1)
-      line_to mm(5), mm(FOLD_MARKER_1)
-      stroke
-
-      move_to 0, mm(FOLD_MARKER_2)
-      line_to mm(5), mm(FOLD_MARKER_2)
-      stroke
-
-      move_to 0, mm(DIN_A5_HEIGHT/2)
-      line_to mm(7.5), mm(DIN_A5_HEIGHT/2)
-      stroke
-
-      heading Rectangle.new(x: 0,
-        y: height - mm(HEADING_HEIGHT),
-        width: width,
-        height: mm(HEADING_HEIGHT))
-
-      box remark_area_rect
-
-      remark Rectangle.new(x: ADDRESS_LEFT,
-        y: height - mm(ADDRESS_TOP + REMARK_HEIGHT),
-        width: mm(ADDRESS_WIDTH),
-        height: mm(REMARK_HEIGHT))
-
-      box postal_address_rect
-
-      information Rectangle.new(x: mm(INFOBOX_LEFT),
-        y: height - mm(CONTENT_TOP - INFOBOX_BOTTOM),
-        width: mm(INFOBOX_WIDTH),
-        height: mm(INFOBOX_HEIGHT))
-
-      content Rectangle.new(x: mm(CONTENT_LEFT),
-        y: mm(CONTENT_BOTTOM),
-        width: mm(CONTENT_WIDTH),
-        height: mm(CONTENT_HEIGHT))
-
-      footer Rectangle.new(x: mm(CONTENT_LEFT),
-        y: mm(5),
-        width: mm(CONTENT_WIDTH),
-        height: mm(15))
+    def draw_markers
+      draw_marker at: mm(DIN_A4_HEIGHT)/2,
+                  width: mm(7.5)
+      draw_marker at: mm(FOLD_MARKER_1),
+                  width: mm(5)
+      draw_marker at: mm(FOLD_MARKER_2),
+                  width: mm(5)
     end
 
     def draw_address(*,
@@ -122,7 +94,6 @@ module Hpdf
                          third : String = "",
                          fourth : String = "",
                          fifth : String = "")
-      r = remark_area_rect
       self.gray_stroke = 0.5
       self.gray_fill = 0.5
       draw_multirow_text rect: remark_area_rect,
@@ -152,48 +123,59 @@ module Hpdf
     end
 
     def postal_address_rect : Rectangle
-      Rectangle.new(x: ADDRESS_LEFT,
+      Rectangle.new(x: mm(ADDRESS_LEFT),
         y: height - mm(ADDRESS_TOP + REMARK_HEIGHT + POSTAL_HEIGHT),
         width: mm(ADDRESS_WIDTH),
         height: mm(POSTAL_HEIGHT))
     end
 
     def remark_area_rect : Rectangle
-      Rectangle.new(x: ADDRESS_LEFT,
+      Rectangle.new(x: mm(ADDRESS_LEFT),
         y: height - mm(ADDRESS_TOP + REMARK_HEIGHT),
         width: mm(ADDRESS_WIDTH),
         height: mm(REMARK_HEIGHT))
     end
 
-    def heading(r : Rectangle)
-      box r
+    def content_rect : Rectangle
+      Rectangle.new(x: mm(CONTENT_LEFT),
+        y: mm(CONTENT_BOTTOM),
+        width: mm(CONTENT_WIDTH),
+        height: mm(CONTENT_HEIGHT))
     end
 
-    def remark_area(r : Rectangle)
-      box r
+    def information_rect : Rectangle
+      Rectangle.new(x: mm(INFOBOX_LEFT),
+        y: height - mm(CONTENT_TOP - INFOBOX_BOTTOM),
+        width: mm(INFOBOX_WIDTH),
+        height: mm(INFOBOX_HEIGHT))
     end
 
-    def remark(r : Rectangle)
-      box r
+
+    def heading_rect : Rectangle
+      Rectangle.new(x: 0,
+        y: height - mm(HEADING_HEIGHT),
+        width: width,
+        height: mm(HEADING_HEIGHT))
     end
 
-    def postal_address(r : Rectangle)
-      box r
+    def footer_rect : Rectangle
+      Rectangle.new(x: mm(CONTENT_LEFT),
+        y: mm(5),
+        width: mm(CONTENT_WIDTH),
+        height: mm(15))
     end
 
-    def information(r : Rectangle)
-      box r
+    def draw_marker(at : Number, width : Number)
+      self.gray_stroke = 0
+      self.line_width = 1
+      context do
+        move_to 0, at
+        line_to width, at
+        stroke
+      end
     end
 
-    def content(r : Rectangle)
-      box r
-    end
-
-    def footer(r : Rectangle)
-      box r
-    end
-
-    private def box(r : Rectangle)
+    private def draw_box(r : Rectangle)
       # self.gray_fill = 0.5
       # rectangle r
       # fill
