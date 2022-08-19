@@ -21,10 +21,16 @@ describe Hpdf::Letter do
                          page.gray_stroke = 0
                          page.gray_fill = 0
 
-        # draw_infobox [
-        #   infobox_kv(""),
-        #   infobox_empty_line,
-        # ]
+        draw_infobox Hpdf::Base14::Helvetica, 12 do
+          row "Your contact:", "Max Mustermann"
+          row "Department:", "Customer Service"
+          row
+          row "Phone:", "09161 620-9800"
+          row "Fax:", "09161 8989-2000"
+          row "E-Mail:", "info@goodcorp.com"
+          row
+          row "Date:", "2022-02-01"
+        end
 
         # Content
         text Hpdf::Base14::HelveticaBold, 12 do

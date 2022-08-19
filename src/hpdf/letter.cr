@@ -55,6 +55,57 @@ module Hpdf
     ADDRESS_TOP    = HEADING_HEIGHT
     FOLD_MARKER_2  = FOLD_MARKER_1 + FOLD_MARKER_2_GAP
 
+    class InfoBox
+      getter rows : Array(Tuple(String, String))
+
+      def initialize()
+        @rows = Array(Tuple(String, String)).new
+      end
+
+      def row(key : String = "", value : String = "")
+        @rows << {key, value}
+      end
+
+      def keys : Array(String)
+        @rows.map { |row| row[0] }
+      end
+
+      def values : Array(String)
+        @rows.map { |row| row[1] }
+      end
+
+      def longest_key
+        @rows.sort do |a, b|
+          a[0].grapheme_size <=> b[0].grapheme_size
+        end.last[0]
+      end
+    end
+
+    def draw_infobox(font : String, font_size = Number)
+      infobox = InfoBox.new
+      v = with infobox yield
+
+      padding = text font, font_size do |page|
+        page.measure_text_width(infobox.longest_key).real_width
+      end
+
+      draw_multirow_text rect: information_rect,
+        rows: infobox.keys,
+        padding_left: 0,
+        font_name: font,
+        font_size: font_size,
+        line_height: font_size * 1.3
+
+      draw_multirow_text rect: information_rect,
+        rows: infobox.values,
+        padding_left: padding + mm(2.5),
+        font_name: font,
+        font_size: font_size,
+        line_height: font_size * 1.3
+
+      v
+    end
+
     def draw_boxes
       draw_box heading_rect
       draw_box remark_area_rect
@@ -105,9 +156,11 @@ module Hpdf
                            rows : Array(String),
                            padding_left : Number,
                            line_space : Number = 1,
-                           font_name : String = Base14::Helvetica)
-      line_height = rect.height / rows.size
-      font_size = line_height - line_space
+                           font_name : String = Base14::Helvetica,
+                           font_size : Number = -1,
+                           line_height : Number = -1)
+      line_height = rect.height / rows.size if line_height == -1 # auto calc
+      font_size = line_height - line_space if font_size == -1 # auto calc
       self.text_leading = line_height
       text font_name, font_size do
         first_line = line_height * (rows.size - 1) + font.not_nil!.cap_height(font_size) / 2

@@ -680,8 +680,9 @@ module Hpdf
     # build enables DSL style access to building a doc
     def self.build(&block)
       doc = new
-      with doc yield doc
+      v = with doc yield doc
       doc
+      v
     end
 
     # build enables DSL style access to building a doc
