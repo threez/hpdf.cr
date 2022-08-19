@@ -10,4 +10,4 @@ pdf = Hpdf::Doc.build do
   end
 end
 
-pdf.save_to_file "hello.pdf"
+pdf.save_to_file("pdfs/examples-hello.pdf")

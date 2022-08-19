@@ -11,7 +11,7 @@ def testdoc(filename : String? = nil, &block)
   with pdf yield pdf
   unless filename.nil?
     filename = filename.downcase.gsub /[^a-z0-9]+/, "-"
-    path = "spec-#{filename}.pdf"
+    path = "pdfs/spec-#{filename}.pdf"
     pdf.save_to_file path
   end
   pdf

@@ -99,7 +99,7 @@ module Hpdf
     #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
     #   `false` it returns `10` (the end of the previous word).
     def measure_text(text : String, *, width : Number, font_size : Number,
-        char_space : Number, word_space : Number, word_wrap : Bool = true) : MeasuredText
+                     char_space : Number, word_space : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.font_measure_text(self, text, text.size,
         real(width), real(font_size), real(char_space), real(word_space),
         bool(word_wrap), out real_width)

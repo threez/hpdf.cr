@@ -59,4 +59,4 @@ pdf = Hpdf::Doc.build do
   end
 end
 
-pdf.save_to_file("arc.pdf")
+pdf.save_to_file("pdfs/examples-arc.pdf")

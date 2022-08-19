@@ -267,4 +267,4 @@ pdf = Hpdf::Doc.build do
 end
 
 # save the document to a file
-pdf.save_to_file "line.pdf"
+pdf.save_to_file "pdfs/examples-line.pdf"

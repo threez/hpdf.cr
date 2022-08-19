@@ -3,7 +3,7 @@ describe Hpdf::Image do
     testdoc do |pdf|
       image = pdf.load_png_image_from_file("spec/data/screenshot.png")
 
-      s = image.get_size
+      s = image.size
       s.width.should eq 645
       s.height.should eq 534
       image.width.should eq 645

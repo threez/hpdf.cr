@@ -103,4 +103,4 @@ f = Hpdf::Doc.build do |pdf|
   end
 end
 
-f.save_to_file($0 + "jpfont.pdf")
+f.save_to_file("pdfs/examples-jpfont.pdf")

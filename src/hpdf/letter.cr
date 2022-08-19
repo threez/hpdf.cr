@@ -58,7 +58,7 @@ module Hpdf
     class InfoBox
       getter rows : Array(Tuple(String, String))
 
-      def initialize()
+      def initialize
         @rows = Array(Tuple(String, String)).new
       end
 
@@ -117,11 +117,11 @@ module Hpdf
 
     def draw_markers
       draw_marker at: mm(DIN_A4_HEIGHT)/2,
-                  width: mm(7.5)
+        width: mm(7.5)
       draw_marker at: mm(FOLD_MARKER_1),
-                  width: mm(5)
+        width: mm(5)
       draw_marker at: mm(FOLD_MARKER_2),
-                  width: mm(5)
+        width: mm(5)
     end
 
     def draw_address(*,
@@ -134,9 +134,9 @@ module Hpdf
       self.gray_stroke = 0
       self.gray_fill = 0
       draw_multirow_text rect: postal_address_rect,
-                         rows: [company, salutation, name, street, place, country],
-                         padding_left: mm(ADDRESS_PADDING_LEFT),
-                         font_name: Base14::CourierBold
+        rows: [company, salutation, name, street, place, country],
+        padding_left: mm(ADDRESS_PADDING_LEFT),
+        font_name: Base14::CourierBold
     end
 
     def draw_remark_area(*,
@@ -148,8 +148,8 @@ module Hpdf
       self.gray_stroke = 0.5
       self.gray_fill = 0.5
       draw_multirow_text rect: remark_area_rect,
-                         rows: [fifth, fourth, third, second, first],
-                         padding_left: mm(ADDRESS_PADDING_LEFT)
+        rows: [fifth, fourth, third, second, first],
+        padding_left: mm(ADDRESS_PADDING_LEFT)
     end
 
     def draw_multirow_text(rect : Rectangle,
@@ -160,7 +160,7 @@ module Hpdf
                            font_size : Number = -1,
                            line_height : Number = -1)
       line_height = rect.height / rows.size if line_height == -1 # auto calc
-      font_size = line_height - line_space if font_size == -1 # auto calc
+      font_size = line_height - line_space if font_size == -1    # auto calc
       self.text_leading = line_height
       text font_name, font_size do
         first_line = line_height * (rows.size - 1) + font.not_nil!.cap_height(font_size) / 2
@@ -202,7 +202,6 @@ module Hpdf
         width: mm(INFOBOX_WIDTH),
         height: mm(INFOBOX_HEIGHT))
     end
-
 
     def heading_rect : Rectangle
       Rectangle.new(x: 0,

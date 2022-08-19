@@ -2,6 +2,8 @@
 
 Shard to create PDF documents with crystal using [libharu/libhpdf](https://github.com/libharu/libharu/).
 
+Se example renderings here: [pdfs](https://github.com/threez/hpdf.cr/tree/master/pdfs).
+
 ## Installation
 
 1. Add the dependency to your `shard.yml`:

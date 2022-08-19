@@ -16,7 +16,7 @@ module Hpdf
     end
 
     # gets the size of the image of an image object.
-    def get_size : Size
+    def size : Size
       s = LibHaru.image_get_size(self)
       Size.new(width: s.x.to_u32, height: s.y.to_u32)
     end

@@ -40,4 +40,4 @@ page.text do
   end
 end
 
-pdf.save_to_file("font.pdf")
+pdf.save_to_file("pdfs/examples-font.pdf")

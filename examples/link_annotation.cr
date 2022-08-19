@@ -175,4 +175,4 @@ f = Hpdf::Doc.build do |pdf|
 end
 
 # save the document to a file
-f.save_to_file "link_annotation.pdf"
+f.save_to_file "pdfs/examples-link_annotation.pdf"
