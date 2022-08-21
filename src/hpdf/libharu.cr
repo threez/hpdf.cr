@@ -1,4 +1,9 @@
-@[Link("hpdf")]
+{% if flag?(:darwin) %}
+  @[Link("haru")]
+  @[Link("png")]
+{% else %}
+  @[Link("hpdf")]
+{% end %}
 lib LibHaru
   type Doc = Void*
   type Page = Void*

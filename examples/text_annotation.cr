@@ -95,4 +95,4 @@ f = Hpdf::Doc.build do |pdf|
   end
 end
 
-f.save_to_file("text_annotation.pdf")
+f.save_to_file("pdfs/examples-text_annotation.pdf")

@@ -11,6 +11,9 @@ module Hpdf
     @font : Font? = nil
     @font_size : Float32 = 0
 
+    # get the current font if any
+    getter font
+
     def initialize(@page : LibHaru::Page, @doc : Doc)
     end
 
@@ -345,11 +348,24 @@ module Hpdf
     #   ![http://libharu.sourceforge.net/image/figure19.png](http://libharu.sourceforge.net/image/figure19.png)
     def set_dash(pattern : Array(Number), *, phase = 0)
       requires_mode GMode::PageDescription, GMode::TextObject
+
       if pattern.size > 8
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
-      pat = pattern.map { |i| uint16(i) }
-      LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
+
+      if pattern.empty?
+        LibHaru.page_set_dash(self, nil, uint(0), uint(phase))
+      end
+
+      pat = StaticArray(UInt16, 8).new do |i|
+        if i < pattern.size
+          uint16(pattern[i].not_nil!)
+        else
+          uint16(0)
+        end
+      end
+
+      LibHaru.page_set_dash(self, pat, uint(pattern.size), uint(phase))
     end
 
     # applys the graphics state to the page.
@@ -973,9 +989,15 @@ module Hpdf
       len
     end
 
+    # see `text_rect`.
+    def text_rect(rect : Rectangle, text : String, *,
+                  align : TextAlignment = TextAlignment::Left) : Number
+      text_rect rect.left, rect.top, rect.right, rect.bottom, text, align: align
+    end
+
     # ## Helper ###
 
-    def reset_dash
+    def reset_dash!
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
     end
 
@@ -983,6 +1005,17 @@ module Hpdf
       @font = @doc.font(name)
       @font_size = size.to_f32
       set_font_and_size(@font.not_nil!, @font_size)
+    end
+
+    # measures the passed *text* width using the current font and font size.
+    # An application can invoke `measure_text_width` when the `graphics_mode`
+    # of the page is in `GMode::TextObject`.
+    def measure_text_width(text : String) : MeasuredText
+      @font.not_nil!.measure_text text,
+        font_size: @font_size,
+        width: width,
+        word_space: word_space,
+        char_space: char_space
     end
 
     def draw_rectangle(x : Number, y : Number, w : Number, h : Number, *, line_width lw = 1)
@@ -1009,22 +1042,25 @@ module Hpdf
         use_font(name, size)
       end
       begin_text
-      with self yield self
+      v = with self yield self
       text_end
+      v
     end
 
     # saves the current graphic state and restores it after
     # the block is completed
     def context
       g_save
-      with self yield self
+      v = with self yield self
       g_restore
+      v
     end
 
     def path(x : Number, y : Number)
       move_to x, y
-      with self yield self
+      v = with self yield self
       close_path
+      v
     end
   end
 end

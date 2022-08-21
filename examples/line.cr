@@ -72,7 +72,7 @@ pdf = Hpdf::Doc.build do
     set_dash [8, 7, 2, 7]
     my_draw_line(60, 620, "dash_ptn=[8, 7, 2, 7], phase=0")
 
-    reset_dash
+    reset_dash!
 
     page.line_width = 30
     set_rgb_stroke 0.0, 0.5, 0.0
@@ -184,7 +184,7 @@ pdf = Hpdf::Doc.build do
     line_to x2, y2
     stroke
 
-    reset_dash
+    reset_dash!
 
     page.line_width = 1.5
 
@@ -218,7 +218,7 @@ pdf = Hpdf::Doc.build do
     line_to x1, y1
     stroke
 
-    reset_dash
+    reset_dash!
 
     page.line_width = 1.5
     move_to x, y
@@ -257,7 +257,7 @@ pdf = Hpdf::Doc.build do
     line_to x3, y3
     stroke
 
-    reset_dash
+    reset_dash!
 
     page.line_width = 1.5
     move_to x, y
@@ -267,4 +267,4 @@ pdf = Hpdf::Doc.build do
 end
 
 # save the document to a file
-pdf.save_to_file "line.pdf"
+pdf.save_to_file "pdfs/examples-line.pdf"
