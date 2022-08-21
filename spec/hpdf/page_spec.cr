@@ -171,6 +171,7 @@ describe Hpdf::Image do
       miter_limit.should eq 50
 
       # set_dash
+      reset_dash!
       set_dash [8, 7, 2, 7]
       pattern, phase = dash
       pattern.should eq [8, 7, 2, 7]

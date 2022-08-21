@@ -1,6 +1,6 @@
 .PHONY: spec docs examples
 
-all: fmt lint docs spec examples montage.png
+all: clean fmt lint docs spec examples montage.png
 
 fmt:
 	crystal tool format
@@ -14,7 +14,7 @@ lint:
 docs:
 	crystal docs
 
-examples: clean
+examples:
 	shards build
 	sh ./examples/run.sh
 

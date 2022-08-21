@@ -348,11 +348,24 @@ module Hpdf
     #   ![http://libharu.sourceforge.net/image/figure19.png](http://libharu.sourceforge.net/image/figure19.png)
     def set_dash(pattern : Array(Number), *, phase = 0)
       requires_mode GMode::PageDescription, GMode::TextObject
+
       if pattern.size > 8
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
-      pat = pattern.map { |i| uint16(i) }
-      LibHaru.page_set_dash(self, pat, uint(pat.size), uint(phase))
+
+      if pattern.empty?
+        LibHaru.page_set_dash(self, nil, uint(0), uint(phase))
+      end
+
+      pat = StaticArray(UInt16, 8).new do |i|
+        if i < pattern.size
+          uint16(pattern[i].not_nil!)
+        else
+          uint16(0)
+        end
+      end
+
+      LibHaru.page_set_dash(self, pat, uint(pattern.size), uint(phase))
     end
 
     # applys the graphics state to the page.
@@ -984,7 +997,7 @@ module Hpdf
 
     # ## Helper ###
 
-    def reset_dash
+    def reset_dash!
       LibHaru.page_set_dash(self, nil, uint(0), uint(0))
     end
 
