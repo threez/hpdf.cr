@@ -8,8 +8,13 @@ fmt:
 spec:
 	crystal spec -v
 
-lint:
-	./lib/ameba/bin/ameba
+AMEBA=./lib/ameba/bin/ameba
+
+$(AMEBA): $(AMEBA).cr
+	crystal build -o $@ $(AMEBA).cr
+
+lint: $(AMEBA)
+	$(AMEBA)
 
 docs:
 	crystal docs
