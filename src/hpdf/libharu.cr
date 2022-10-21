@@ -66,9 +66,15 @@ lib LibHaru
   end
 
   struct DashMode
-    ptn : UInt16[8]
-    num_ptn : UInt
-    phase : UInt
+    {% if flag?(:darwin) %}
+      ptn : Real[8]
+      num_ptn : UInt
+      phase : Real
+    {% else %}
+      ptn : UInt16[8]
+      num_ptn : UInt
+      phase : UInt
+    {% end %}
   end
 
   struct TransMatrix
@@ -174,7 +180,11 @@ lib LibHaru
   fun page_set_line_cap = HPDF_Page_SetLineCap(Page, UInt) : Status
   fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
   fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
-  fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
+  {% if flag?(:darwin) %}
+    fun page_set_dash = HPDF_Page_SetDash(Page, Real*, UInt, Real) : Status
+  {% else %}
+    fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
+  {% end %}
   fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
   fun page_gsave = HPDF_Page_GSave(Page) : Status
   fun page_grestore = HPDF_Page_GRestore(Page) : Status

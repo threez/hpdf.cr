@@ -29,4 +29,4 @@ jobs:
       - name: Install libharu / crystal
         run: brew install libharu crystal libpng
       - name: Run tests
-        run: make examples spec || true
+        run: make examples spec
