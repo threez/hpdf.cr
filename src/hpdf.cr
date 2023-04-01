@@ -30,5 +30,5 @@ require "./hpdf/*"
 #
 # Start building a document using `Doc#build`
 module Hpdf
-  VERSION = "0.9.2"
+  VERSION = "0.9.3"
 end

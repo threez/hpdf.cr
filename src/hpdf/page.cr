@@ -1028,9 +1028,15 @@ module Hpdf
         char_space: char_space
     end
 
-    def draw_rectangle(x : Number, y : Number, w : Number, h : Number, *, line_width lw = 1)
-      @line_width = lw
-      rectangle(x, y, w, h)
+    # draws a rectangle with the given coordinates and linw width
+    def draw_rectangle(x : Number, y : Number, w : Number, h : Number, *, line_width lw : Number = 1)
+      draw_rectangle(Rectangle.new(x, y, w, h), line_width: lw)
+    end
+
+    # draws a rectangle with the given rectangle and linw width
+    def draw_rectangle(rect : Rectangle, *, line_width lw = 1)
+      self.line_width = lw
+      rectangle(rect)
       stroke
     end
 
@@ -1066,11 +1072,30 @@ module Hpdf
       v
     end
 
+    # create path at given coordinates and yields the block
+    # closes the path at the end and returns the result of
+    # the block
     def path(x : Number, y : Number)
       move_to x, y
       v = with self yield self
       close_path
       v
+    end
+
+    # table creates a table at the given coordinates and yields
+    # the block in the context of the created table.
+    #
+    # * *line_width* changes the line with of the drawn cells
+    def table(*, x : Number, y : Number,
+              width : Number, height : Number,
+              line_width lw : Number = 1, &block)
+      table = Table.new(x, y, width, height)
+      with table yield table
+      table.render(self) do |object, rect|
+        if object.is_a? Cell
+          draw_rectangle rect, line_width: lw
+        end
+      end
     end
   end
 end
