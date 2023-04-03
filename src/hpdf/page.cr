@@ -1082,21 +1082,41 @@ module Hpdf
       v
     end
 
+    # table creates a table at the given rect and yields
+    # the block in the context of the created table.
+    #
+    # * *line_width* changes the line with of the drawn cells
+    # * *spacing* spacing between the cells, by default there is no spacing
+    # * *fixed_row_height* allows to specify the row height instead of calculation
+    def table(rect : Rectangle,
+              line_width lw : Number = 1,
+              spacing sp : Number = 0,
+              fixed_row_height fwh : Number = 0,
+              &block)
+      table(x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+        line_width: lw, spacing: sp, fixed_row_height: fwh) do |table|
+        with table yield table
+      end
+    end
+
     # table creates a table at the given coordinates and yields
     # the block in the context of the created table.
     #
     # * *line_width* changes the line with of the drawn cells
     # * *spacing* spacing between the cells, by default there is no spacing
+    # * *fixed_row_height* allows to specify the row height instead of calculation
     def table(*, x : Number, y : Number,
               width : Number, height : Number,
               line_width lw : Number = 1,
-              spacing sp : Number = 0, &block)
+              fixed_row_height fwh : Number = 0,
+              spacing sp : Number = 0,
+              &block)
       # add line width to spacing, otherwise we see no effect of the spacing
       sp = line_width + sp if sp > 0
-      table = Table.new(x, y, width, height, spacing: sp)
+      table = Table.new(x, y, width, height, spacing: sp, fixed_row_height: fwh)
       with table yield table
       table.render(self) do |object, sym|
-        if object.is_a? Cell && sym == :after
+        if object.is_a? BaseCell && sym == :after
           draw_rectangle object.rect.as(Rectangle), line_width: lw
         end
       end

@@ -250,11 +250,13 @@ module Hpdf
 
     # visualize a rect on the page
     private def draw_box(r : Rectangle)
-      self.gray_fill = 0.9
-      rectangle r
-      fill
-      self.gray_stroke = 0.3
-      draw_rectangle r.x, r.y, r.width, r.height
+      context do
+        self.gray_fill = 0.9
+        rectangle r
+        fill
+        self.gray_stroke = 0.3
+        draw_rectangle r.x, r.y, r.width, r.height
+      end
     end
 
     # draws a text into multiple rows, like a single column table

@@ -87,6 +87,37 @@ module Hpdf
     def top=(top : Float32)
       @height = top - bottom
     end
+
+    # change the rect by using padding
+    def padding!(*, top : Float32 = 0,
+                 bottom : Float32 = 0,
+                 left : Float32 = 0,
+                 right : Float32 = 0)
+      if top
+        @height -= top
+      end
+      if bottom
+        @height -= bottom
+        @y += bottom
+      end
+      if left
+        @x += left
+        @width -= left
+      end
+      if right
+        @width -= right
+      end
+    end
+
+    # change the rect by using padding and return a new rect based on it
+    def padding(*, top : Float32 = 0,
+                bottom : Float32 = 0,
+                left : Float32 = 0,
+                right : Float32 = 0) : Rectangle
+      r = self.dup
+      r.padding!(top: top, bottom: bottom, left: left, right: right)
+      r
+    end
   end
 
   struct MeasuredText
