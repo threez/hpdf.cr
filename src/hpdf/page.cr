@@ -1086,14 +1086,18 @@ module Hpdf
     # the block in the context of the created table.
     #
     # * *line_width* changes the line with of the drawn cells
+    # * *spacing* spacing between the cells, by default there is no spacing
     def table(*, x : Number, y : Number,
               width : Number, height : Number,
-              line_width lw : Number = 1, &block)
-      table = Table.new(x, y, width, height)
+              line_width lw : Number = 1,
+              spacing sp : Number = 0, &block)
+      # add line width to spacing, otherwise we see no effect of the spacing
+      sp = line_width + sp if sp > 0
+      table = Table.new(x, y, width, height, spacing: sp)
       with table yield table
-      table.render(self) do |object, rect|
-        if object.is_a? Cell
-          draw_rectangle rect, line_width: lw
+      table.render(self) do |object, sym|
+        if object.is_a? Cell && sym == :after
+          draw_rectangle object.rect.as(Rectangle), line_width: lw
         end
       end
     end

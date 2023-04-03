@@ -49,13 +49,35 @@ describe Hpdf::Table do
 
         text Hpdf::Base14::Helvetica, 20 do
           move_text_pos 100, 650
-          show_text "Cell span"
+          show_text "Cell span and spacing"
         end
 
-        table(x: 100, y: 500, width: 300, height: 120, line_width: 3) do
+        table(x: 100, y: 500, width: 300, height: 120,
+          line_width: 1, spacing: 2) do
           row do
             cell span: 2 { }
             cell span: 4 { }
+          end
+          row do
+            cell { }
+            cell { }
+            cell { }
+            cell { }
+            cell { }
+            cell { }
+          end
+          row do
+            cell span: 2 { }
+            cell span: 3 { }
+            cell span: 1 { }
+          end
+          row do
+            cell span: 5 { }
+            cell span: 1 { }
+          end
+          row do
+            cell span: 3 { }
+            cell span: 3 { }
           end
           row do
             cell span: 2 { }
