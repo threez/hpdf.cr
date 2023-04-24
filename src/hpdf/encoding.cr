@@ -52,7 +52,7 @@ module Hpdf
     end
 
     # returns the type of byte in the text at position index.
-    def byte_type(text : String, idx : Number) : ByteType
+    def byte_type(text : (String | Bytes), idx : Number) : ByteType
       ByteType.new(LibHaru.encoder_get_type(self, text, uint(idx)))
     end
 

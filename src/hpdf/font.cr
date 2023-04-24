@@ -84,7 +84,7 @@ module Hpdf
     end
 
     # total width of the text, number of charactors and number of the words.
-    def text_width(text : String)
+    def text_width(text : (String | Bytes))
       LibHaru.font_text_width(self, text, text.size)
     end
 
@@ -98,7 +98,7 @@ module Hpdf
     #   until `"J"` can be included within the width, if *word_wrap* parameter is `false`
     #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
     #   `false` it returns `10` (the end of the previous word).
-    def measure_text(text : String, *, width : Number, font_size : Number,
+    def measure_text(text : (String | Bytes), *, width : Number, font_size : Number,
                      char_space : Number, word_space : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.font_measure_text(self, text, text.size,
         real(width), real(font_size), real(char_space), real(word_space),

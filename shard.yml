@@ -1,5 +1,5 @@
 name: hpdf
-version: 0.9.2
+version: 0.9.6
 
 authors:
   - Vincent Landgraf <vincent@landgrafx.de>
@@ -7,6 +7,8 @@ authors:
 targets:
   example-hello:
     main: ./examples/hello.cr
+  example-accented:
+    main: ./examples/accented.cr
   example-font:
     main: ./examples/font.cr
   example-line:

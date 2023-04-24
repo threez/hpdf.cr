@@ -122,7 +122,7 @@ module Hpdf
     end
 
     # creates a new text cell using the passed parameters
-    def text_cell(text : String,
+    def text_cell(text : (String | Bytes),
                   *,
                   span : Number = 1,
                   font : String = Hpdf::Base14::Helvetica,
@@ -183,7 +183,7 @@ module Hpdf
   class TextCell < BaseCell
     property rect : Rectangle?
 
-    def initialize(@text : String,
+    def initialize(@text : (String | Bytes),
                    *,
                    span : Number = 1,
                    @font : String = Hpdf::Base14::Helvetica,
