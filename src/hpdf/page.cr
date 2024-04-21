@@ -10,6 +10,7 @@ module Hpdf
 
     @font : Font? = nil
     @font_size : Float32 = 0
+    @encoding : String? = nil
 
     # get the current font if any
     getter font
@@ -73,7 +74,7 @@ module Hpdf
     # * *text* the text to be displayed.
     # * *encoder* an encoder handle which is used to encode the text.
     #   If it is null, PDFDocEncoding is used.
-    def create_text_annotation(rect : Rectangle, text : (String | Bytes), encoder : Encoder? = nil) : TextAnnotation
+    def create_text_annotation(rect : Rectangle, text : String, encoder : Encoder? = nil) : TextAnnotation
       TextAnnotation.new(LibHaru.page_create_text_annotation(self, rect, text, encoder), @doc, self)
     end
 
@@ -94,8 +95,8 @@ module Hpdf
     end
 
     # gets the width of the text in current fontsize, character spacing and word spacing.
-    def text_width(text : (String | Bytes)) : Float32
-      LibHaru.page_text_width(self, text).to_f32
+    def text_width(text : String) : Float32
+      LibHaru.page_text_width(self, encoded_text(text)).to_f32
     end
 
     # calculates the byte length which can be included within the specified width.
@@ -106,8 +107,8 @@ module Hpdf
     #   until `"J"` can be included within the width, if *word_wrap* parameter is `false`
     #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
     #   `false` it returns `10` (the end of the previous word).
-    def measure_text(text : (String | Bytes), *, width : Number, word_wrap : Bool = true) : MeasuredText
-      size = LibHaru.page_measure_text(self, text,
+    def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
+      size = LibHaru.page_measure_text(self, encoded_text(text),
         real(width), bool(word_wrap), out real_width)
       MeasuredText.new(size, real_width)
     end
@@ -827,9 +828,9 @@ module Hpdf
     # page is in `GMode::PageDescription` or `GMode::TextObject`.
     #
     # * *text* the text to print.
-    def show_text(text : (String | Bytes))
+    def show_text(text : String)
       requires_mode GMode::PageDescription, GMode::TextObject
-      LibHaru.page_show_text(self, text)
+      LibHaru.page_show_text(self, encoded_text(text))
     end
 
     # moves the current text position to the start of the next line,
@@ -837,9 +838,9 @@ module Hpdf
     # An application can invoke `show_text_next_line` when the
     # graphics mode of the page is in `GMode::PageDescription` or
     # `GMode::TextObject`.
-    def show_text_next_line(text : (String | Bytes))
+    def show_text_next_line(text : String)
       requires_mode GMode::PageDescription, GMode::TextObject
-      LibHaru.page_show_text_next_line(self, text)
+      LibHaru.page_show_text_next_line(self, encoded_text(text))
     end
 
     # moves the current text position to the start of the next line,
@@ -847,9 +848,9 @@ module Hpdf
     # text at the current position on the page.
     # An application can invoke `show_text_next_line_ex` when the
     # graphics mode of the page is in `GMode::TextObject`.
-    def show_text_next_line_ex(text : (String | Bytes), word_space : Number, char_space : Number)
+    def show_text_next_line_ex(text : String, word_space : Number, char_space : Number)
       requires_mode GMode::TextObject
-      LibHaru.page_show_text_next_line_ex(self, real(word_space), real(char_space), text)
+      LibHaru.page_show_text_next_line_ex(self, real(word_space), real(char_space), encoded_text(text))
     end
 
     # sets the filling color.
@@ -964,7 +965,7 @@ module Hpdf
     #
     # * *x*, *y* the point position where the text is displayed.
     # * *text* the text to show.
-    def text_out(x : Number | Symbol, y : Number | Symbol, text : (String | Bytes))
+    def text_out(x : Number | Symbol, y : Number | Symbol, text : String)
       requires_mode GMode::TextObject
       if x == :center
         x = (width - text_width(text)) / 2
@@ -977,7 +978,7 @@ module Hpdf
           y = height / 2 - @font_size / 2
         end
       end
-      LibHaru.page_text_out(self, real(x.as(Number)), real(y.as(Number)), text)
+      LibHaru.page_text_out(self, real(x.as(Number)), real(y.as(Number)), encoded_text(text))
     end
 
     # print the text inside the specified region. Some chars may not
@@ -991,16 +992,16 @@ module Hpdf
     # * *text* the text to show.
     # * *align* the alignment of the text.
     def text_rect(left : Number, top : Number, right : Number, bottom : Number,
-                  text : (String | Bytes), *, align : TextAlignment = TextAlignment::Left) : Number
+                  text : String, *, align : TextAlignment = TextAlignment::Left) : Number
       requires_mode GMode::TextObject
       LibHaru.page_text_rect(self, real(left), real(top),
         real(right), real(bottom),
-        text, align.to_i, out len)
+        encoded_text(text), align.to_i, out len)
       len
     end
 
     # see `text_rect`.
-    def text_rect(rect : Rectangle, text : (String | Bytes), *,
+    def text_rect(rect : Rectangle, text : String, *,
                   align : TextAlignment = TextAlignment::Left) : Number
       text_rect rect.left, rect.top, rect.right, rect.bottom, text, align: align
     end
@@ -1011,8 +1012,8 @@ module Hpdf
       set_dash([] of Int32, phase: 0)
     end
 
-    def use_font(name, size, *, encoding : String? = nil)
-      @font = @doc.font(name, encoding: encoding)
+    def use_font(name, size, *, encoding enc : String? = @encoding)
+      @font = @doc.font(name, encoding: enc)
       @font_size = size.to_f32
       if f = @font
         set_font_and_size(f, @font_size)
@@ -1024,9 +1025,9 @@ module Hpdf
     # measures the passed *text* width using the current font and font size.
     # An application can invoke `measure_text_width` when the `graphics_mode`
     # of the page is in `GMode::TextObject`.
-    def measure_text_width(text : (String | Bytes)) : MeasuredText
+    def measure_text_width(text : String) : MeasuredText
       if f = @font
-        f.measure_text text, font_size: @font_size,
+        f.measure_text encoded_text(text), font_size: @font_size,
           width: width,
           word_space: word_space,
           char_space: char_space
@@ -1053,6 +1054,32 @@ module Hpdf
       end
     end
 
+    # set encoding to be used for strings
+    def use_encoding(encoding : String, &)
+      tmp = @encoding
+      @encoding = encoding
+      v = with self yield self
+      @encoding = tmp
+      v
+    end
+
+    private def encoded_text(text : String) : (String | Bytes)
+      return text if ascii_only?(text)
+
+      if enc = @encoding
+        text.encode(enc) + 0x00
+      else
+        text
+      end
+    end
+
+    private def ascii_only?(str : String) : Bool
+      str.each_char do |char|
+        return false if char.ord > 127
+      end
+      true
+    end
+
     # ## DSL ###
 
     # build enables DSL style access to building a page
@@ -1060,7 +1087,7 @@ module Hpdf
       with self yield self
     end
 
-    def text(name = nil, size = nil, *, encoding enc : String? = nil, &)
+    def text(name = nil, size = nil, *, encoding enc : String = @encoding, &)
       if name && size
         use_font(name, size, encoding: enc)
       end

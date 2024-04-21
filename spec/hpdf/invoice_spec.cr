@@ -6,24 +6,26 @@ describe Hpdf::Letter do
         # debug_draw_boxes
 
         # Header
-        draw_address company: "Evil Corp",
-          salutation: "Mr.",
-          name: "Robot",
-          street: "Street 1",
-          place: "New York",
-          country: "USA"
+        use_encoding Hpdf::Encodings::ISO8859_2 do
+          draw_address company: "Evil Cörp",
+            salutation: "Mr.",
+            name: "Robot",
+            street: "Street 1",
+            place: "New York",
+            country: "USA"
 
-        draw_remark_area first: "Good Corp | Awesomestr. 20 | 12345 Place"
+          draw_remark_area first: "Good Corp | Awesomestr. 20 | 12345 Place"
 
-        draw_infobox Hpdf::Base14::Helvetica, 12 do
-          row "Your contact:", "Max Mustermann"
-          row "Department:", "Customer Service"
-          row
-          row "Phone:", "09161 620-9800"
-          row "Fax:", "09161 8989-2000"
-          row "E-Mail:", "info@goodcorp.com"
-          row
-          row "Date:", "2022-02-01"
+          draw_infobox Hpdf::Base14::Helvetica, 12 do
+            row "Your contact:", "Max Müstermann"
+            row "Department:", "Customer Service"
+            row
+            row "Phone:", "09161 620-9800"
+            row "Fax:", "09161 8989-2000"
+            row "E-Mail:", "info@goodcorp.com"
+            row
+            row "Date:", "2022-02-01"
+          end
         end
 
         # Content
@@ -39,80 +41,82 @@ describe Hpdf::Letter do
                                   "\n\nKind regards your service team"
         end
 
-        table(content_rect.padding(top: 150), fixed_row_height: 22) do
-          row do
-            text_cell "Position",
-              align: Hpdf::TextAlignment::Center,
-              font: Hpdf::Base14::HelveticaBold,
-              bg_gray: 0.9
-            text_cell "Description",
-              align: Hpdf::TextAlignment::Center,
-              font: Hpdf::Base14::HelveticaBold,
-              span: 4,
-              bg_gray: 0.9
-            text_cell "Quantity",
-              align: Hpdf::TextAlignment::Center,
-              font: Hpdf::Base14::HelveticaBold,
-              bg_gray: 0.9
-            text_cell "Price",
-              align: Hpdf::TextAlignment::Center,
-              font: Hpdf::Base14::HelveticaBold,
-              bg_gray: 0.9
-            text_cell "Total",
-              align: Hpdf::TextAlignment::Center,
-              font: Hpdf::Base14::HelveticaBold,
-              bg_gray: 0.9
-          end
-          row do
-            text_cell "1"
-            text_cell "iPhone 12",
-              span: 4
-            text_cell "2",
-              align: Hpdf::TextAlignment::Right
-            text_cell "899.00",
-              align: Hpdf::TextAlignment::Right
-            text_cell "1798.00",
-              align: Hpdf::TextAlignment::Right
-          end
-          row do
-            text_cell "2"
-            text_cell "MacBookPro 14\"",
-              span: 4
-            text_cell "1",
-              align: Hpdf::TextAlignment::Right
-            text_cell "2499.00",
-              align: Hpdf::TextAlignment::Right
-            text_cell "2499.00",
-              align: Hpdf::TextAlignment::Right
-          end
-          row do
-            text_cell "3"
-            text_cell "iPad",
-              span: 4
-            text_cell "1",
-              align: Hpdf::TextAlignment::Right
-            text_cell "499.00",
-              align: Hpdf::TextAlignment::Right
-            text_cell "499.00",
-              align: Hpdf::TextAlignment::Right
-          end
-          row { }
-          row do
-            text_cell "Total EUR",
-              span: 7,
-              align: Hpdf::TextAlignment::Right
-            text_cell "4796.00",
-              font: Hpdf::Base14::HelveticaBold,
-              align: Hpdf::TextAlignment::Right,
-              bg_gray: 0.9
-          end
-          row do
-            text_cell "incl. VAT 19%",
-              span: 7,
-              align: Hpdf::TextAlignment::Right
-            text_cell "765.75",
-              align: Hpdf::TextAlignment::Right,
-              bg_gray: 0.9
+        use_encoding Hpdf::Encodings::ISO8859_2 do
+          table(content_rect.padding(top: 150), fixed_row_height: 22) do
+            row do
+              text_cell "Position",
+                align: Hpdf::TextAlignment::Center,
+                font: Hpdf::Base14::HelveticaBold,
+                bg_gray: 0.9
+              text_cell "Description",
+                align: Hpdf::TextAlignment::Center,
+                font: Hpdf::Base14::HelveticaBold,
+                span: 4,
+                bg_gray: 0.9
+              text_cell "Quantity",
+                align: Hpdf::TextAlignment::Center,
+                font: Hpdf::Base14::HelveticaBold,
+                bg_gray: 0.9
+              text_cell "Price",
+                align: Hpdf::TextAlignment::Center,
+                font: Hpdf::Base14::HelveticaBold,
+                bg_gray: 0.9
+              text_cell "Total",
+                align: Hpdf::TextAlignment::Center,
+                font: Hpdf::Base14::HelveticaBold,
+                bg_gray: 0.9
+            end
+            row do
+              text_cell "1"
+              text_cell "iPhone 12",
+                span: 4
+              text_cell "2",
+                align: Hpdf::TextAlignment::Right
+              text_cell "899.00",
+                align: Hpdf::TextAlignment::Right
+              text_cell "1798.00",
+                align: Hpdf::TextAlignment::Right
+            end
+            row allow_grow: true do
+              text_cell "2"
+              text_cell "MacBookPro 14\"\nBehold an entirely new class of GPU.\nAnd the biggest breakthrough in silicön",
+                span: 4
+              text_cell "1",
+                align: Hpdf::TextAlignment::Right
+              text_cell "2499.00",
+                align: Hpdf::TextAlignment::Right
+              text_cell "2499.00",
+                align: Hpdf::TextAlignment::Right
+            end
+            row do
+              text_cell "3"
+              text_cell "iPad",
+                span: 4
+              text_cell "1",
+                align: Hpdf::TextAlignment::Right
+              text_cell "499.00",
+                align: Hpdf::TextAlignment::Right
+              text_cell "499.00",
+                align: Hpdf::TextAlignment::Right
+            end
+            row { }
+            row do
+              text_cell "Total EUR",
+                span: 7,
+                align: Hpdf::TextAlignment::Right
+              text_cell "4796.00",
+                font: Hpdf::Base14::HelveticaBold,
+                align: Hpdf::TextAlignment::Right,
+                bg_gray: 0.9
+            end
+            row do
+              text_cell "incl. VAT 19%",
+                span: 7,
+                align: Hpdf::TextAlignment::Right
+              text_cell "765.75",
+                align: Hpdf::TextAlignment::Right,
+                bg_gray: 0.9
+            end
           end
         end
 

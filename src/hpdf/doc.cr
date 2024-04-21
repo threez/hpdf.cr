@@ -130,8 +130,12 @@ module Hpdf
     end
 
     # gets the handle of a corresponding font object by specified name and encoding.
-    def font(name : String, encoding : String? = nil)
-      Font.new(LibHaru.get_font(@doc, name, encoding), self)
+    def font(name : String, encoding enc : String? = nil)
+      if enc
+        Font.new(LibHaru.get_font(@doc, name, enc), self)
+      else
+        Font.new(LibHaru.get_font(@doc, name, nil), self)
+      end
     end
 
     # loads a type1 font from an external file and register it to a document object.

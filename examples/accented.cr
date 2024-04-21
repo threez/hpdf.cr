@@ -1,11 +1,11 @@
 require "../src/hpdf"
 
-k = "Können wir mit Umlauten umgehen? Ja von Kopf bis Fuß.".encode("ISO8859-2")
-
 pdf = Hpdf::Doc.build do
   page do
-    text Hpdf::Base14::Helvetica, 20, encoding: "ISO8859-2" do
-      text_out :center, height - 50, k
+    use_encoding Hpdf::Encodings::ISO8859_2 do
+      text Hpdf::Base14::Helvetica, 20 do
+        text_out :center, height - 50, "Können wir mit Umlauten umgehen? Ja von Kopf bis Fuß."
+      end
     end
   end
 end
