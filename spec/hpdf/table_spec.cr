@@ -23,16 +23,16 @@ describe Hpdf::Table do
           sudoku.each do |row_data|
             row do
               row_data.each do |val|
-                cell do |p, rect|
+                cell do |page, rect|
                   if val != 0
                     # gray background for prefilled numbers
-                    p.context do
-                      p.gray_fill = 0.9
+                    page.context do
+                      page.gray_fill = 0.9
                       rectangle rect
                       fill
                     end
 
-                    p.text Hpdf::Base14::Helvetica, 16 do
+                    page.text Hpdf::Base14::Helvetica, 16 do
                       # center text
                       rect.x += 12
                       rect.y -= 7

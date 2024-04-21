@@ -678,14 +678,14 @@ module Hpdf
     # ## DSL ###
 
     # build enables DSL style access to building a doc
-    def self.build(&block)
+    def self.build(&)
       doc = new
       with doc yield doc
       doc
     end
 
     # build enables DSL style access to building a doc
-    def build
+    def build(&)
       with self yield self
     end
 
@@ -707,7 +707,7 @@ module Hpdf
     #   end
     # end
     # ```
-    def page(klass = Page, &block)
+    def page(klass = Page, &)
       page = add_custom_page(klass)
       with page yield page
     end

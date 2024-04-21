@@ -1,0 +1,16 @@
+# Run `ameba --only Lint/UselessAssign` for details
+Lint/UselessAssign:
+  Description: Disallows useless variable assignments
+  ExcludeTypeDeclarations: false
+  Excluded:
+  - src/hpdf/libharu.cr
+  Enabled: true
+  Severity: Warning
+
+# Run `ameba --only Lint/NotNil` for details
+Lint/NotNil:
+  Description: Identifies usage of `not_nil!` calls
+  Excluded:
+  - spec/hpdf/*
+  Enabled: true
+  Severity: Warning

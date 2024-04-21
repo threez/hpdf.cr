@@ -6,7 +6,7 @@ def create_font
   pdf.font "Helvetica"
 end
 
-def testdoc(filename : String? = nil, &block)
+def testdoc(filename : String? = nil, &)
   pdf = Hpdf::Doc.new
   with pdf yield pdf
   unless filename.nil?
@@ -17,7 +17,7 @@ def testdoc(filename : String? = nil, &block)
   pdf
 end
 
-def testpage(filename : String? = nil, &block)
+def testpage(filename : String? = nil, &)
   testdoc filename do |pdf|
     page do |page|
       with page yield page, pdf

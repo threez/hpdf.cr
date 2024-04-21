@@ -20,7 +20,7 @@ lib LibHaru
     year : Int
     month : Int       # between 1 and 12.
     day : Int         # between 1 and ether of 28, 29, 30, 31. (It is different by the month.)
-    hour : Int        #  0 to 23
+    hour : Int        # 0 to 23
     minutes : Int     # 0 to 59
     seconds : Int     # 0 to 59
     ind : Char        # the relationship of local time to Universal Time. " ", +, −, and Z are available.

@@ -30,7 +30,7 @@ module Hpdf
 
     # creates a rows and yields the block with the newly created row
     # and adds it to the end (bottom) of the table
-    def row(&block)
+    def row(&)
       row = Row.new
       with row yield row
       add_row(row)

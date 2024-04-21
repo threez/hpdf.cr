@@ -28,11 +28,11 @@ class MyPage < Hpdf::Page
     text do
       set_rgb_fill 0, 0, 0
       self.text_rendering_mode = Hpdf::TextRenderingMode::Fill
-      set_font_and_size font.not_nil!, 10
+      set_font_and_size font, 10 unless font.nil?
       text_out x, y - 12, str
     end
 
-    set_font_and_size font.not_nil!, fsize
+    set_font_and_size font, fsize unless font.nil?
     set_rgb_fill c.r, c.g, c.b
   end
 end

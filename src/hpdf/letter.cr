@@ -14,7 +14,7 @@ module Hpdf
     # usable in PDF documents.
     #
     # * *mm* the value in milimeters
-    private def mm(mm : Number) : Number
+    def mm(mm : Number) : Number
       height / DIN_A4_HEIGHT * mm
     end
   end
@@ -76,8 +76,8 @@ module Hpdf
 
       # returns the longest key of all given rows
       def longest_key
-        @rows.sort do |a, b|
-          a[0].grapheme_size <=> b[0].grapheme_size
+        @rows.sort do |left, right|
+          left[0].grapheme_size <=> right[0].grapheme_size
         end.last[0]
       end
     end
@@ -86,7 +86,7 @@ module Hpdf
     #
     # * *font* the name of the font to use
     # * *font_size* the size of the font to use
-    def draw_infobox(font : String, font_size = Number)
+    def draw_infobox(font : String, font_size = Number, &)
       infobox = InfoBox.new
       v = with infobox yield
 
@@ -271,7 +271,7 @@ module Hpdf
       font_size = line_height - line_space if font_size == -1    # auto calc
       self.text_leading = line_height
       text font_name, font_size do
-        first_line = line_height * (rows.size - 1) + font.not_nil!.cap_height(font_size) / 2
+        first_line = line_height * (rows.size - 1) + font_cap_height / 2
         move_text_pos rect.x + padding_left, rect.y + first_line
         rows.each_with_index do |text, i|
           if i == 0
@@ -280,6 +280,14 @@ module Hpdf
             show_text_next_line text
           end
         end
+      end
+    end
+
+    def font_cap_height : Number
+      if f = font
+        f.cap_height(@font_size)
+      else
+        @font_size / 2
       end
     end
   end

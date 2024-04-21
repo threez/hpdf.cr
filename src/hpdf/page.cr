@@ -1014,18 +1014,25 @@ module Hpdf
     def use_font(name, size, *, encoding : String? = nil)
       @font = @doc.font(name, encoding: encoding)
       @font_size = size.to_f32
-      set_font_and_size(@font.not_nil!, @font_size)
+      if f = @font
+        set_font_and_size(f, @font_size)
+      else
+        raise "font #{name} could not be set"
+      end
     end
 
     # measures the passed *text* width using the current font and font size.
     # An application can invoke `measure_text_width` when the `graphics_mode`
     # of the page is in `GMode::TextObject`.
     def measure_text_width(text : (String | Bytes)) : MeasuredText
-      @font.not_nil!.measure_text text,
-        font_size: @font_size,
-        width: width,
-        word_space: word_space,
-        char_space: char_space
+      if f = @font
+        f.measure_text text, font_size: @font_size,
+          width: width,
+          word_space: word_space,
+          char_space: char_space
+      else
+        raise "no font set"
+      end
     end
 
     # draws a rectangle with the given coordinates and linw width
@@ -1049,11 +1056,11 @@ module Hpdf
     # ## DSL ###
 
     # build enables DSL style access to building a page
-    def build
+    def build(&)
       with self yield self
     end
 
-    def text(name = nil, size = nil, *, encoding enc : String? = nil, &block)
+    def text(name = nil, size = nil, *, encoding enc : String? = nil, &)
       if name && size
         use_font(name, size, encoding: enc)
       end
@@ -1065,7 +1072,7 @@ module Hpdf
 
     # saves the current graphic state and restores it after
     # the block is completed
-    def context
+    def context(&)
       g_save
       v = with self yield self
       g_restore
@@ -1075,7 +1082,7 @@ module Hpdf
     # create path at given coordinates and yields the block
     # closes the path at the end and returns the result of
     # the block
-    def path(x : Number, y : Number)
+    def path(x : Number, y : Number, &)
       move_to x, y
       v = with self yield self
       close_path
@@ -1092,7 +1099,7 @@ module Hpdf
               line_width lw : Number = 1,
               spacing sp : Number = 0,
               fixed_row_height fwh : Number = 0,
-              &block)
+              &)
       table(x: rect.x, y: rect.y, width: rect.width, height: rect.height,
         line_width: lw, spacing: sp, fixed_row_height: fwh) do |table|
         with table yield table
@@ -1110,7 +1117,7 @@ module Hpdf
               line_width lw : Number = 1,
               fixed_row_height fwh : Number = 0,
               spacing sp : Number = 0,
-              &block)
+              &)
       # add line width to spacing, otherwise we see no effect of the spacing
       sp = line_width + sp if sp > 0
       table = Table.new(x, y, width, height, spacing: sp, fixed_row_height: fwh)
