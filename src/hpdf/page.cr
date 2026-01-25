@@ -103,10 +103,11 @@ module Hpdf
     #
     # * *text* the text to get the width for.
     # * *width* The width of the area to put the text.
-    # * *word_wrap* When there are three words of `"ABCDE FGH IJKL"`, and the substring
-    #   until `"J"` can be included within the width, if *word_wrap* parameter is `false`
-    #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
-    #   `false` it returns `10` (the end of the previous word).
+    # * *word_wrap* Assume there are three words `"ABCDE FGH IJKL"`, and the substring
+    #   until `"J"` can be included within the width. If *word_wrap* parameter is `false`,
+    #   `12` characters can be included;  if *word_wrap* is `true`, only `10` characters will fit,
+    #   i.e. until the end of the previous word. This value is available as property `len_included`
+    #   in the returned MeasuredText struct.
     def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.page_measure_text(self, encoded_text(text),
         real(width), bool(word_wrap), out real_width)
