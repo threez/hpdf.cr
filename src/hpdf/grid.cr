@@ -1,5 +1,5 @@
 module Hpdf
-  # Grip is a helper to draw a fine grid on the page.
+  # Grid is a helper to draw a fine grid on the page.
   # Use it in your custom `Doc#page` pages:
   #
   # ```
