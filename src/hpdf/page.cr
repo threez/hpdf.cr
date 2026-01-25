@@ -185,11 +185,7 @@ module Hpdf
     # First argument is the pattern, second is the phase.
     def dash
       mode = LibHaru.page_get_dash(self)
-      pattern = {% if flag?(:darwin) %}
-                  Array(Float32).new
-                {% else %}
-                  Array(UInt16).new
-                {% end %}
+      pattern = Array(Float32).new
       mode.num_ptn.times do |i|
         pattern << mode.ptn[i]
       end
@@ -359,25 +355,14 @@ module Hpdf
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
 
-      {% if flag?(:darwin) %}
-        pat = StaticArray(Float32, 8).new do |i|
-          if i < pattern.size
-            pattern[i].not_nil!.to_f32
-          else
-            0.to_f32
-          end
+      pat = StaticArray(Float32, 8).new do |i|
+        if i < pattern.size
+          pattern[i].not_nil!.to_f32
+        else
+          0.to_f32
         end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
-      {% else %}
-        pat = StaticArray(UInt16, 8).new do |i|
-          if i < pattern.size
-            pattern[i].not_nil!.to_u16
-          else
-            0.to_u16
-          end
-        end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_u32)
-      {% end %}
+      end
+      LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
     end
 
     # applys the graphics state to the page.
