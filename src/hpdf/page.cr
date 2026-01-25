@@ -1053,7 +1053,7 @@ module Hpdf
       return text if ascii_only?(text)
 
       if enc = @encoding
-        text.encode(enc) + 0x00
+        text.encode(enc) + Bytes.new(1,0x00)
       else
         text
       end
