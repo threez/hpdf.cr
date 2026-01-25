@@ -83,6 +83,7 @@ lib LibHaru
 
   # Document handling
   fun new = HPDF_New((Status, Status, Void*) -> Void, Void*) : Doc
+  fun new_doc = HPDF_NewDoc(Doc) : Status
   fun free = HPDF_Free(Doc) : Void
   fun save_to_file = HPDF_SaveToFile(Doc, LibC::Char*) : Status
   fun save_to_stream = HPDF_SaveToStream(Doc) : Void

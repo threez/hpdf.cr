@@ -1,20 +1,23 @@
 require "spec"
 require "../src/hpdf"
 
+module Suite
+  DOC = Hpdf::Doc.new
+end
+
 def create_font
-  pdf = Hpdf::Doc.new
-  pdf.font "Helvetica"
+  Suite::DOC.font "Helvetica"
 end
 
 def testdoc(filename : String? = nil, &)
-  pdf = Hpdf::Doc.new
-  with pdf yield pdf
+  LibHaru.new_doc(Suite::DOC)
+  with Suite::DOC yield Suite::DOC
   unless filename.nil?
     filename = filename.downcase.gsub /[^a-z0-9]+/, "-"
     path = "pdfs/spec-#{filename}.pdf"
-    pdf.save_to_file path
+    Suite::DOC.save_to_file path
   end
-  pdf
+  Suite::DOC
 end
 
 def testpage(filename : String? = nil, &)
