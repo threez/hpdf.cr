@@ -15,7 +15,7 @@ endobj
 endobj
 3 0 obj
 <<
-/Producer (Haru Free PDF Library 2.4.5)
+/Producer (Haru Free PDF Library 2.4.6)
 >>
 endobj
 4 0 obj
@@ -56,7 +56,7 @@ f*
 200 100 50 80 re
 B
 200 200 50 80 re
-B
+B*
 300 300 m
 200 200 l
 b
@@ -79,7 +79,7 @@ Q
 endstream
 endobj
 6 0 obj
-518
+519
 endobj
 xref
 0 7
@@ -89,7 +89,7 @@ xref
 0000000123 00000 n
 0000000184 00000 n
 0000000338 00000 n
-0000000910 00000 n
+0000000911 00000 n
 trailer
 <<
 /Root 1 0 R
@@ -97,5 +97,5 @@ trailer
 /Size 7
 >>
 startxref
-929
+930
 %%EOF

@@ -185,11 +185,19 @@ module Hpdf
     # First argument is the pattern, second is the phase.
     def dash
       mode = LibHaru.page_get_dash(self)
-      pattern = Array(Float32).new
-      mode.num_ptn.times do |i|
-        pattern << mode.ptn[i]
-      end
-      {pattern, mode.phase}
+      {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
+        pattern = Array(UInt16).new
+        mode.num_ptn.times do |i|
+          pattern << mode.ptn[i]
+        end
+        {pattern, mode.phase}
+      {% else %}
+        pattern = Array(Float32).new
+        mode.num_ptn.times do |i|
+          pattern << mode.ptn[i]
+        end
+        {pattern, mode.phase}
+      {% end %}
     end
 
     # gets the current value of the page's flatness.
@@ -355,14 +363,25 @@ module Hpdf
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
 
-      pat = StaticArray(Float32, 8).new do |i|
-        if i < pattern.size
-          pattern[i].not_nil!.to_f32
-        else
-          0.to_f32
+      {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
+        pat = StaticArray(UInt16, 8).new do |i|
+          if i < pattern.size
+            pattern[i].to_u16
+          else
+            0_u16
+          end
         end
-      end
-      LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
+        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_u32)
+      {% else %}
+        pat = StaticArray(Float32, 8).new do |i|
+          if i < pattern.size
+            pattern[i].to_f32
+          else
+            0_f32
+          end
+        end
+        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
+      {% end %}
     end
 
     # applys the graphics state to the page.
@@ -584,7 +603,7 @@ module Hpdf
     # changes the graphics mode to `GMode::PageDescription`.
     def eofill_stroke
       requires_mode GMode::PathObject, GMode::ClippingPath
-      LibHaru.page_fill_stroke(self)
+      LibHaru.page_eofill_stroke(self)
     end
 
     # closes the current path, fills the current path using the
@@ -1053,7 +1072,7 @@ module Hpdf
       return text if ascii_only?(text)
 
       if enc = @encoding
-        text.encode(enc) + Bytes.new(1,0x00)
+        text.encode(enc) + Bytes.new(1, 0x00)
       else
         text
       end

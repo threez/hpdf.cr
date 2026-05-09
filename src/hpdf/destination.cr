@@ -21,7 +21,7 @@ module Hpdf
     # * *top* the top coordinates of the page.
     # * *zoom* the page magnified factor. The value must be between 0.08(8%) to 32(%).
     def xyz!(left : Number, top : Number, zoom : Number)
-      LibHaru.destination_set_xyz(self, left, top, zoom)
+      LibHaru.destination_set_xyz(self, real(left), real(top), real(zoom))
     end
 
     # sets the appearance of the page to displaying entire
@@ -45,7 +45,7 @@ module Hpdf
     #
     # * *left* the left coordinates of the page.
     def fit_v!(left : Number)
-      LibHaru.destination_set_fit_v(self, real(top))
+      LibHaru.destination_set_fit_v(self, real(left))
     end
 
     # defines the appearance of a page to magnifying the page to fit a
@@ -65,22 +65,22 @@ module Hpdf
       LibHaru.destination_set_fit_b(self)
     end
 
-    # defines the appearance of a page to magnifying to fit the width
-    # of the page within the window and setting the top position of the
-    # page to the value of the "top" parameter.
+    # defines the appearance of a page to magnifying to fit the width of
+    # the bounding box of the page within the window and setting the top
+    # position of the page to the value of the "top" parameter.
     #
-    # * *left* the top coordinates of the page.
-    def fit_bh!(left : Number)
-      LibHaru.destination_set_fit_bh(self, real(left))
+    # * *top* the top coordinates of the page.
+    def fit_bh!(top : Number)
+      LibHaru.destination_set_fit_bh(self, real(top))
     end
 
     # defines the appearance of a page to magnifying to fit the height of
     # the bounding box of the page within the window and setting the
-    # top position of the page to the value of the "top" parameter.
+    # left position of the page to the value of the "left" parameter.
     #
-    # * *top* the top coordinates of the page.
-    def fit_bv!(top : Number)
-      LibHaru.destination_set_fit_bh(self, real(top))
+    # * *left* the left coordinates of the page.
+    def fit_bv!(left : Number)
+      LibHaru.destination_set_fit_bv(self, real(left))
     end
   end
 end

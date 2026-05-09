@@ -4,27 +4,39 @@ module Hpdf
   class Doc
     include Helper
 
-    @doc : LibHaru::Doc
+    # Owns the libharu HPDF_Doc handle's lifetime. Held by `Doc` and only by
+    # `Doc`, so it is never part of the `Doc <-> Page` reference cycle.
+    # Concentrating the finalizer here lets `Doc` itself stay non-finalizable,
+    # which avoids Boehm's "Finalization cycle involving (???)" warning.
+    private class Owner
+      def initialize(@doc : LibHaru::Doc)
+      end
+
+      def to_unsafe
+        @doc
+      end
+
+      def finalize
+        LibHaru.free(@doc)
+      end
+    end
+
+    @owner : Owner
     @pages : Array(Page)
 
     def initialize
-      @doc = LibHaru.new(->(error_no, detail_no, _user_data) {
+      doc = LibHaru.new(->(error_no, detail_no, _user_data) {
         raise Hpdf.errcode(error_no, detail_no)
       }, nil)
-      unless @doc
+      unless doc
         raise Error.new("error: cannot create PdfDoc object")
       end
+      @owner = Owner.new(doc)
       @pages = Array(Page).new
     end
 
     def to_unsafe
-      @doc
-    end
-
-    # will free any related memory in case the document
-    # is not used any longer
-    def finalize
-      LibHaru.free(self)
+      @owner.to_unsafe
     end
 
     # saves the current document to a file.
@@ -132,9 +144,9 @@ module Hpdf
     # gets the handle of a corresponding font object by specified name and encoding.
     def font(name : String, encoding enc : String? = nil)
       if enc
-        Font.new(LibHaru.get_font(@doc, name, enc), self)
+        Font.new(LibHaru.get_font(self, name, enc), self)
       else
-        Font.new(LibHaru.get_font(@doc, name, nil), self)
+        Font.new(LibHaru.get_font(self, name, nil), self)
       end
     end
 
@@ -540,7 +552,7 @@ module Hpdf
     # </table>
     def load_raw_image_from_file(file_name : String, width : Number,
                                  height : Number, color_space : ColorSpace) : Image
-      Image.new(LibHaru.load_raw_image_from_file(self, filename, uint(width), uint(height), color_space), self)
+      Image.new(LibHaru.load_raw_image_from_file(self, file_name, uint(width), uint(height), color_space), self)
     end
 
     # loads an image which has "raw" image format from buffer.
