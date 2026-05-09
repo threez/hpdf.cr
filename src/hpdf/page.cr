@@ -357,7 +357,7 @@ module Hpdf
 
       pat = StaticArray(Float32, 8).new do |i|
         if i < pattern.size
-          pattern[i].not_nil!.to_f32
+          pattern[i].to_f32
         else
           0.to_f32
         end
@@ -1053,7 +1053,7 @@ module Hpdf
       return text if ascii_only?(text)
 
       if enc = @encoding
-        text.encode(enc) + Bytes.new(1,0x00)
+        text.encode(enc) + Bytes.new(1, 0x00)
       else
         text
       end
