@@ -103,10 +103,11 @@ module Hpdf
     #
     # * *text* the text to get the width for.
     # * *width* The width of the area to put the text.
-    # * *word_wrap* When there are three words of `"ABCDE FGH IJKL"`, and the substring
-    #   until `"J"` can be included within the width, if *word_wrap* parameter is `false`
-    #   it returns `12`,  and if word_wrap parameter is `false` *word_wrap* parameter is
-    #   `false` it returns `10` (the end of the previous word).
+    # * *word_wrap* Assume there are three words `"ABCDE FGH IJKL"`, and the substring
+    #   until `"J"` can be included within the width. If *word_wrap* parameter is `false`,
+    #   `12` characters can be included;  if *word_wrap* is `true`, only `10` characters will fit,
+    #   i.e. until the end of the previous word. This value is available as property `len_included`
+    #   in the returned MeasuredText struct.
     def measure_text(text : String, *, width : Number, word_wrap : Bool = true) : MeasuredText
       size = LibHaru.page_measure_text(self, encoded_text(text),
         real(width), bool(word_wrap), out real_width)
@@ -184,11 +185,7 @@ module Hpdf
     # First argument is the pattern, second is the phase.
     def dash
       mode = LibHaru.page_get_dash(self)
-      pattern = {% if flag?(:darwin) %}
-                  Array(Float32).new
-                {% else %}
-                  Array(UInt16).new
-                {% end %}
+      pattern = Array(Float32).new
       mode.num_ptn.times do |i|
         pattern << mode.ptn[i]
       end
@@ -358,25 +355,14 @@ module Hpdf
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
 
-      {% if flag?(:darwin) %}
-        pat = StaticArray(Float32, 8).new do |i|
-          if i < pattern.size
-            pattern[i].not_nil!.to_f32
-          else
-            0.to_f32
-          end
+      pat = StaticArray(Float32, 8).new do |i|
+        if i < pattern.size
+          pattern[i].not_nil!.to_f32
+        else
+          0.to_f32
         end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
-      {% else %}
-        pat = StaticArray(UInt16, 8).new do |i|
-          if i < pattern.size
-            pattern[i].not_nil!.to_u16
-          else
-            0.to_u16
-          end
-        end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_u32)
-      {% end %}
+      end
+      LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
     end
 
     # applys the graphics state to the page.
@@ -1067,7 +1053,7 @@ module Hpdf
       return text if ascii_only?(text)
 
       if enc = @encoding
-        text.encode(enc) + 0x00
+        text.encode(enc) + Bytes.new(1,0x00)
       else
         text
       end
