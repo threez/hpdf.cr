@@ -584,7 +584,7 @@ module Hpdf
     # changes the graphics mode to `GMode::PageDescription`.
     def eofill_stroke
       requires_mode GMode::PathObject, GMode::ClippingPath
-      LibHaru.page_fill_stroke(self)
+      LibHaru.page_eofill_stroke(self)
     end
 
     # closes the current path, fills the current path using the

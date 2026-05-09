@@ -253,6 +253,47 @@ describe Hpdf::Image do
     end
   end
 
+  # Regression: eofill_stroke previously called HPDF_Page_FillStroke,
+  # silently producing nonzero-winding output indistinguishable from
+  # fill_stroke. A self-intersecting star yields different fills under
+  # the two rules, so the PDF byte streams must differ.
+  it "renders eofill_stroke distinct from fill_stroke on self-intersecting paths" do
+    star = ->(p : Hpdf::Page) {
+      p.move_to 200, 100
+      p.line_to 280, 340
+      p.line_to 80, 200
+      p.line_to 320, 200
+      p.line_to 120, 340
+      p.close_path
+    }
+
+    # Capture bytes inside each block, since Suite::DOC in spec_helper
+    # is reset between testpage calls.
+    eo_bytes = ""
+    testpage do |page, pdf|
+      page.context do
+        page.set_rgb_fill 0.6, 0.3, 0.7
+        page.set_rgb_stroke 0.2, 0.2, 0.2
+        star.call(page)
+        page.eofill_stroke
+      end
+      eo_bytes = pdf.to_io.to_s
+    end
+
+    nz_bytes = ""
+    testpage do |page, pdf|
+      page.context do
+        page.set_rgb_fill 0.6, 0.3, 0.7
+        page.set_rgb_stroke 0.2, 0.2, 0.2
+        star.call(page)
+        page.fill_stroke
+      end
+      nz_bytes = pdf.to_io.to_s
+    end
+
+    eo_bytes.should_not eq nz_bytes
+  end
+
   it "can render text" do
     testpage "render text" do |page|
       context do

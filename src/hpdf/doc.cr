@@ -552,7 +552,7 @@ module Hpdf
     # </table>
     def load_raw_image_from_file(file_name : String, width : Number,
                                  height : Number, color_space : ColorSpace) : Image
-      Image.new(LibHaru.load_raw_image_from_file(self, filename, uint(width), uint(height), color_space), self)
+      Image.new(LibHaru.load_raw_image_from_file(self, file_name, uint(width), uint(height), color_space), self)
     end
 
     # loads an image which has "raw" image format from buffer.
