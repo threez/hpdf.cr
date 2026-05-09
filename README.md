@@ -39,8 +39,12 @@ pdf.save_to_file "hello.pdf"
 
 ## C library dependencies
 
-Before usage you have to install the library **libharu** which
-depends on **libpng** and **zlib**:
+Before usage you have to install the library **libharu** (≥ 2.3.0) which
+depends on **libpng** and **zlib**. Both the 2.3.x and 2.4.x ABIs of
+`HPDF_Page_SetDash` / `HPDF_DashMode` are supported — the installed version
+is detected at compile time (via `pkg-config` or the installed `hpdf.h`
+header) and the matching binding is selected automatically. The detected
+version is exposed as `Hpdf::LIBHPDF_VERSION`.
 
 <table>
 <thead>

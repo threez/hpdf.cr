@@ -34,7 +34,7 @@ development_dependencies:
     version: ~> 1.6.0
 
 libraries:
-  libhpdf: 2.4.0
+  libhpdf: 2.3.0
 
 crystal: 1.4.1
 
