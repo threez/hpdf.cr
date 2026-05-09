@@ -22,7 +22,7 @@ module Hpdf
     #   the grid
     # * *vertical_fat_line_every* how often a fat line should be
     #   drawn vertically, every fat line has a text marker
-    # * *horizontal_fat_line_every* how often a fat line shoild
+    # * *horizontal_fat_line_every* how often a fat line should
     #   be drawn horizontally, every fat line has a text marker
     def draw_grid(*,
                   font_name = Base14::Helvetica,
