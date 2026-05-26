@@ -1,3 +1,5 @@
+require "../../src/hpdf/libharu"
+
 describe Hpdf::Doc do
   describe "#pdfa_conformance=" do
     it "accepts PDF/A-1B conformance" do
