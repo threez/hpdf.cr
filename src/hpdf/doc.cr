@@ -711,6 +711,25 @@ module Hpdf
       LibHaru.pdfa_add_xmp_extension(self, xml)
     end
 
+    # Loads an ICC color profile from *path* and returns an output-intent handle.
+    #
+    # * *path* path to the ICC profile file on disk.
+    # * *num_component* number of color components: 1 (gray), 3 (RGB), or 4 (CMYK).
+    #
+    # Pass the returned handle to `append_output_intents`.
+    def load_icc_profile(path : String, num_component : Int32 = 3) : LibHaru::OutputIntent
+      LibHaru.load_icc_profile_from_file(self, path, num_component)
+    end
+
+    # Appends a PDF/A `/OutputIntents` entry using an ICC color profile.
+    #
+    # Required by PDF/A-1b and later for colour-space definition.
+    # * *name* the colour-space name that appears in the output intent (e.g. `"sRGB"`).
+    # * *profile* a handle returned by `load_icc_profile`.
+    def append_output_intents(name : String, profile : LibHaru::OutputIntent) : Nil
+      LibHaru.append_output_intents(self, name, profile)
+    end
+
     # Attaches a file from *path* on disk and configures its embedded-file metadata.
     # The file must exist on disk until `save_to_file` or `to_io` is called.
     # Returns `self` to allow chaining.
