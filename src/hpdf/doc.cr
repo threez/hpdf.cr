@@ -691,6 +691,54 @@ module Hpdf
       page
     end
 
+    # ## PDF/A and embedded files ###
+
+    # Sets the PDF/A conformance level and generates the required XMP metadata block.
+    # Must be called before adding pages.
+    #
+    # * *level* the conformance level (see `PDFAConformance`).
+    def pdfa_conformance=(level : PDFAConformance)
+      LibHaru.set_pdfa_conformance(self, LibHaru::PDFAType.new(level.value))
+      LibHaru.pdfa_add_xmp_metadata(self)
+      LibHaru.pdfa_generate_id(self)
+    end
+
+    # Injects a raw XMP namespace extension block into the document XMP stream.
+    #
+    # * *xml* a well-formed XML string declaring additional XMP namespaces
+    #   and schema descriptions, appended verbatim to the document's XMP packet.
+    def add_xmp_extension(xml : String)
+      LibHaru.pdfa_add_xmp_extension(self, xml)
+    end
+
+    # Attaches a file from *path* on disk and configures its embedded-file metadata.
+    # The file must exist on disk until `save_to_file` or `to_io` is called.
+    # Returns `self` to allow chaining.
+    #
+    # * *path* path to the file on disk to embed.
+    # * *name* display name for the attachment (defaults to the file's basename).
+    # * *description* optional human-readable description of the attachment.
+    # * *subtype* MIME type of the attached file (default: `"text/xml"`).
+    # * *relationship* how the attachment relates to the document (see `AFRelationship`).
+    # * *creation_date* optional creation timestamp stored in the attachment metadata.
+    # * *modification_date* optional last-modification timestamp stored in the attachment metadata.
+    def attach_file(path : String, *,
+                    name : String = File.basename(path),
+                    description : String? = nil,
+                    subtype : String = "text/xml",
+                    relationship : AFRelationship = AFRelationship::Alternative,
+                    creation_date : Time? = nil,
+                    modification_date : Time? = nil) : self
+      ef = LibHaru.attach_file(self, path)
+      LibHaru.embedded_file_set_name(ef, name)
+      LibHaru.embedded_file_set_subtype(ef, subtype)
+      LibHaru.embedded_file_set_af_relationship(ef, LibHaru::AFRelationship.new(relationship.value.to_u32))
+      LibHaru.embedded_file_set_description(ef, description) if description
+      LibHaru.embedded_file_set_creation_date(ef, Date.new(creation_date).to_unsafe) if creation_date
+      LibHaru.embedded_file_set_last_modification_date(ef, Date.new(modification_date).to_unsafe) if modification_date
+      self
+    end
+
     # ## DSL ###
 
     # build enables DSL style access to building a doc

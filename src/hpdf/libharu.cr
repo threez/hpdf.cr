@@ -162,6 +162,47 @@ lib LibHaru
   fun set_encryption_mode = HPDF_SetEncryptionMode(Doc, UInt, UInt) : Status
   fun set_compression_mode = HPDF_SetCompressionMode(Doc, UInt) : Status
 
+  # PDF/A conformance and embedded file attachments
+  type EmbeddedFile = Void*
+
+  enum PDFAType : LibC::Int
+    NON_PDFA = -1
+    PDFA_1A  =  0
+    PDFA_1B  =  1
+    PDFA_2A  =  2
+    PDFA_2B  =  3
+    PDFA_2U  =  4
+    PDFA_3A  =  5
+    PDFA_3B  =  6
+    PDFA_3U  =  7
+    PDFA_4   =  8
+    PDFA_4E  =  9
+    PDFA_4F  = 10
+  end
+
+  enum AFRelationship : LibC::UInt
+    Source           = 0
+    Data             = 1
+    Alternative      = 2
+    Supplement       = 3
+    EncryptedPayload = 4
+    FormData         = 5
+    Schema           = 6
+    Unspecified      = 7
+  end
+
+  fun set_pdfa_conformance = HPDF_SetPDFAConformance(Doc, PDFAType) : Status
+  fun pdfa_add_xmp_metadata = HPDF_PDFA_AddXmpMetadata(Doc) : Status
+  fun pdfa_add_xmp_extension = HPDF_PDFA_AddXmpExtension(Doc, LibC::Char*) : Status
+  fun pdfa_generate_id = HPDF_PDFA_GenerateID(Doc) : Status
+  fun attach_file = HPDF_AttachFile(Doc, LibC::Char*) : EmbeddedFile
+  fun embedded_file_set_name = HPDF_EmbeddedFile_SetName(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_description = HPDF_EmbeddedFile_SetDescription(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_subtype = HPDF_EmbeddedFile_SetSubtype(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_af_relationship = HPDF_EmbeddedFile_SetAFRelationship(EmbeddedFile, AFRelationship) : Status
+  fun embedded_file_set_creation_date = HPDF_EmbeddedFile_SetCreationDate(EmbeddedFile, Date) : Status
+  fun embedded_file_set_last_modification_date = HPDF_EmbeddedFile_SetLastModificationDate(EmbeddedFile, Date) : Status
+
   # Page handling
   fun page_set_width = HPDF_Page_SetWidth(Page, Real) : Status
   fun page_set_height = HPDF_Page_SetHeight(Page, Real) : Status
