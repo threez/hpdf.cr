@@ -191,15 +191,14 @@ lib LibHaru
     Unspecified      = 7
   end
 
-  fun set_pdfa_conformance = HPDF_SetPDFAConformance(Doc, PDFAType) : Status
-  fun pdfa_add_xmp_metadata = HPDF_PDFA_AddXmpMetadata(Doc) : Status
-  fun pdfa_add_xmp_extension = HPDF_PDFA_AddXmpExtension(Doc, LibC::Char*) : Status
-  fun pdfa_generate_id = HPDF_PDFA_GenerateID(Doc) : Status
-
   {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
     type OutputIntent = Void*
 
+    fun set_pdfa_conformance = HPDF_SetPDFAConformance(Doc, PDFAType) : Status
+    fun pdfa_add_xmp_metadata = HPDF_PDFA_AddXmpMetadata(Doc) : Status
+    fun pdfa_add_xmp_extension = HPDF_PDFA_AddXmpExtension(Doc, LibC::Char*) : Status
     fun add_pdfa_xmp_extension = HPDF_AddPDFAXmpExtension(Doc, LibC::Char*) : Status
+    fun pdfa_generate_id = HPDF_PDFA_GenerateID(Doc) : Status
     fun load_icc_profile_from_file = HPDF_LoadIccProfileFromFile(Doc, LibC::Char*, LibC::Int) : OutputIntent
     fun append_output_intents = HPDF_AppendOutputIntents(Doc, LibC::Char*, OutputIntent) : Status
     fun attach_file = HPDF_AttachFile(Doc, LibC::Char*) : EmbeddedFile

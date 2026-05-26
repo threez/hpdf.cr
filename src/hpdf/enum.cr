@@ -1,3 +1,5 @@
+require "./libharu"
+
 module Hpdf
   enum InfoType
     # date-time type parameters
@@ -233,52 +235,54 @@ module Hpdf
     EncryptR3 = 3
   end
 
-  # PDF/A conformance level. Used with `Doc#pdfa_conformance=`.
-  enum PDFAConformance
-    # PDF/A-1 Level A — full accessibility and reuse requirements.
-    PDFA_1A
-    # PDF/A-1 Level B — basic visual reproducibility requirements.
-    PDFA_1B
-    # PDF/A-2 Level A — full accessibility, reuse, and optional content.
-    PDFA_2A
-    # PDF/A-2 Level B — basic visual reproducibility, supports JPEG 2000.
-    PDFA_2B
-    # PDF/A-2 Level U — Unicode mapping required, no full accessibility.
-    PDFA_2U
-    # PDF/A-3 Level A — like 2A, also allows arbitrary embedded file attachments.
-    PDFA_3A
-    # PDF/A-3 Level B — like 2B, also allows arbitrary embedded file attachments.
-    PDFA_3B
-    # PDF/A-3 Level U — like 2U, also allows arbitrary embedded file attachments.
-    PDFA_3U
-    # PDF/A-4 — based on PDF 2.0; replaces A/B/U levels with F/E variants.
-    PDFA_4
-    # PDF/A-4E — engineering documents; allows 3D annotations and rich media.
-    PDFA_4E
-    # PDF/A-4F — allows arbitrary embedded file attachments (successor to PDF/A-3).
-    PDFA_4F
-  end
+  {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
+    # PDF/A conformance level. Used with `Doc#pdfa_conformance=`.
+    enum PDFAConformance
+      # PDF/A-1 Level A — full accessibility and reuse requirements.
+      PDFA_1A
+      # PDF/A-1 Level B — basic visual reproducibility requirements.
+      PDFA_1B
+      # PDF/A-2 Level A — full accessibility, reuse, and optional content.
+      PDFA_2A
+      # PDF/A-2 Level B — basic visual reproducibility, supports JPEG 2000.
+      PDFA_2B
+      # PDF/A-2 Level U — Unicode mapping required, no full accessibility.
+      PDFA_2U
+      # PDF/A-3 Level A — like 2A, also allows arbitrary embedded file attachments.
+      PDFA_3A
+      # PDF/A-3 Level B — like 2B, also allows arbitrary embedded file attachments.
+      PDFA_3B
+      # PDF/A-3 Level U — like 2U, also allows arbitrary embedded file attachments.
+      PDFA_3U
+      # PDF/A-4 — based on PDF 2.0; replaces A/B/U levels with F/E variants.
+      PDFA_4
+      # PDF/A-4E — engineering documents; allows 3D annotations and rich media.
+      PDFA_4E
+      # PDF/A-4F — allows arbitrary embedded file attachments (successor to PDF/A-3).
+      PDFA_4F
+    end
 
-  # Associated File (AF) relationship type for embedded attachments.
-  # Used with `Doc#attach_file`.
-  enum AFRelationship
-    # The embedded file is the source material used to create the document.
-    Source
-    # The embedded file contains data used by or associated with the document.
-    Data
-    # The embedded file is an alternative representation of the document content.
-    Alternative
-    # The embedded file supplements the document with additional information.
-    Supplement
-    # The embedded file is an encrypted payload.
-    EncryptedPayload
-    # The embedded file contains form data associated with the document.
-    FormData
-    # The embedded file defines a schema used within the document.
-    Schema
-    # The relationship is not specified or does not fit any other category.
-    Unspecified
-  end
+    # Associated File (AF) relationship type for embedded attachments.
+    # Used with `Doc#attach_file`.
+    enum AFRelationship
+      # The embedded file is the source material used to create the document.
+      Source
+      # The embedded file contains data used by or associated with the document.
+      Data
+      # The embedded file is an alternative representation of the document content.
+      Alternative
+      # The embedded file supplements the document with additional information.
+      Supplement
+      # The embedded file is an encrypted payload.
+      EncryptedPayload
+      # The embedded file contains form data associated with the document.
+      FormData
+      # The embedded file defines a schema used within the document.
+      Schema
+      # The relationship is not specified or does not fit any other category.
+      Unspecified
+    end
+  {% end %}
 
   # graphics mode.
   enum GMode

@@ -694,23 +694,25 @@ module Hpdf
 
     # ## PDF/A and embedded files ###
 
-    # Sets the PDF/A conformance level and generates the required XMP metadata block.
-    # Must be called before adding pages.
-    #
-    # * *level* the conformance level (see `PDFAConformance`).
-    def pdfa_conformance=(level : PDFAConformance)
-      LibHaru.set_pdfa_conformance(self, LibHaru::PDFAType.new(level.value))
-      LibHaru.pdfa_add_xmp_metadata(self)
-      LibHaru.pdfa_generate_id(self)
-    end
+    {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
+      # Sets the PDF/A conformance level and generates the required XMP metadata block.
+      # Must be called before adding pages.
+      #
+      # * *level* the conformance level (see `PDFAConformance`).
+      def pdfa_conformance=(level : PDFAConformance)
+        LibHaru.set_pdfa_conformance(self, LibHaru::PDFAType.new(level.value))
+        LibHaru.pdfa_add_xmp_metadata(self)
+        LibHaru.pdfa_generate_id(self)
+      end
 
-    # Injects a raw XMP namespace extension block into the document XMP stream.
-    #
-    # * *xml* a well-formed XML string declaring additional XMP namespaces
-    #   and schema descriptions, appended verbatim to the document's XMP packet.
-    def add_xmp_extension(xml : String)
-      LibHaru.pdfa_add_xmp_extension(self, xml)
-    end
+      # Injects a raw XMP namespace extension block into the document XMP stream.
+      #
+      # * *xml* a well-formed XML string declaring additional XMP namespaces
+      #   and schema descriptions, appended verbatim to the document's XMP packet.
+      def add_xmp_extension(xml : String)
+        LibHaru.pdfa_add_xmp_extension(self, xml)
+      end
+    {% end %}
 
     {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
       # Loads an ICC color profile from *path* and returns an output-intent handle.
@@ -731,9 +733,7 @@ module Hpdf
       def append_output_intents(name : String, profile : LibHaru::OutputIntent) : Nil
         LibHaru.append_output_intents(self, name, profile)
       end
-    {% end %}
 
-    {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
       # Attaches a file from *path* on disk and configures its embedded-file metadata.
       # The file must exist on disk until `save_to_file` or `to_io` is called.
       # Returns `self` to allow chaining.

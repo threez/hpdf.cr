@@ -1,53 +1,53 @@
 require "../../src/hpdf/libharu"
 
-describe Hpdf::Doc do
-  describe "#pdfa_conformance=" do
-    it "accepts PDF/A-1B conformance" do
-      testdoc "pdfa-1b" do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_1B
-        page = pdf.add_page
-        page.text Hpdf::Base14::Helvetica, 12 do
-          page.text_out 50, 700, "PDF/A-1B"
+{% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
+  describe Hpdf::Doc do
+    describe "#pdfa_conformance=" do
+      it "accepts PDF/A-1B conformance" do
+        testdoc "pdfa-1b" do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_1B
+          page = pdf.add_page
+          page.text Hpdf::Base14::Helvetica, 12 do
+            page.text_out 50, 700, "PDF/A-1B"
+          end
+        end
+      end
+
+      it "accepts PDF/A-3B conformance" do
+        testdoc "pdfa-3b" do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          page = pdf.add_page
+          page.text Hpdf::Base14::Helvetica, 12 do
+            page.text_out 50, 700, "PDF/A-3B"
+          end
+        end
+      end
+
+      it "produces a valid PDF stream" do
+        testdoc do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          pdf.add_page
+          stream = pdf.to_io
+          stream.to_s[0..6].should eq "%PDF-1."
         end
       end
     end
 
-    it "accepts PDF/A-3B conformance" do
-      testdoc "pdfa-3b" do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        page = pdf.add_page
-        page.text Hpdf::Base14::Helvetica, 12 do
-          page.text_out 50, 700, "PDF/A-3B"
+    describe "#add_xmp_extension" do
+      it "injects an XMP extension without raising" do
+        testdoc do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          xml = <<-XML
+            <rdf:Description xmlns:zf="urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#">
+              <zf:ConformanceLevel>EN 16931</zf:ConformanceLevel>
+            </rdf:Description>
+            XML
+          pdf.add_xmp_extension xml
+          pdf.add_page
         end
       end
     end
 
-    it "produces a valid PDF stream" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        pdf.add_page
-        stream = pdf.to_io
-        stream.to_s[0..6].should eq "%PDF-1."
-      end
-    end
-  end
-
-  describe "#add_xmp_extension" do
-    it "injects an XMP extension without raising" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        xml = <<-XML
-          <rdf:Description xmlns:zf="urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#">
-            <zf:ConformanceLevel>EN 16931</zf:ConformanceLevel>
-          </rdf:Description>
-          XML
-        pdf.add_xmp_extension xml
-        pdf.add_page
-      end
-    end
-  end
-
-  {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
     describe "#attach_file" do
       it "attaches a file with default metadata" do
         testdoc "pdfa-attachment" do |pdf|
@@ -107,5 +107,5 @@ describe Hpdf::Doc do
         end
       end
     end
-  {% end %}
-end
+  end
+{% end %}
