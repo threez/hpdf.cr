@@ -45,63 +45,65 @@ describe Hpdf::Doc do
     end
   end
 
-  describe "#attach_file" do
-    it "attaches a file with default metadata" do
-      testdoc "pdfa-attachment" do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        result = pdf.attach_file "spec/data/attachment.xml"
-        result.should eq pdf
-        pdf.add_page
+  {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
+    describe "#attach_file" do
+      it "attaches a file with default metadata" do
+        testdoc "pdfa-attachment" do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          result = pdf.attach_file "spec/data/attachment.xml"
+          result.should eq pdf
+          pdf.add_page
+        end
       end
-    end
 
-    it "accepts a custom name and description" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        pdf.attach_file "spec/data/attachment.xml",
-          name: "invoice.xml",
-          description: "Invoice data"
-        pdf.add_page
-      end
-    end
-
-    it "accepts a custom MIME subtype" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        pdf.attach_file "spec/data/attachment.xml", subtype: "application/xml"
-        pdf.add_page
-      end
-    end
-
-    it "accepts all AFRelationship values" do
-      Hpdf::AFRelationship.values.each do |rel|
+      it "accepts a custom name and description" do
         testdoc do |pdf|
           pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-          pdf.attach_file "spec/data/attachment.xml", relationship: rel
+          pdf.attach_file "spec/data/attachment.xml",
+            name: "invoice.xml",
+            description: "Invoice data"
+          pdf.add_page
+        end
+      end
+
+      it "accepts a custom MIME subtype" do
+        testdoc do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          pdf.attach_file "spec/data/attachment.xml", subtype: "application/xml"
+          pdf.add_page
+        end
+      end
+
+      it "accepts all AFRelationship values" do
+        Hpdf::AFRelationship.values.each do |rel|
+          testdoc do |pdf|
+            pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+            pdf.attach_file "spec/data/attachment.xml", relationship: rel
+            pdf.add_page
+          end
+        end
+      end
+
+      it "accepts creation and modification dates" do
+        testdoc do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          t = Time.utc(2024, 1, 15, 10, 0, 0)
+          pdf.attach_file "spec/data/attachment.xml",
+            creation_date: t,
+            modification_date: t
+          pdf.add_page
+        end
+      end
+
+      it "returns self for chaining" do
+        testdoc do |pdf|
+          pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
+          pdf
+            .attach_file("spec/data/attachment.xml", name: "a.xml")
+            .attach_file("spec/data/attachment.xml", name: "b.xml")
           pdf.add_page
         end
       end
     end
-
-    it "accepts creation and modification dates" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        t = Time.utc(2024, 1, 15, 10, 0, 0)
-        pdf.attach_file "spec/data/attachment.xml",
-          creation_date: t,
-          modification_date: t
-        pdf.add_page
-      end
-    end
-
-    it "returns self for chaining" do
-      testdoc do |pdf|
-        pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
-        pdf
-          .attach_file("spec/data/attachment.xml", name: "a.xml")
-          .attach_file("spec/data/attachment.xml", name: "b.xml")
-        pdf.add_page
-      end
-    end
-  end
+  {% end %}
 end
