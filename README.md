@@ -46,20 +46,13 @@ is detected at compile time (via `pkg-config` or the installed `hpdf.h`
 header) and the matching binding is selected automatically. The detected
 version is exposed as `Hpdf::LIBHPDF_VERSION`.
 
-<table>
-<thead>
-<tr><th>System</th><th>Command</th></tr>
-</thead>
-<tbody>
-<tr><td>Alpine</td><td><code>apk add libharu</code></td></tr>
-<tr><td>Debian/Ubuntu</td><td><code>sudo apt install libhpdf-dev</code></td></tr>
-<tr><td>Centos</td><td><code>sudo yum install libharu-devel</code></td></tr>
-<tr><td>Fedora/Redhat</td><td><code>sudo dnf install libharu-devel</code></td></tr>
-<tr><td>FreeBSD</td><td><code>pkg install libharu</code></td></tr>
-<tr><td>OpenBSD</td><td><code>pkg_add libharu</code></td></tr>
-<tr><td>macOS</td><td><code>brew install libharu</code></td></tr>
-<tbody>
-</table>
+- **Alpine** — `apk add libharu`
+- **Debian/Ubuntu** — `sudo apt install libhpdf-dev`
+- **CentOS** — `sudo yum install libharu-devel`
+- **Fedora/Red Hat** — `sudo dnf install libharu-devel`
+- **FreeBSD** — `pkg install libharu`
+- **OpenBSD** — `pkg_add libharu`
+- **macOS** — `brew install libharu`
 
 ## Development
 
