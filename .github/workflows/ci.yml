@@ -10,8 +10,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
-      - name: Install libharu
-        run: sudo apt install libhpdf-dev
+      - name: Install build deps
+        run: sudo apt-get install -y cmake libpng-dev zlib1g-dev
+      - name: Ensure libharu >= 2.4.6
+        run: make libharu
       - name: Install development dependencies
         run: shards install
       - name: Run tests
@@ -27,6 +29,8 @@ jobs:
       - name: Download source
         uses: actions/checkout@v4
       - name: Install libharu / crystal
-        run: brew install libharu crystal libpng
+        run: brew install libharu crystal libpng cmake
+      - name: Ensure libharu >= 2.4.6
+        run: make libharu
       - name: Run tests
         run: make examples spec

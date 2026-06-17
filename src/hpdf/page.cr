@@ -185,19 +185,11 @@ module Hpdf
     # First argument is the pattern, second is the phase.
     def dash
       mode = LibHaru.page_get_dash(self)
-      {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
-        pattern = Array(UInt16).new
-        mode.num_ptn.times do |i|
-          pattern << mode.ptn[i]
-        end
-        {pattern, mode.phase}
-      {% else %}
-        pattern = Array(Float32).new
-        mode.num_ptn.times do |i|
-          pattern << mode.ptn[i]
-        end
-        {pattern, mode.phase}
-      {% end %}
+      pattern = Array(Float32).new
+      mode.num_ptn.times do |i|
+        pattern << mode.ptn[i]
+      end
+      {pattern, mode.phase}
     end
 
     # gets the current value of the page's flatness.
@@ -363,25 +355,14 @@ module Hpdf
         raise ArgumentError.new("to many elements in the dash pattern: #{pattern.size}")
       end
 
-      {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
-        pat = StaticArray(UInt16, 8).new do |i|
-          if i < pattern.size
-            pattern[i].to_u16
-          else
-            0_u16
-          end
+      pat = StaticArray(Float32, 8).new do |i|
+        if i < pattern.size
+          pattern[i].to_f32
+        else
+          0_f32
         end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_u32)
-      {% else %}
-        pat = StaticArray(Float32, 8).new do |i|
-          if i < pattern.size
-            pattern[i].to_f32
-          else
-            0_f32
-          end
-        end
-        LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
-      {% end %}
+      end
+      LibHaru.page_set_dash(self, pat, pattern.size.to_u32, phase.to_f)
     end
 
     # applys the graphics state to the page.
