@@ -282,6 +282,15 @@ module Hpdf
     Unspecified
   end
 
+  # used in `Page#set_boundary`.
+  enum PageBoundary
+    MediaBox = 0
+    CropBox
+    BleedBox
+    TrimBox
+    ArtBox
+  end
+
   # graphics mode.
   enum GMode
     None            = 0x0000

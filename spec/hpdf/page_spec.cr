@@ -200,6 +200,21 @@ describe Hpdf::Image do
     end
   end
 
+  it "can set zoom and page boundary" do
+    testpage do |page|
+      page.zoom = 1.5
+      page.set_boundary Hpdf::PageBoundary::CropBox, 10, 10, 290, 290
+      page.set_boundary Hpdf::PageBoundary::TrimBox, 5, 5, 295, 295
+    end
+  end
+
+  it "can draw an ellipse" do
+    testpage do |page|
+      page.ellipse 150, 150, 100, 50
+      page.stroke
+    end
+  end
+
   it "can draw" do
     testpage "shapes" do |page|
       context do

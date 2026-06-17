@@ -35,6 +35,12 @@ describe Hpdf::Doc do
     end
   end
 
+  it "can enable UTF encodings" do
+    testdoc do |pdf|
+      pdf.use_utf_encodings
+    end
+  end
+
   it "can handle base14 fonts" do
     testdoc do |pdf|
       Hpdf::Base14::All.each do |font_name|
