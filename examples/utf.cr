@@ -1,10 +1,10 @@
 require "../src/hpdf"
 
-# Demonstrates use_utf_encodings with NotoSans (Apache 2.0) to render
+# Demonstrates use_utf_encodings with Open Sans (SIL OFL 1.1) to render
 # text from many scripts in a single document.
 #
-# Font: NotoSans-Regular.ttf — https://github.com/notofonts/latin-greek-cyrillic
-# License: Apache License 2.0
+# Font: OpenSans-Regular.ttf — https://fonts.google.com/specimen/Open+Sans
+# License: SIL Open Font License 1.1
 
 SAMPLES = [
   {"German", "Der schnelle braune Fuchs springt über den faulen Hund."},
@@ -29,9 +29,9 @@ doc = Hpdf::Doc.build do |pdf|
   # Enable UTF-8 encoding support — required before loading a Unicode font
   pdf.use_utf_encodings
 
-  # NotoSans covers Latin, Greek, Cyrillic, Arabic, Hebrew, and CJK scripts.
-  # Apache 2.0 license — safe to embed in any PDF.
-  font_name = pdf.load_tt_font_from_file("spec/data/fonts/NotoSans-Regular.ttf",
+  # Open Sans covers Latin, Greek, Cyrillic, Arabic, Hebrew, and more.
+  # SIL Open Font License 1.1 — safe to embed in any PDF.
+  font_name = pdf.load_tt_font_from_file("spec/data/fonts/OpenSans-Regular.ttf",
     embedding: true)
 
   page do |page|
@@ -48,7 +48,7 @@ doc = Hpdf::Doc.build do |pdf|
     text Hpdf::Base14::Helvetica, 10 do
       page.gray_fill = 0.4
       text_out :center, DOC_H - MARGIN - 32,
-        "use_utf_encodings + NotoSans (Apache 2.0) — rendered with hpdf.cr"
+        "use_utf_encodings + Open Sans (SIL OFL 1.1) — rendered with hpdf.cr"
     end
 
     # Divider line
