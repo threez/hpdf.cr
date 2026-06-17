@@ -1,7 +1,7 @@
 require "../src/hpdf"
 
 # Demonstrates use_utf_encodings with Open Sans (SIL OFL 1.1) to render
-# text from many scripts in a single document.
+# text from Latin-based and Greek/Cyrillic scripts in a single document.
 #
 # Font: OpenSans-Regular.ttf — https://fonts.google.com/specimen/Open+Sans
 # License: SIL Open Font License 1.1
@@ -11,11 +11,10 @@ SAMPLES = [
   {"Latin", "The quick brown fox jumps over the lazy dog."},
   {"Greek", "Ο γρήγορος καφέ αλεπού πηδά πάνω από τον τεμπέλη σκύλο."},
   {"Cyrillic", "Быстрая коричневая лиса прыгает через ленивую собаку."},
-  {"Arabic", "الثعلب البني السريع يقفز فوق الكلب الكسول."},
-  {"Hebrew", "השועל החום המהיר קופץ מעל הכלב העצלן."},
-  {"Japanese", "素早い茶色の狐が怠惰な犬を飛び越えた。"},
-  {"Korean", "빠른 갈색 여우가 게으른 개를 뛰어넘었다."},
-  {"Chinese", "敏捷的棕色狐狸跳过了懒狗。"},
+  {"French", "Le rapide renard brun saute par-dessus le chien paresseux."},
+  {"Spanish", "El veloz zorro marrón salta sobre el perro perezoso."},
+  {"Polish", "Zażółć gęślą jaźń — czyli szybki brązowy lis."},
+  {"Czech", "Příliš žluťoučký kůň úpěl ďábelské ódy."},
 ]
 
 DOC_W   = 595
