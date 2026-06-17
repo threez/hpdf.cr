@@ -7,7 +7,7 @@ describe Hpdf::Font do
     font.ascent.should eq 718
     font.descent.should eq -207
     font.x_height.should eq 523
-    font.cap_height.should eq 523
+    font.cap_height.should eq 718
 
     bb = font.b_box
     bb.left.should eq -166.0

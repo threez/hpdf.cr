@@ -10,3 +10,4 @@
 
 .vscode
 pdfs/*.png
+/vendor/libharu/build/

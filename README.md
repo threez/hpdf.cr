@@ -39,20 +39,22 @@ pdf.save_to_file "hello.pdf"
 
 ## C library dependencies
 
-Before usage you have to install the library **libharu** (≥ 2.3.0) which
-depends on **libpng** and **zlib**. Both the 2.3.x and 2.4.x ABIs of
-`HPDF_Page_SetDash` / `HPDF_DashMode` are supported — the installed version
-is detected at compile time (via `pkg-config` or the installed `hpdf.h`
-header) and the matching binding is selected automatically. The detected
-version is exposed as `Hpdf::LIBHPDF_VERSION`.
+Requires **libharu ≥ 2.4.6**, which depends on **libpng** and **zlib**.
 
-- **Alpine** — `apk add libharu`
-- **Debian/Ubuntu** — `sudo apt install libhpdf-dev`
-- **CentOS** — `sudo yum install libharu-devel`
-- **Fedora/Red Hat** — `sudo dnf install libharu-devel`
+- **macOS** — `brew install libharu` (ships ≥ 2.4.6)
+- **Alpine** — `apk add libharu` (check version; build from submodule if < 2.4.6)
+- **Arch Linux** — `pacman -S libharu`
 - **FreeBSD** — `pkg install libharu`
 - **OpenBSD** — `pkg_add libharu`
-- **macOS** — `brew install libharu`
+- **Debian/Ubuntu** — `apt` ships libhpdf 2.3 (too old). Build from the bundled submodule instead:
+
+  ```bash
+  git clone https://github.com/threez/hpdf.cr
+  cd hpdf.cr
+  make libharu   # initialises submodule and builds a static lib; no system install needed
+  ```
+
+  The shard's `@[Link]` detects and links the built static library automatically.
 
 ## Development
 

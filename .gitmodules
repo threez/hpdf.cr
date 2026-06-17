@@ -1,0 +1,3 @@
+[submodule "vendor/libharu"]
+	path = vendor/libharu
+	url = https://github.com/libharu/libharu

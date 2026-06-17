@@ -1,37 +1,17 @@
-module Hpdf
-  # Shell script run at compile time to detect the installed libharu version.
-  # Tries `pkg-config` first (works on most Linux installs), then falls back
-  # to grepping `HPDF_MAJOR_VERSION` / `HPDF_MINOR_VERSION` from the installed
-  # headers. Echoes "MAJOR.MINOR" (e.g. `2.4`) or `2.4` if nothing was found.
-  LIBHPDF_VERSION_DETECTION_SCRIPT = <<-SH
-    for n in libhpdf libharu; do
-      v=$(pkg-config --modversion "$n" 2>/dev/null)
-      if [ -n "$v" ]; then
-        echo "$v"
-        exit 0
-      fi
-    done
-    for d in /opt/homebrew/include /usr/local/include /usr/include; do
-      for h in $d/hpdf_version.h $d/hpdf.h; do
-        [ -f "$h" ] || continue
-        major=$(awk '/^#define HPDF_MAJOR_VERSION/{print $3; exit}' "$h")
-        minor=$(awk '/^#define HPDF_MINOR_VERSION/{print $3; exit}' "$h")
-        if [ -n "$major" ]; then
-          echo "$major.$minor"
-          exit 0
-        fi
-      done
-    done
-    echo "2.4"
-    SH
+{% begin %}
+  {% repo_root = __DIR__ + "/../.." %}
+  {% static_lib = repo_root + "/vendor/libharu/build/src/libhpdf.a" %}
 
-  # Compile-time-detected libharu version, e.g. `"2.3.0"` or `"2.4.6"`.
-  # Used to switch between the pre-2.4 (UINT16-based) and 2.4+ (HPDF_REAL-based)
-  # ABIs of `HPDF_Page_SetDash` and `HPDF_DashMode`.
-  LIBHPDF_VERSION = {{ system(LIBHPDF_VERSION_DETECTION_SCRIPT).chomp }}
-end
-
-@[Link("hpdf")]
+  {% if system("pkg-config --exists libhpdf 2>/dev/null && echo y || true").chomp == "y" %}
+    @[Link(ldflags: {{ system("pkg-config --libs libhpdf").chomp }})]
+  {% elsif system("pkg-config --exists libharu 2>/dev/null && echo y || true").chomp == "y" %}
+    @[Link(ldflags: {{ system("pkg-config --libs libharu").chomp }})]
+  {% elsif system("test -f " + static_lib + " && echo y || true").chomp == "y" %}
+    @[Link(ldflags: {{ static_lib + " -lpng -lz -lm" }})]
+  {% else %}
+    @[Link("hpdf")]
+  {% end %}
+{% end %}
 lib LibHaru
   type Doc = Void*
   type Page = Void*
@@ -94,15 +74,9 @@ lib LibHaru
   end
 
   struct DashMode
-    {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
-      ptn : UInt16[8]
-      num_ptn : UInt
-      phase : UInt
-    {% else %}
-      ptn : Real[8]
-      num_ptn : UInt
-      phase : Real
-    {% end %}
+    ptn : Real[8]
+    num_ptn : UInt
+    phase : Real
   end
 
   struct TransMatrix
@@ -191,24 +165,22 @@ lib LibHaru
     Unspecified      = 7
   end
 
-  {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
-    type OutputIntent = Void*
+  type OutputIntent = Void*
 
-    fun set_pdfa_conformance = HPDF_SetPDFAConformance(Doc, PDFAType) : Status
-    fun pdfa_add_xmp_metadata = HPDF_PDFA_AddXmpMetadata(Doc) : Status
-    fun pdfa_add_xmp_extension = HPDF_PDFA_AddXmpExtension(Doc, LibC::Char*) : Status
-    fun add_pdfa_xmp_extension = HPDF_AddPDFAXmpExtension(Doc, LibC::Char*) : Status
-    fun pdfa_generate_id = HPDF_PDFA_GenerateID(Doc) : Status
-    fun load_icc_profile_from_file = HPDF_LoadIccProfileFromFile(Doc, LibC::Char*, LibC::Int) : OutputIntent
-    fun append_output_intents = HPDF_AppendOutputIntents(Doc, LibC::Char*, OutputIntent) : Status
-    fun attach_file = HPDF_AttachFile(Doc, LibC::Char*) : EmbeddedFile
-    fun embedded_file_set_name = HPDF_EmbeddedFile_SetName(EmbeddedFile, LibC::Char*) : Status
-    fun embedded_file_set_description = HPDF_EmbeddedFile_SetDescription(EmbeddedFile, LibC::Char*) : Status
-    fun embedded_file_set_subtype = HPDF_EmbeddedFile_SetSubtype(EmbeddedFile, LibC::Char*) : Status
-    fun embedded_file_set_af_relationship = HPDF_EmbeddedFile_SetAFRelationship(EmbeddedFile, AFRelationship) : Status
-    fun embedded_file_set_creation_date = HPDF_EmbeddedFile_SetCreationDate(EmbeddedFile, Date) : Status
-    fun embedded_file_set_last_modification_date = HPDF_EmbeddedFile_SetLastModificationDate(EmbeddedFile, Date) : Status
-  {% end %}
+  fun set_pdfa_conformance = HPDF_SetPDFAConformance(Doc, PDFAType) : Status
+  fun pdfa_add_xmp_metadata = HPDF_PDFA_AddXmpMetadata(Doc) : Status
+  fun pdfa_add_xmp_extension = HPDF_PDFA_AddXmpExtension(Doc, LibC::Char*) : Status
+  fun add_pdfa_xmp_extension = HPDF_AddPDFAXmpExtension(Doc, LibC::Char*) : Status
+  fun pdfa_generate_id = HPDF_PDFA_GenerateID(Doc) : Status
+  fun load_icc_profile_from_file = HPDF_LoadIccProfileFromFile(Doc, LibC::Char*, LibC::Int) : OutputIntent
+  fun append_output_intents = HPDF_AppendOutputIntents(Doc, LibC::Char*, OutputIntent) : Status
+  fun attach_file = HPDF_AttachFile(Doc, LibC::Char*) : EmbeddedFile
+  fun embedded_file_set_name = HPDF_EmbeddedFile_SetName(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_description = HPDF_EmbeddedFile_SetDescription(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_subtype = HPDF_EmbeddedFile_SetSubtype(EmbeddedFile, LibC::Char*) : Status
+  fun embedded_file_set_af_relationship = HPDF_EmbeddedFile_SetAFRelationship(EmbeddedFile, AFRelationship) : Status
+  fun embedded_file_set_creation_date = HPDF_EmbeddedFile_SetCreationDate(EmbeddedFile, Date) : Status
+  fun embedded_file_set_last_modification_date = HPDF_EmbeddedFile_SetLastModificationDate(EmbeddedFile, Date) : Status
 
   # Page handling
   fun page_set_width = HPDF_Page_SetWidth(Page, Real) : Status
@@ -257,11 +229,7 @@ lib LibHaru
   fun page_set_line_cap = HPDF_Page_SetLineCap(Page, UInt) : Status
   fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
   fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
-  {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i < 4 %}
-    fun page_set_dash = HPDF_Page_SetDash(Page, UInt16*, UInt, UInt) : Status
-  {% else %}
-    fun page_set_dash = HPDF_Page_SetDash(Page, Real*, UInt, Real) : Status
-  {% end %}
+  fun page_set_dash = HPDF_Page_SetDash(Page, Real*, UInt, Real) : Status
   fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
   fun page_gsave = HPDF_Page_GSave(Page) : Status
   fun page_grestore = HPDF_Page_GRestore(Page) : Status
@@ -319,7 +287,7 @@ lib LibHaru
   fun font_get_ascent = HPDF_Font_GetAscent(Font) : Int
   fun font_get_descent = HPDF_Font_GetDescent(Font) : Int
   fun font_get_x_height = HPDF_Font_GetXHeight(Font) : UInt
-  fun font_get_cap_height = HPDF_Font_GetXHeight(Font) : UInt
+  fun font_get_cap_height = HPDF_Font_GetCapHeight(Font) : UInt
   fun font_text_width = HPDF_Font_TextWidth(Font, LibC::Char*, UInt) : TextWidth
   fun font_measure_text = HPDF_Font_MeasureText(Font, LibC::Char*, UInt, Real, Real, Real, Real, Bool, Real*) : UInt
   fun page_text_rect = HPDF_Page_TextRect(Page, Real, Real, Real, Real, LibC::Char*, UInt, UInt*) : Status

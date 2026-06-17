@@ -40,6 +40,12 @@ module Hpdf
       @owner.to_unsafe
     end
 
+    # resets the document to a fresh state, clearing all pages and content.
+    def new_doc
+      LibHaru.new_doc(self)
+      @pages.clear
+    end
+
     # saves the current document to a file.
     def save_to_file(path : String)
       LibHaru.save_to_file(self, path)
@@ -694,74 +700,70 @@ module Hpdf
 
     # ## PDF/A and embedded files ###
 
-    {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
-      # Sets the PDF/A conformance level and generates the required XMP metadata block.
-      # Must be called before adding pages.
-      #
-      # * *level* the conformance level (see `PDFAConformance`).
-      def pdfa_conformance=(level : PDFAConformance)
-        LibHaru.set_pdfa_conformance(self, LibHaru::PDFAType.new(level.value))
-        LibHaru.pdfa_add_xmp_metadata(self)
-        LibHaru.pdfa_generate_id(self)
-      end
+    # Sets the PDF/A conformance level and generates the required XMP metadata block.
+    # Must be called before adding pages.
+    #
+    # * *level* the conformance level (see `PDFAConformance`).
+    def pdfa_conformance=(level : PDFAConformance)
+      LibHaru.set_pdfa_conformance(self, LibHaru::PDFAType.new(level.value))
+      LibHaru.pdfa_add_xmp_metadata(self)
+      LibHaru.pdfa_generate_id(self)
+    end
 
-      # Injects a raw XMP namespace extension block into the document XMP stream.
-      #
-      # * *xml* a well-formed XML string declaring additional XMP namespaces
-      #   and schema descriptions, appended verbatim to the document's XMP packet.
-      def add_xmp_extension(xml : String)
-        LibHaru.pdfa_add_xmp_extension(self, xml)
-      end
-    {% end %}
+    # Injects a raw XMP namespace extension block into the document XMP stream.
+    #
+    # * *xml* a well-formed XML string declaring additional XMP namespaces
+    #   and schema descriptions, appended verbatim to the document's XMP packet.
+    def add_xmp_extension(xml : String)
+      LibHaru.pdfa_add_xmp_extension(self, xml)
+    end
 
-    {% if system(Hpdf::LIBHPDF_VERSION_DETECTION_SCRIPT).chomp.split(".")[1].to_i >= 4 %}
-      # Loads an ICC color profile from *path* and returns an output-intent handle.
-      #
-      # * *path* path to the ICC profile file on disk.
-      # * *num_component* number of color components: 1 (gray), 3 (RGB), or 4 (CMYK).
-      #
-      # Pass the returned handle to `append_output_intents`.
-      def load_icc_profile(path : String, num_component : Int32 = 3) : LibHaru::OutputIntent
-        LibHaru.load_icc_profile_from_file(self, path, num_component)
-      end
+    # Loads an ICC color profile from *path* and returns an output-intent handle.
+    #
+    # * *path* path to the ICC profile file on disk.
+    # * *num_component* number of color components: 1 (gray), 3 (RGB), or 4 (CMYK).
+    #
+    # Pass the returned handle to `append_output_intents`.
+    def load_icc_profile(path : String, num_component : Int32 = 3) : LibHaru::OutputIntent
+      LibHaru.load_icc_profile_from_file(self, path, num_component)
+    end
 
-      # Appends a PDF/A `/OutputIntents` entry using an ICC color profile.
-      #
-      # Required by PDF/A-1b and later for colour-space definition.
-      # * *name* the colour-space name that appears in the output intent (e.g. `"sRGB"`).
-      # * *profile* a handle returned by `load_icc_profile`.
-      def append_output_intents(name : String, profile : LibHaru::OutputIntent) : Nil
-        LibHaru.append_output_intents(self, name, profile)
-      end
+    # Appends a PDF/A `/OutputIntents` entry using an ICC color profile.
+    #
+    # Required by PDF/A-1b and later for colour-space definition.
+    # * *name* the colour-space name that appears in the output intent (e.g. `"sRGB"`).
+    # * *profile* a handle returned by `load_icc_profile`.
+    def append_output_intents(name : String, profile : LibHaru::OutputIntent) : Nil
+      LibHaru.append_output_intents(self, name, profile)
+    end
 
-      # Attaches a file from *path* on disk and configures its embedded-file metadata.
-      # The file must exist on disk until `save_to_file` or `to_io` is called.
-      # Returns `self` to allow chaining.
-      #
-      # * *path* path to the file on disk to embed.
-      # * *name* display name for the attachment (defaults to the file's basename).
-      # * *description* optional human-readable description of the attachment.
-      # * *subtype* MIME type of the attached file (default: `"text/xml"`).
-      # * *relationship* how the attachment relates to the document (see `AFRelationship`).
-      # * *creation_date* optional creation timestamp stored in the attachment metadata.
-      # * *modification_date* optional last-modification timestamp stored in the attachment metadata.
-      def attach_file(path : String, *,
-                      name : String = File.basename(path),
-                      description : String? = nil,
-                      subtype : String = "text/xml",
-                      relationship : AFRelationship = AFRelationship::Alternative,
-                      creation_date : Time? = nil,
-                      modification_date : Time? = nil) : self
-        ef = LibHaru.attach_file(self, path)
-        LibHaru.embedded_file_set_name(ef, name)
-        LibHaru.embedded_file_set_subtype(ef, subtype)
-        LibHaru.embedded_file_set_af_relationship(ef, LibHaru::AFRelationship.new(relationship.value.to_u32))
-        LibHaru.embedded_file_set_description(ef, description) if description
-        LibHaru.embedded_file_set_creation_date(ef, Date.new(creation_date).to_unsafe) if creation_date
-        LibHaru.embedded_file_set_last_modification_date(ef, Date.new(modification_date).to_unsafe) if modification_date
-        self
-      end
-    {% end %}
+    # Attaches a file from *path* on disk and configures its embedded-file metadata.
+    # The file must exist on disk until `save_to_file` or `to_io` is called.
+    # Returns `self` to allow chaining.
+    #
+    # * *path* path to the file on disk to embed.
+    # * *name* display name for the attachment (defaults to the file's basename).
+    # * *description* optional human-readable description of the attachment.
+    # * *subtype* MIME type of the attached file (default: `"text/xml"`).
+    # * *relationship* how the attachment relates to the document (see `AFRelationship`).
+    # * *creation_date* optional creation timestamp stored in the attachment metadata.
+    # * *modification_date* optional last-modification timestamp stored in the attachment metadata.
+    def attach_file(path : String, *,
+                    name : String = File.basename(path),
+                    description : String? = nil,
+                    subtype : String = "text/xml",
+                    relationship : AFRelationship = AFRelationship::Alternative,
+                    creation_date : Time? = nil,
+                    modification_date : Time? = nil) : self
+      ef = LibHaru.attach_file(self, path)
+      LibHaru.embedded_file_set_name(ef, name)
+      LibHaru.embedded_file_set_subtype(ef, subtype)
+      LibHaru.embedded_file_set_af_relationship(ef, LibHaru::AFRelationship.new(relationship.value.to_u32))
+      LibHaru.embedded_file_set_description(ef, description) if description
+      LibHaru.embedded_file_set_creation_date(ef, Date.new(creation_date).to_unsafe) if creation_date
+      LibHaru.embedded_file_set_last_modification_date(ef, Date.new(modification_date).to_unsafe) if modification_date
+      self
+    end
 
     # ## DSL ###
 

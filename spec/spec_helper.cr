@@ -10,7 +10,7 @@ def create_font
 end
 
 def testdoc(filename : String? = nil, &)
-  LibHaru.new_doc(Suite::DOC)
+  Suite::DOC.new_doc
   with Suite::DOC yield Suite::DOC
   unless filename.nil?
     filename = filename.downcase.gsub /[^a-z0-9]+/, "-"
