@@ -56,18 +56,20 @@ pdf = Hpdf::Doc.build do
     end
 
     # --- Arc rainbow above the sun ---
+    # Center at same point as sun; innermost arc clears the sun (radius 90 > 70+stroke).
+    # Arcs span 20°–160° (symmetric about 90° = straight up).
     rainbow = [
       {1.0, 0.1, 0.1},
-      {1.0, 0.6, 0.0},
-      {1.0, 1.0, 0.0},
-      {0.1, 0.8, 0.1},
+      {1.0, 0.55, 0.0},
+      {1.0, 0.95, 0.0},
+      {0.1, 0.75, 0.1},
       {0.1, 0.4, 1.0},
-      {0.6, 0.0, 0.9},
+      {0.55, 0.0, 0.85},
     ]
     rainbow.each_with_index do |(r, g, b), i|
       page.set_rgb_stroke r, g, b
-      page.line_width = 6
-      page.arc W / 2, H * 0.62, 130 + i * 10, 30, 150
+      page.line_width = 7
+      page.arc W / 2, H * 0.62, 90 + i * 7, 20, 160
       page.stroke
     end
 
