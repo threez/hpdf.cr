@@ -600,6 +600,24 @@ module Hpdf
       Image.new(LibHaru.load_jpeg_image_from_file(self, file_name), self)
     end
 
+    # creates a new extended graphics state object. Use it to set transparency
+    # and blend modes on a page via `Page#ext_g_state=`.
+    def create_ext_g_state : ExtGState
+      ExtGState.new(LibHaru.create_ext_g_state(self), self)
+    end
+
+    # creates a new shading object.
+    #
+    # * *type* the type of shading (see `ShadingType`)
+    # * *color_space* the color space of the shading (see `ColorSpace`)
+    # * *x_min*, *x_max*, *y_min*, *y_max* the bounding box of the shading
+    def create_shading(type : ShadingType, color_space : ColorSpace,
+                       x_min : Number, x_max : Number,
+                       y_min : Number, y_max : Number) : Shading
+      Shading.new(LibHaru.shading_new(self, type.to_u32, color_space.to_u32,
+        real(x_min), real(x_max), real(y_min), real(y_max)), self)
+    end
+
     def creation_date : Time?
       v = LibHaru.get_info_attr(self, InfoType::CreationDate)
       Date.parse(String.new(v)) unless v.null?

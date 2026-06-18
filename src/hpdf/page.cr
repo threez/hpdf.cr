@@ -368,9 +368,17 @@ module Hpdf
     # applys the graphics state to the page.
     # An application can invoke `ext_g_state=` when the `graphics_mode` of
     # the page is in `GMode::PageDescription`.
-    private def ext_g_state=(handle)
+    def ext_g_state=(gs : ExtGState)
       requires_mode GMode::PageDescription
-      LibHaru.page_set_ext_g_state(self, handle)
+      LibHaru.page_set_ext_g_state(self, gs)
+    end
+
+    # paints a shading on the page.
+    # An application can invoke `shading=` when the `graphics_mode` of
+    # the page is in `GMode::PageDescription`.
+    def shading=(shading : Shading)
+      requires_mode GMode::PageDescription
+      LibHaru.page_set_shading(self, shading)
     end
 
     # saves the page's current graphics parameter to the stack.

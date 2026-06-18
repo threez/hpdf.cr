@@ -126,11 +126,29 @@ module Hpdf
     Darken
     Lighten
     ColorDodge
-    ColorBum
+    ColorBurn
     HardLight
     SoftLight
     Difference
-    Exclushon
+    Exclusion
+  end
+
+  # the type of shading (gradient fill). Currently only
+  # `FreeFormTriangleMesh` (Gouraud-shaded triangle mesh, type 4) is
+  # implemented in libharu.
+  enum ShadingType
+    FreeFormTriangleMesh = 4
+  end
+
+  # edge connectivity flag used when adding vertices to a `Shading` mesh.
+  # Controls how each new vertex connects to the previous triangle.
+  enum ShadingEdgeFlag
+    # first vertex of a new standalone triangle — no shared edge
+    NoConnection = 0
+    # new vertex connects to the edge between vertices B and C of the previous triangle
+    PreviousBC = 1
+    # new vertex connects to the edge between vertices A and C of the previous triangle
+    PreviousAC = 2
   end
 
   enum TextAlignment
