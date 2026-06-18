@@ -21,6 +21,8 @@ lib LibHaru
   type Outline = Void*
   type Destination = Void*
   type Annotation = Void*
+  type ExtGState = Void*
+  type Shading = Void*
 
   alias Real = LibC::Float
   alias Status = LibC::ULong
@@ -231,7 +233,11 @@ lib LibHaru
   fun page_set_line_join = HPDF_Page_SetLineJoin(Page, UInt) : Status
   fun page_set_miter_limit = HPDF_Page_SetMiterLimit(Page, Real) : Status
   fun page_set_dash = HPDF_Page_SetDash(Page, Real*, UInt, Real) : Status
-  fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, Void*) : Status
+  fun page_set_ext_g_state = HPDF_Page_SetExtGState(Page, ExtGState) : Status
+  fun create_ext_g_state = HPDF_CreateExtGState(Doc) : ExtGState
+  fun ext_g_state_set_alpha_stroke = HPDF_ExtGState_SetAlphaStroke(ExtGState, Real) : Status
+  fun ext_g_state_set_alpha_fill = HPDF_ExtGState_SetAlphaFill(ExtGState, Real) : Status
+  fun ext_g_state_set_blend_mode = HPDF_ExtGState_SetBlendMode(ExtGState, UInt) : Status
   fun page_gsave = HPDF_Page_GSave(Page) : Status
   fun page_grestore = HPDF_Page_GRestore(Page) : Status
   fun page_concat = HPDF_Page_Concat(Page, Real, Real, Real, Real, Real, Real) : Status
@@ -282,6 +288,11 @@ lib LibHaru
   fun page_ellipse = HPDF_Page_Ellipse(Page, Real, Real, Real, Real) : Status
   fun page_arc = HPDF_Page_Arc(Page, Real, Real, Real, Real, Real) : Status
   fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
+
+  # Shading
+  fun shading_new = HPDF_Shading_New(Doc, UInt, UInt, Real, Real, Real, Real) : Shading
+  fun shading_add_vertex_rgb = HPDF_Shading_AddVertexRGB(Shading, UInt, Real, Real, UInt8, UInt8, UInt8) : Status
+  fun page_set_shading = HPDF_Page_SetShading(Page, Shading) : Status
 
   # Font handling
   fun font_get_font_name = HPDF_Font_GetFontName(Font) : LibC::Char*
