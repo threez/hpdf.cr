@@ -287,6 +287,12 @@ module Hpdf
       LibHaru.use_cnt_encodings(self)
     end
 
+    # enables UTF-8 encoding support. After `use_utf_encodings` is invoked,
+    # the document can use UTF-8 encoded text with compatible encoders.
+    def use_utf_encodings
+      LibHaru.use_utf_encodings(self)
+    end
+
     # loads an external png image file.
     #
     # * *file_name* path to a PNG image file.

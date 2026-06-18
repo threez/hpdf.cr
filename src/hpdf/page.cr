@@ -921,6 +921,23 @@ module Hpdf
       draw_image image, rect.x, rect.y, rect.width, rect.height
     end
 
+    # sets the initial zoom factor shown when the page is opened in a viewer.
+    #
+    # * *zoom* the zoom factor. Must be between 0.08 and 32.
+    def zoom=(zoom : Number)
+      LibHaru.page_set_zoom(self, real(zoom))
+    end
+
+    # sets one of the page's bounding boxes (media, crop, bleed, trim, or art).
+    #
+    # * *boundary* which box to set (see `PageBoundary`).
+    # * *left*, *bottom*, *right*, *top* the coordinates of the box.
+    def set_boundary(boundary : PageBoundary,
+                     left : Number, bottom : Number,
+                     right : Number, top : Number)
+      LibHaru.page_set_boundary(self, boundary.to_i32, real(left), real(bottom), real(right), real(top))
+    end
+
     # appends a circle to the current path.
     # An application can invoke `circle` when the `graphics_mode` of the
     # page is in `GMode::PageDescription` or `GMode::PathObject`.
@@ -930,6 +947,18 @@ module Hpdf
     def circle(x : Number, y : Number, ray : Number)
       requires_mode GMode::PageDescription, GMode::PathObject
       LibHaru.page_circle(self, real(x), real(y), real(ray))
+    end
+
+    # appends an ellipse to the current path.
+    # An application can invoke `ellipse` when the `graphics_mode` of the
+    # page is in `GMode::PageDescription` or `GMode::PathObject`.
+    #
+    # * *x*, *y* the center point of the ellipse.
+    # * *xray* the horizontal radius.
+    # * *yray* the vertical radius.
+    def ellipse(x : Number, y : Number, xray : Number, yray : Number)
+      requires_mode GMode::PageDescription, GMode::PathObject
+      LibHaru.page_ellipse(self, real(x), real(y), real(xray), real(yray))
     end
 
     # appends a circle to the current path.

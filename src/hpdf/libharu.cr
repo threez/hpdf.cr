@@ -123,6 +123,7 @@ lib LibHaru
   fun use_kr_encodings = HPDF_UseKREncodings(Doc) : Status
   fun use_cns_encodings = HPDF_UseCNSEncodings(Doc) : Status
   fun use_cnt_encodings = HPDF_UseCNTEncodings(Doc) : Status
+  fun use_utf_encodings = HPDF_UseUTFEncodings(Doc) : Status
   fun load_png_image_from_file = HPDF_LoadPngImageFromFile(Doc, LibC::Char*) : Image
   fun load_png_image_from_file2 = HPDF_LoadPngImageFromFile2(Doc, LibC::Char*) : Image
   fun load_raw_image_from_file = HPDF_LoadRawImageFromFile(Doc, LibC::Char*, UInt, UInt, UInt) : Image
@@ -275,7 +276,10 @@ lib LibHaru
   fun page_set_cmyk_fill = HPDF_Page_SetCMYKFill(Page, Real, Real, Real, Real) : Status
   fun page_set_cmyk_stroke = HPDF_Page_SetCMYKStroke(Page, Real, Real, Real, Real) : Status
   fun page_draw_image = HPDF_Page_DrawImage(Page, Image, Real, Real, Real, Real) : Status
+  fun page_set_zoom = HPDF_Page_SetZoom(Page, Real) : Status
+  fun page_set_boundary = HPDF_Page_SetBoundary(Page, Int, Real, Real, Real, Real) : Status
   fun page_circle = HPDF_Page_Circle(Page, Real, Real, Real) : Status
+  fun page_ellipse = HPDF_Page_Ellipse(Page, Real, Real, Real, Real) : Status
   fun page_arc = HPDF_Page_Arc(Page, Real, Real, Real, Real, Real) : Status
   fun page_text_out = HPDF_Page_TextOut(Page, Real, Real, LibC::Char*) : Status
 

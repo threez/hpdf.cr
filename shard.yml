@@ -27,6 +27,10 @@ targets:
     main: ./examples/text_annotation.cr
   example-link-annotation:
     main: ./examples/link_annotation.cr
+  example-shapes:
+    main: ./examples/shapes.cr
+  example-utf:
+    main: ./examples/utf.cr
 
 development_dependencies:
   ameba:

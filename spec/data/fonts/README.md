@@ -1,16 +1,30 @@
 # Fonts
 
-The fonts here are only used for testing the font loading.
-They are free to use, but only use them if the license work for you.
+The fonts here are only used for testing the font loading and examples.
+They are free to use, but only use them if the license works for you.
 
 ## Sources
 
 * https://github.com/libharu/libharu/tree/master/demo/type1
 * https://fonts.google.com/specimen/Roboto
+* https://github.com/notofonts/latin-greek-cyrillic
+* https://fonts.google.com/specimen/Open+Sans
+
+# NotoSans-Regular
+
+Noto Sans v2.015, full variant (Latin, Greek, Cyrillic, Arabic, Hebrew, CJK and more).
+License: Apache License 2.0 — safe to embed in any PDF without restrictions.
+Source: https://github.com/notofonts/latin-greek-cyrillic/releases/tag/NotoSans-v2.015
+
+# OpenSans-Regular
+
+Open Sans — humanist sans-serif with broad Unicode coverage including Arabic and Hebrew.
+License: SIL Open Font License 1.1 — safe to embed in any PDF without restrictions.
+Source: https://fonts.google.com/specimen/Open+Sans
 
 # Roboto
 
-See google license information
+See Google license information (Apache 2.0)
 
 # a010013l
 
