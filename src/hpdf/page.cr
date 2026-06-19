@@ -204,6 +204,7 @@ module Hpdf
 
     # sets the flatness tolerance for curve rendering. *value* must be in the range 0–100.
     def flat=(value : Number)
+      raise ArgumentError.new("flat value out of range: #{value} (must be 0–100)") unless (0..100).includes?(value)
       LibHaru.page_set_flat(self, real(value))
     end
 
