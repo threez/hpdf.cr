@@ -112,6 +112,7 @@ lib LibHaru
   fun load_type1_font_from_file = HPDF_LoadType1FontFromFile(Doc, LibC::Char*, LibC::Char*) : LibC::Char*
   fun load_tt_font_from_file = HPDF_LoadTTFontFromFile(Doc, LibC::Char*, Bool) : LibC::Char*
   fun load_tt_font_from_file2 = HPDF_LoadTTFontFromFile2(Doc, LibC::Char*, UInt, Bool) : Status
+  fun load_tt_font_from_mem = HPDF_LoadTTFontFromMemory(Doc, UInt8*, UInt, Bool) : LibC::Char*
   fun add_page_label = HPDF_AddPageLabel(Doc, UInt, UInt, UInt, LibC::Char*) : Status
   fun use_jp_fonts = HPDF_UseJPFonts(Doc) : Status
   fun use_kr_fonts = HPDF_UseKRFonts(Doc) : Status
@@ -131,6 +132,9 @@ lib LibHaru
   fun load_raw_image_from_file = HPDF_LoadRawImageFromFile(Doc, LibC::Char*, UInt, UInt, UInt) : Image
   fun load_raw_image_from_mem = HPDF_LoadRawImageFromMem(Doc, LibC::Char*, UInt, UInt, UInt, UInt) : Image
   fun load_jpeg_image_from_file = HPDF_LoadJpegImageFromFile(Doc, LibC::Char*) : Image
+  fun load_png_image_from_mem = HPDF_LoadPngImageFromMem(Doc, UInt8*, UInt) : Image
+  fun load_jpeg_image_from_mem = HPDF_LoadJpegImageFromMem(Doc, UInt8*, UInt) : Image
+  fun image_load_raw1_bit_image_from_mem = HPDF_Image_LoadRaw1BitImageFromMem(Doc, UInt8*, UInt, UInt, UInt, Bool, Bool) : Image
   fun set_info_attr = HPDF_SetInfoAttr(Doc, UInt, LibC::Char*) : Status
   fun get_info_attr = HPDF_GetInfoAttr(Doc, UInt) : LibC::Char*
   fun set_info_date_attr = HPDF_SetInfoDateAttr(Doc, UInt, Date) : Status
@@ -184,6 +188,7 @@ lib LibHaru
   fun embedded_file_set_af_relationship = HPDF_EmbeddedFile_SetAFRelationship(EmbeddedFile, AFRelationship) : Status
   fun embedded_file_set_creation_date = HPDF_EmbeddedFile_SetCreationDate(EmbeddedFile, Date) : Status
   fun embedded_file_set_last_modification_date = HPDF_EmbeddedFile_SetLastModificationDate(EmbeddedFile, Date) : Status
+  fun embedded_file_set_size = HPDF_EmbeddedFile_SetSize(EmbeddedFile, UInt64) : Status
 
   # Page handling
   fun page_set_width = HPDF_Page_SetWidth(Page, Real) : Status
@@ -335,12 +340,14 @@ lib LibHaru
 
   # Image
   fun image_get_size = HPDF_Image_GetSize(Image) : Point
+  fun image_get_size2 = HPDF_Image_GetSize2(Image, Point*) : Status
   fun image_get_width = HPDF_Image_GetWidth(Image) : UInt
   fun image_get_height = HPDF_Image_GetHeight(Image) : UInt
   fun image_get_bits_per_component = HPDF_Image_GetBitsPerComponent(Image) : UInt
   fun image_get_color_space = HPDF_Image_GetColorSpace(Image) : LibC::Char*
   fun image_set_color_mask = HPDF_Image_SetColorMask(Image, UInt, UInt, UInt, UInt, UInt, UInt) : Status
   fun image_set_mask_image = HPDF_Image_SetMaskImage(Image, Image) : Status
+  fun image_add_smask = HPDF_Image_AddSMask(Image, Image) : Status
 
   # Exception codes
   HPDF_ARRAY_COUNT_ERR              = 0x1001 #	Internal error. The consistency of the data was lost.
