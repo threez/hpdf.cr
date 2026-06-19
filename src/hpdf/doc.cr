@@ -119,6 +119,18 @@ module Hpdf
       PageMode.new LibHaru.get_page_mode(self).to_i32
     end
 
+    # gets the viewer preferences bitmask for the document.
+    def viewer_preference : ViewerPreference
+      ViewerPreference.new(LibHaru.get_viewer_preference(self))
+    end
+
+    # sets the viewer preferences that control PDF viewer UI behaviour on open.
+    #
+    # * *preference* one or more `ViewerPreference` flags combined with `|`.
+    def viewer_preference=(preference : ViewerPreference)
+      LibHaru.set_viewer_preference(self, preference.value)
+    end
+
     # set the first page to appear when a document is opened.
     def open_action=(dst : Destination)
       LibHaru.set_open_action(self, dst)
@@ -146,6 +158,14 @@ module Hpdf
       new_page = Page.new(LibHaru.insert_page(self, page), self)
       @pages.insert index: idx, object: new_page
       new_page
+    end
+
+    # returns the page at the given 0-based *index*.
+    # Returns the existing tracked `Page` wrapper if one is found for the handle,
+    # preserving font and encoding state set on the original object.
+    def page_by_index(index : Int) : Page
+      handle = LibHaru.get_page_by_index(self, uint(index))
+      @pages.find { |page| page.to_unsafe == handle } || Page.new(handle, self)
     end
 
     # gets the handle of a corresponding font object by specified name and encoding.

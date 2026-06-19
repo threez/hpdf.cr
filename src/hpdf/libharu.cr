@@ -23,6 +23,7 @@ lib LibHaru
   type Annotation = Void*
   type ExtGState = Void*
   type Shading = Void*
+  type XObject = Void*
 
   alias Real = LibC::Float
   alias Status = LibC::ULong
@@ -104,6 +105,9 @@ lib LibHaru
   fun get_page_layout = HPDF_GetPageLayout(Doc) : UInt
   fun set_page_mode = HPDF_SetPageMode(Doc, UInt) : Status
   fun get_page_mode = HPDF_GetPageMode(Doc) : UInt
+  fun get_viewer_preference = HPDF_GetViewerPreference(Doc) : UInt
+  fun set_viewer_preference = HPDF_SetViewerPreference(Doc, UInt) : Status
+  fun get_page_by_index = HPDF_GetPageByIndex(Doc, UInt) : Page
   fun set_open_action = HPDF_SetOpenAction(Doc, Destination) : Status
   fun get_current_page = HPDF_GetCurrentPage(Doc) : Page
   fun add_page = HPDF_AddPage(Doc) : Page
@@ -215,6 +219,9 @@ lib LibHaru
   fun page_get_miter_limit = HPDF_Page_GetMiterLimit(Page) : Real
   fun page_get_dash = HPDF_Page_GetDash(Page) : DashMode
   fun page_get_flat = HPDF_Page_GetFlat(Page) : Real
+  fun page_get_text_leading = HPDF_Page_GetTextLeading(Page) : Real
+  fun page_get_text_matrix = HPDF_Page_GetTextMatrix(Page) : TransMatrix
+  fun page_set_flat = HPDF_Page_SetFlat(Page, Real) : Status
   fun page_get_char_space = HPDF_Page_GetCharSpace(Page) : Real
   fun page_get_word_space = HPDF_Page_GetWordSpace(Page) : Real
   fun page_get_horizontal_scalling = HPDF_Page_GetHorizontalScalling(Page) : Real
@@ -224,7 +231,9 @@ lib LibHaru
   fun page_get_rgb_stroke = HPDF_Page_GetRGBStroke(Page) : RGB
   fun page_get_cmyk_fill = HPDF_Page_GetCMYKFill(Page) : CMYK
   fun page_get_cmyk_stroke = HPDF_Page_GetCMYKStroke(Page) : CMYK
-  fun page_execute_x_object = HPDF_Page_ExecuteXObject(Page, Image) : Status
+  fun page_execute_x_object = HPDF_Page_ExecuteXObject(Page, XObject) : Status
+  fun page_create_x_object_from_image = HPDF_Page_CreateXObjectFromImage(Doc, Page, Rect, Image, Bool) : XObject
+  fun page_create_x_object_as_white_rect = HPDF_Page_CreateXObjectAsWhiteRect(Doc, Page, Rect) : XObject
   fun page_get_gray_fill = HPDF_Page_GetGrayFill(Page) : Real
   fun page_get_gray_stroke = HPDF_Page_GetGrayStroke(Page) : Real
   fun page_get_stroking_color_space = HPDF_Page_GetStrokingColorSpace(Page) : UInt

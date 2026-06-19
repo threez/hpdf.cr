@@ -2,6 +2,11 @@ require "./helper"
 require "./enum"
 
 module Hpdf
+  # Opaque handle for a form XObject returned by `Page#create_x_object_from_image`
+  # and `Page#create_x_object_as_white_rect`. Pass to `Page#execute_x_object` to
+  # paint the XObject onto a page.
+  alias XObject = LibHaru::XObject
+
   # The page handle is used to operate an individual page.
   # When `Doc#add_page` or `Doc#insert_page` is invoked, a page object
   # is created.
@@ -197,6 +202,12 @@ module Hpdf
       LibHaru.page_get_flat(self).to_f32
     end
 
+    # sets the flatness tolerance for curve rendering. *value* must be in the range 0–100.
+    def flat=(value : Number)
+      raise ArgumentError.new("flat value out of range: #{value} (must be 0–100)") unless (0..100).includes?(value)
+      LibHaru.page_set_flat(self, real(value))
+    end
+
     # gets the current value of the page's character spacing.
     def char_space : Float32
       requires_mode GMode::PageDescription, GMode::TextObject
@@ -249,13 +260,31 @@ module Hpdf
       CMYK.new(LibHaru.page_get_cmyk_stroke(self))
     end
 
-    # draws the XObject using the current graphics context. This is used
-    # by `draw_image` to draw the `Image` by first calling `g_save` and
-    # `concat` and then calling `g_restore` after `execute_x_object`.
-    # It could be used manually to rotate an image.
-    def execute_x_object(image : Image)
+    # draws the XObject using the current graphics context.
+    def execute_x_object(obj : XObject)
       requires_mode GMode::PageDescription
-      LibHaru.page_execute_x_object(self, image)
+      LibHaru.page_execute_x_object(self, obj)
+    end
+
+    # wraps *image* as a form XObject within *rect*. If *zoom* is `true`, the image
+    # is scaled to fill the rectangle.
+    # The returned `XObject` can be drawn repeatedly with `execute_x_object`.
+    #
+    # * *rect* the bounding rectangle for the XObject on the page.
+    # * *image* the image to embed as a form XObject.
+    # * *zoom* if `true`, the image is scaled to fill *rect*.
+    def create_x_object_from_image(rect : Rectangle, image : Image, zoom : Bool = true) : XObject
+      requires_mode GMode::PageDescription
+      LibHaru.page_create_x_object_from_image(@doc, self, rect.to_unsafe, image, bool(zoom))
+    end
+
+    # creates a white rectangle form XObject within *rect*.
+    # The returned `XObject` can be drawn repeatedly with `execute_x_object`.
+    #
+    # * *rect* the bounding rectangle for the white rectangle XObject on the page.
+    def create_x_object_as_white_rect(rect : Rectangle) : XObject
+      requires_mode GMode::PageDescription
+      LibHaru.page_create_x_object_as_white_rect(@doc, self, rect.to_unsafe)
     end
 
     # returns the current value of the page's filling color. `gray_fill` is
@@ -724,6 +753,12 @@ module Hpdf
       LibHaru.page_set_text_leading(self, real(value))
     end
 
+    # gets the current value of the page's text leading (line spacing).
+    def text_leading : Float32
+      requires_mode GMode::PageDescription, GMode::TextObject
+      LibHaru.page_get_text_leading(self).to_f32
+    end
+
     # sets the type of font and size leading.
     # An application can invoke `set_font_and_size` when the graphics
     # mode of the page is in `GMode::PageDescription` or
@@ -801,6 +836,12 @@ module Hpdf
     def set_text_matrix(a : Number, b : Number, c : Number, d : Number, x : Number, y : Number)
       requires_mode GMode::TextObject
       LibHaru.page_set_text_matrix(self, real(a), real(b), real(c), real(d), real(x), real(y))
+    end
+
+    # gets the current text transformation matrix.
+    def text_matrix : TransMatrix
+      requires_mode GMode::TextObject
+      TransMatrix.new(LibHaru.page_get_text_matrix(self))
     end
 
     # moves the current text position to the start of the next line.
