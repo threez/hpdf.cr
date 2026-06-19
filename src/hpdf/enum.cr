@@ -375,4 +375,16 @@ module Hpdf
     Paragraph
     Insert
   end
+
+  # Controls PDF viewer UI behaviour when the document is opened.
+  # Values can be combined with `|`.
+  @[Flags]
+  enum ViewerPreference : UInt32
+    HideToolbar      =  1
+    HideMenubar      =  2
+    HideWindowUI     =  4
+    FitWindow        =  8
+    CenterWindow     = 16
+    PrintScalingNone = 32
+  end
 end
