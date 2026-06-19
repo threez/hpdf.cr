@@ -185,6 +185,20 @@ module Hpdf
       String.new(LibHaru.load_tt_font_from_file2(self, file_name, uint(index), bool(embedding)))
     end
 
+    # loads a TrueType font from a file path or a `Bytes` buffer and returns
+    # the font name. The font name can be passed to `Doc#font`.
+    #
+    # * *source* a file path (`String` or `Path`) or raw font data (`Bytes`).
+    # * *embedding* if `true` the glyph data is embedded in the PDF.
+    def load_tt_font(source : String | Path, embedding : Bool = true) : String
+      String.new(LibHaru.load_tt_font_from_file(self, source.to_s, bool(embedding)))
+    end
+
+    # :ditto:
+    def load_tt_font(source : Bytes, embedding : Bool = true) : String
+      String.new(LibHaru.load_tt_font_from_mem(self, source.to_unsafe, uint(source.size), bool(embedding)))
+    end
+
     # adds a page labeling range for the document.
     #
     # * *page_num* the first page that applies this labeling range.
@@ -305,6 +319,24 @@ module Hpdf
       else
         Image.new(LibHaru.load_png_image_from_file(self, file_name), self)
       end
+    end
+
+    # loads a PNG image from a file path or a `Bytes` buffer.
+    #
+    # * *source* a file path (`String` or `Path`) or raw PNG data (`Bytes`).
+    # * *lazy* (file only) if `true`, defers loading the pixel data until the PDF
+    #   is written, which reduces peak memory usage for large images.
+    def load_png_image(source : String | Path, lazy : Bool = false) : Image
+      if lazy
+        Image.new(LibHaru.load_png_image_from_file2(self, source.to_s), self)
+      else
+        Image.new(LibHaru.load_png_image_from_file(self, source.to_s), self)
+      end
+    end
+
+    # :ditto:
+    def load_png_image(source : Bytes) : Image
+      Image.new(LibHaru.load_png_image_from_mem(self, source.to_unsafe, uint(source.size)), self)
     end
 
     # loads an image which has "raw" image format.
@@ -600,6 +632,36 @@ module Hpdf
       Image.new(LibHaru.load_jpeg_image_from_file(self, file_name), self)
     end
 
+    # loads a JPEG image from a file path or a `Bytes` buffer.
+    #
+    # * *source* a file path (`String` or `Path`) or raw JPEG data (`Bytes`).
+    def load_jpeg_image(source : String | Path) : Image
+      Image.new(LibHaru.load_jpeg_image_from_file(self, source.to_s), self)
+    end
+
+    # :ditto:
+    def load_jpeg_image(source : Bytes) : Image
+      Image.new(LibHaru.load_jpeg_image_from_mem(self, source.to_unsafe, uint(source.size)), self)
+    end
+
+    # loads a 1-bit bilevel image from a `Bytes` buffer.
+    # Each row occupies *line_width* bytes; individual pixels are packed MSB-first.
+    #
+    # * *source* raw image data.
+    # * *width* image width in pixels.
+    # * *height* image height in pixels.
+    # * *line_width* byte width of one scanline (must be ≥ ⌈*width*/8⌉).
+    # * *black_is1* if `true`, a set bit is black; if `false`, a set bit is white.
+    # * *top_is_first* if `true`, the first byte row is the top of the image.
+    def load_raw1_bit_image(source : Bytes, *, width : Number, height : Number,
+                            line_width : Number, black_is1 : Bool = true,
+                            top_is_first : Bool = true) : Image
+      Image.new(LibHaru.image_load_raw1_bit_image_from_mem(
+        self, source.to_unsafe, uint(width), uint(height), uint(line_width),
+        bool(black_is1), bool(top_is_first)
+      ), self)
+    end
+
     # creates a new extended graphics state object. Use it to set transparency
     # and blend modes on a page via `Page#ext_g_state=`.
     def create_ext_g_state : ExtGState
@@ -770,6 +832,7 @@ module Hpdf
     # * *description* optional human-readable description of the attachment.
     # * *subtype* MIME type of the attached file (default: `"text/xml"`).
     # * *relationship* how the attachment relates to the document (see `AFRelationship`).
+    # * *size* optional file size in bytes stored in the attachment metadata.
     # * *creation_date* optional creation timestamp stored in the attachment metadata.
     # * *modification_date* optional last-modification timestamp stored in the attachment metadata.
     def attach_file(path : String, *,
@@ -777,6 +840,7 @@ module Hpdf
                     description : String? = nil,
                     subtype : String = "text/xml",
                     relationship : AFRelationship = AFRelationship::Alternative,
+                    size : UInt64? = nil,
                     creation_date : Time? = nil,
                     modification_date : Time? = nil) : self
       ef = LibHaru.attach_file(self, path)
@@ -784,6 +848,7 @@ module Hpdf
       LibHaru.embedded_file_set_subtype(ef, subtype)
       LibHaru.embedded_file_set_af_relationship(ef, LibHaru::AFRelationship.new(relationship.value.to_u32))
       LibHaru.embedded_file_set_description(ef, description) if description
+      LibHaru.embedded_file_set_size(ef, size) if size
       LibHaru.embedded_file_set_creation_date(ef, Date.new(creation_date).to_unsafe) if creation_date
       LibHaru.embedded_file_set_last_modification_date(ef, Date.new(modification_date).to_unsafe) if modification_date
       self
