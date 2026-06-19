@@ -217,8 +217,6 @@ lib LibHaru
   fun page_get_text_leading = HPDF_Page_GetTextLeading(Page) : Real
   fun page_get_text_matrix = HPDF_Page_GetTextMatrix(Page) : TransMatrix
   fun page_set_flat = HPDF_Page_SetFlat(Page, Real) : Status
-  fun page_get_current_pos2 = HPDF_Page_GetCurrentPos2(Page, Point*) : Status
-  fun page_get_current_text_pos2 = HPDF_Page_GetCurrentTextPos2(Page, Point*) : Status
   fun page_get_char_space = HPDF_Page_GetCharSpace(Page) : Real
   fun page_get_word_space = HPDF_Page_GetWordSpace(Page) : Real
   fun page_get_horizontal_scalling = HPDF_Page_GetHorizontalScalling(Page) : Real

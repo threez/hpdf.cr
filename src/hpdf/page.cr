@@ -138,13 +138,6 @@ module Hpdf
       Point.new(LibHaru.page_get_current_pos(self))
     end
 
-    # gets the current graphics position via out-parameter. Equivalent to `current_pos`.
-    def current_pos2 : Point
-      pt = LibHaru::Point.new
-      LibHaru.page_get_current_pos2(self, pointerof(pt))
-      Point.new(pt)
-    end
-
     # gets the current position for text showing. It returns a `Point` struct
     # indicating the current position for text showing of the page.
     # Otherwise it returns a `Point` struct of {0, 0}.
@@ -153,13 +146,6 @@ module Hpdf
     # mode is `GMode::TextObject`.
     def current_text_pos : Point
       Point.new(LibHaru.page_get_current_text_pos(self))
-    end
-
-    # gets the current text position via out-parameter. Equivalent to `current_text_pos`.
-    def current_text_pos2 : Point
-      pt = LibHaru::Point.new
-      LibHaru.page_get_current_text_pos2(self, pointerof(pt))
-      Point.new(pt)
     end
 
     # gets the handle of the page's current font.
