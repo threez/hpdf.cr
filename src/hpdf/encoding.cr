@@ -27,7 +27,7 @@ module Hpdf
     {% begin %}
     All = [
       {% for constant in @type.constants %}
-        {{constant}},
+        {{ constant }},
       {% end %}
     ]
     {% end %}

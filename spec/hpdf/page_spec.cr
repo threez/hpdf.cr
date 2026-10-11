@@ -28,7 +28,7 @@ describe Hpdf::Image do
   it "creates a destination" do
     testpage do
       # create_destination
-      create_destination.should_not eq nil
+      create_destination.should_not be_nil
     end
   end
 
@@ -48,7 +48,7 @@ describe Hpdf::Image do
       p.y.should eq 0
 
       # current_font
-      current_font.should eq nil
+      current_font.should be_nil
 
       # line_width
       line_width.should eq 1

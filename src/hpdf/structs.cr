@@ -114,7 +114,7 @@ module Hpdf
                 bottom : Float32 = 0,
                 left : Float32 = 0,
                 right : Float32 = 0) : Rectangle
-      r = self.dup
+      r = dup
       r.padding!(top: top, bottom: bottom, left: left, right: right)
       r
     end
