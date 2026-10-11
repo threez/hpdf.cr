@@ -37,10 +37,10 @@ describe Hpdf::Doc do
       testdoc do |pdf|
         pdf.pdfa_conformance = Hpdf::PDFAConformance::PDFA_3B
         xml = <<-XML
-            <rdf:Description xmlns:zf="urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#">
-              <zf:ConformanceLevel>EN 16931</zf:ConformanceLevel>
-            </rdf:Description>
-            XML
+          <rdf:Description xmlns:zf="urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#">
+            <zf:ConformanceLevel>EN 16931</zf:ConformanceLevel>
+          </rdf:Description>
+          XML
         pdf.add_xmp_extension xml
         pdf.add_page
       end

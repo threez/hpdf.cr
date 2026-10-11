@@ -28,8 +28,11 @@ fmtcheck:
 spec:
 	crystal spec -v
 
-lib/ameba/bin/ameba:
+lib/ameba/bin/ameba.cr:
 	shards install
+
+lib/ameba/bin/ameba: lib/ameba/bin/ameba.cr
+	crystal build -o lib/ameba/bin/ameba lib/ameba/bin/ameba.cr --release
 
 lint: lib/ameba/bin/ameba
 	lib/ameba/bin/ameba

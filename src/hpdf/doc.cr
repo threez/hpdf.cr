@@ -138,7 +138,7 @@ module Hpdf
 
     # the handle of current page object.
     def current_page : Page?
-      return nil if @pages.empty?
+      return if @pages.empty?
       cp = LibHaru.get_current_page(self)
       @pages.find do |page|
         page.to_unsafe == cp

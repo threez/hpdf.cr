@@ -35,7 +35,7 @@ targets:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 1.6.0
+    version: ~> 1.7.0
 
 libraries:
   libhpdf: ">= 2.4.6"

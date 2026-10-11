@@ -25,7 +25,7 @@ describe Hpdf::Doc do
 
   it "can handle pages" do
     testdoc do |pdf|
-      pdf.current_page.should eq nil
+      pdf.current_page.should be_nil
 
       last = pdf.add_page
       pdf.current_page.should eq last
@@ -87,16 +87,16 @@ describe Hpdf::Doc do
 
   it "can get/set document attributes" do
     testdoc "doc-attributes" do |pdf|
-      pdf.creation_date.should eq nil
-      pdf.mod_date.should eq nil
-      pdf.author.should eq nil
+      pdf.creation_date.should be_nil
+      pdf.mod_date.should be_nil
+      pdf.author.should be_nil
       # The library version installed is different
       # from OS to OS.
       ire = /Haru Free PDF Library 2./i
-      ire.matches?(pdf.creator.not_nil!).should eq true
-      pdf.title.should eq nil
-      pdf.subject.should eq nil
-      pdf.keywords.should eq nil
+      ire.matches?(pdf.creator.not_nil!).should be_true
+      pdf.title.should be_nil
+      pdf.subject.should be_nil
+      pdf.keywords.should be_nil
 
       pdf.creation_date = Time.local
       pdf.mod_date = Time.utc
@@ -107,8 +107,8 @@ describe Hpdf::Doc do
       pdf.keywords = "Crystal,LibHaru"
 
       pdf.add_page
-      pdf.creation_date.should_not eq nil
-      pdf.mod_date.should_not eq nil
+      pdf.creation_date.should_not be_nil
+      pdf.mod_date.should_not be_nil
       pdf.author.should eq "Vincent"
       pdf.creator.should eq "hpdf.cr"
       pdf.title.should eq "About Hpdf"
